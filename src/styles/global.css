@@ -1,0 +1,145 @@
+:root {
+  /* Colors */
+  --color-main: #d25925;
+  --color-sub-500: #f07d49;
+  --color-white: #ffffff;
+  --color-black: #222222;
+  --color-red: #e30000;
+  --color-gray-500: #323232;
+  --color-gray-400: #4a4a4a;
+  --color-gray-300: #7e7e7e;
+  --color-gray-200: #cdcdcd;
+  --color-gray-100: #ebebeb;
+  --color-gray-50: #f5f5f5;
+
+  /* Font-Size */
+  --size-12: 12px;
+  --size-13: 13px;
+  --size-14: 14px;
+  --size-15: 15px;
+  --size-16: 16px;
+  --size-17: 17px;
+  --size-18: 18px;
+  --size-20: 20px;
+  --size-22: 22px;
+  --size-24: 24px;
+  --size-26: 26px;
+  --size-28: 28px;
+  --size-30: 30px;
+  --size-32: 32px;
+  --size-34: 34px;
+  --size-36: 36px;
+  --size-38: 38px;
+  --size-40: 40px;
+  --size-42: 42px;
+  --size-44: 44px;
+  --size-46: 46px;
+  --size-48: 48px;
+  --size-50: 50px;
+
+  /* Font-Weight */
+  --weight-heavy: 900;
+  --weight-extrabold: 800;
+  --weight-bold: 700;
+  --weight-semibold: 600;
+  --weight-medium: 500;
+  --weight-regular: 400;
+  --weight-light: 300;
+  --weight-extralight: 200;
+  --weight-thin: 100;
+
+  /* Radius */
+  --radius-product: 5px;
+  --radius-button: 5px;
+  --radius-button-category: 2px;
+  --radius-input: 5px;
+
+  /* Font */
+  /* Suit */
+  @font-face {
+    font-family: suit;
+    font-style: normal;
+    font-weight: 100;
+    src: url("/fonts/SUIT-Thin.woff2") format("woff");
+  }
+  @font-face {
+    font-family: suit;
+    font-style: normal;
+    font-weight: 200;
+    src: url("/fonts/SUIT-ExtraLight.woff2") format("woff");
+  }
+  @font-face {
+    font-family: suit;
+    font-style: normal;
+    font-weight: 300;
+    src: url("/fonts/SUIT-Light.woff2") format("woff");
+  }
+  @font-face {
+    font-family: suit;
+    font-style: normal;
+    font-weight: 400;
+    src: url("/fonts/SUIT-Regular.woff2") format("woff");
+  }
+  @font-face {
+    font-family: suit;
+    font-style: normal;
+    font-weight: 500;
+    src: url("/fonts/SUIT-Medium.woff2") format("woff");
+  }
+  @font-face {
+    font-family: suit;
+    font-style: normal;
+    font-weight: 600;
+    src: url("/fonts/SUIT-SemiBold.woff2") format("woff");
+  }
+  @font-face {
+    font-family: suit;
+    font-style: normal;
+    font-weight: 700;
+    src: url("/fonts/SUIT-Bold.woff2") format("woff");
+  }
+  @font-face {
+    font-family: suit;
+    font-style: normal;
+    font-weight: 800;
+    src: url("/fonts/SUIT-ExtraBold.woff2") format("woff");
+  }
+  @font-face {
+    font-family: suit;
+    font-style: normal;
+    font-weight: 900;
+    src: url("/fonts/SUIT-Heavy.woff2") format("woff");
+  }
+
+  /* MaruBuri */
+  @font-face {
+    font-family: maruburi;
+    font-style: normal;
+    font-weight: 200;
+    src: url("/fonts/MaruBuri-ExtraLight.woff") format("woff");
+  }
+  @font-face {
+    font-family: maruburi;
+    font-style: normal;
+    font-weight: 300;
+    src: url("/fonts/MaruBuri-Light.woff") format("woff");
+  }
+  @font-face {
+    font-family: maruburi;
+    font-style: normal;
+    font-weight: 400;
+    src: url("/fonts/MaruBuri-Regular.woff") format("woff");
+  }
+  @font-face {
+    font-family: maruburi;
+    font-style: normal;
+    font-weight: 600;
+    src: url("/fonts/MaruBuri-SemiBold.woff") format("woff");
+  }
+  @font-face {
+    font-family: maruburi;
+    font-style: normal;
+    font-weight: 700;
+    src: url("/fonts/MaruBuri-Bold.woff") format("woff");
+  }
+}
