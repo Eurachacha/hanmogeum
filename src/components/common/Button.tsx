@@ -73,7 +73,6 @@ const ButtonContainer = styled.button<CustomProperties>`
   border-radius: var(--radius-button);
   cursor: pointer;
   font-family: suit;
-  font-weight: var(--weight-extrabold);
 
   &:disabled {
     cursor: default;
