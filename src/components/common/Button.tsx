@@ -1,5 +1,17 @@
 import styled, { RuleSet, css } from "styled-components";
 
+interface ButtonProps {
+  value: string;
+  disabled?: boolean;
+  size: "sm" | "md" | "lg";
+  variant: "point" | "sub" | "normal";
+}
+
+interface CustomProperties {
+  $sizeStyle: RuleSet<object>;
+  $variantStyle: RuleSet<object>;
+}
+
 const SIZES = {
   sm: css`
     padding: 1rem;
@@ -38,18 +50,6 @@ const VARIANTS = {
     }
   `,
 };
-
-interface ButtonProps {
-  value: string;
-  disabled?: boolean;
-  size: "sm" | "md" | "lg";
-  variant: "point" | "sub" | "normal";
-}
-
-interface CustomProperties {
-  $sizeStyle: RuleSet<object>;
-  $variantStyle: RuleSet<object>;
-}
 
 const Button = ({ value, disabled = false, size, variant }: ButtonProps) => {
   const sizeStyle = SIZES[size];
