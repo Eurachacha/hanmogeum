@@ -18,7 +18,7 @@ const Modal = ({ isOpen, iconRequired = false, message, children }: PropsWithChi
           </IconWrapper>
         )}
         <MessageWrapper>{message}</MessageWrapper>
-        {children}
+        <ButtonArea>{children}</ButtonArea>
       </ModalContainer>
     </WholeContainer>
   );
@@ -66,4 +66,10 @@ const IconWrapper = styled.div`
 const MessageWrapper = styled.p`
   margin-top: 1rem;
   margin-bottom: 2.4rem;
+`;
+
+const ButtonArea = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 `;
