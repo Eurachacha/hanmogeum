@@ -1,0 +1,22 @@
+import { PropsWithChildren } from "react";
+import styled from "styled-components";
+
+interface ButtonProps {
+  handleQuantity: () => void;
+}
+
+const QuantitySettingButton = ({ handleQuantity, children }: PropsWithChildren<ButtonProps>) => {
+  return <ButtonContainer onClick={handleQuantity}>{children}</ButtonContainer>;
+};
+
+export default QuantitySettingButton;
+
+const ButtonContainer = styled.button`
+  background: none;
+  border: none;
+  color: var(--color-gray-300);
+  width: 30px;
+  font-size: var(--size-24);
+  font-family: suit;
+  cursor: pointer;
+`;
