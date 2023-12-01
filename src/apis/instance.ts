@@ -2,7 +2,7 @@ import axios from "axios";
 import { INSTANCE_TIMEOUT, AUTH_TOKEN_KEY } from "@/constants/api";
 
 const publicInstance = axios.create({
-  baseURL: process.env.API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: INSTANCE_TIMEOUT,
   headers: {
     "Content-Type": "application/json",
@@ -10,7 +10,7 @@ const publicInstance = axios.create({
 });
 
 const privateInstance = axios.create({
-  baseURL: process.env.API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: INSTANCE_TIMEOUT,
   headers: {
     "Content-Type": "application/json",
