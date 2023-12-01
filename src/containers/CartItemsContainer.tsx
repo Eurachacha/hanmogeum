@@ -16,31 +16,6 @@ export interface CartItemInfo {
   quantity: number;
 }
 
-const mockCartItems = [
-  {
-    checked: true,
-    product_id: 1,
-    price: 9800,
-    shippingFees: 0,
-    name: "실속 분말 녹차",
-    stock: 15,
-    quantity: 1,
-    mainImages: ["https://localhost:443/uploads/sample-dog.jpg"],
-  },
-  {
-    checked: true,
-    product_id: 2,
-    price: 12000,
-    shippingFees: 0,
-    name: "루이보스 차",
-    stock: 5,
-    quantity: 3,
-    mainImages: ["https://localhost:443/uploads/sample-dog.jpg"],
-  },
-];
-
-localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(mockCartItems));
-
 const CartItemsContainer = () => {
   const [cartItems, setCartItems] = useState<CartItemInfo[]>([]);
   const [isAllChecked, setIsAllChecked] = useState(true);
@@ -51,12 +26,38 @@ const CartItemsContainer = () => {
   };
 
   useEffect(() => {
+    const mockCartItems = [
+      {
+        checked: true,
+        product_id: 1,
+        price: 9800,
+        shippingFees: 0,
+        name: "실속 분말 녹차",
+        stock: 15,
+        quantity: 1,
+        mainImages: ["https://localhost:443/uploads/sample-dog.jpg"],
+      },
+      {
+        checked: true,
+        product_id: 2,
+        price: 12000,
+        shippingFees: 0,
+        name: "루이보스 차",
+        stock: 5,
+        quantity: 1,
+        mainImages: ["https://localhost:443/uploads/sample-classic.jpg"],
+      },
+    ];
+
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(mockCartItems));
+
     const cartData = localStorage.getItem(CART_STORAGE_KEY);
     if (cartData) setCartItems(JSON.parse(cartData));
   }, []);
 
   useEffect(() => {
     setIsAllChecked(cartItems.every((item) => item.checked === true));
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
   }, [cartItems]);
 
   return (
@@ -68,14 +69,10 @@ const CartItemsContainer = () => {
         </CheckAllButton>
         <DeleteCheckedButton>선택삭제</DeleteCheckedButton>
       </ItemsHeader>
-      {cartItems.map((item) => (
-        <CartItem
-          key={new Date().getTime() + item.product_id}
-          data={item}
-          cartItems={cartItems}
-          setCartItems={setCartItems}
-        />
-      ))}
+      {cartItems.map((item, idx) => {
+        const itemKey = idx.toString();
+        return <CartItem key={itemKey} data={item} cartItems={cartItems} setCartItems={setCartItems} />;
+      })}
     </CartItemsLayer>
   );
 };

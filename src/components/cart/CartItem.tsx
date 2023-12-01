@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import QuantityContainer from "@/containers/QuantityContainer";
 import CancelIcon from "@/assets/icons/cancel.svg?react";
 import CheckedBoxIcon from "@/assets/icons/checkedBox.svg?react";
@@ -27,13 +27,28 @@ const CartItem = ({ data, cartItems, setCartItems }: CartItemProps) => {
       setCartItems(newItems);
     }
   };
+
+  useEffect(() => {
+    const targetItem = cartItems.find((item) => item.product_id === data.product_id);
+    const targetIndex = cartItems.findIndex((item) => item.product_id === data.product_id);
+    if (targetItem) {
+      const newItems = [
+        ...cartItems.slice(0, targetIndex),
+        { ...targetItem, quantity: quantity },
+        ...cartItems.slice(targetIndex + 1),
+      ];
+      setCartItems(newItems);
+    }
+  }, [quantity]);
+
   return (
     <CartItemLayer>
       <CheckedBox onClick={handleCheckBox}>{data.checked ? <CheckedBoxIcon /> : <UncheckedBoxIcon />}</CheckedBox>
       <ImageWrapper>
-        {data.mainImages.map((src) => (
-          <img key={new Date().getTime() + data.name} src={src} alt={data.name} width="100%" height="100%" />
-        ))}
+        {data.mainImages.map((src, idx) => {
+          const itemKey = idx.toString();
+          return <img key={itemKey} src={src} alt={data.name} width="100%" height="100%" />;
+        })}
       </ImageWrapper>
       <ProductTitle>{data.name}</ProductTitle>
       <QuantityContainer stock={data.stock} quantity={quantity} setQuantity={setQuantity} />
