@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import userApi from "@/apis/services/users";
+import { NavLink } from "react-router-dom";
 import IconShoppingCart from "@/assets/icons/shoppingCart_40.svg?react";
 import IconSearchCart from "@/assets/icons/search_24.svg?react";
 import { AUTH_TOKEN_KEY } from "@/constants/api";
@@ -57,17 +56,17 @@ const Header = () => {
         <CategoryWrapper>
           <div>
             {categoryList.common.map((category) => (
-              <Link key={category.name} to={category.router}>
+              <ActiveLink end key={category.name} to={category.router}>
                 {category.name}
-              </Link>
+              </ActiveLink>
             ))}
           </div>
           {isManager && (
             <AdminCategoryStyle>
               {categoryList.admin.map((category) => (
-                <Link key={category.name} to={category.router}>
+                <ActiveLink end key={category.name} to={category.router}>
                   {category.name}
-                </Link>
+                </ActiveLink>
               ))}
             </AdminCategoryStyle>
           )}
@@ -79,28 +78,34 @@ const Header = () => {
         <UserControlWrapper>
           {isLogin
             ? userControlList.isLogin.map((userControl) => (
-                <Link key={userControl.name} to={userControl.router}>
+                <NavLink key={userControl.name} to={userControl.router}>
                   {userControl.name}
-                </Link>
+                </NavLink>
               ))
             : userControlList.isLogout.map((userControl) => (
-                <Link key={userControl.name} to={userControl.router}>
+                <NavLink key={userControl.name} to={userControl.router}>
                   {userControl.name}
-                </Link>
+                </NavLink>
               ))}
         </UserControlWrapper>
         <CartWrapper>
-          <Link to="/cart">
+          <NavLink to="/cart">
             <IconShoppingCart />
             <CartCountStyle>
               <span>{cartCount}</span>
             </CartCountStyle>
-          </Link>
+          </NavLink>
         </CartWrapper>
       </HeaderWrapper>
     </HeaderLayer>
   );
 };
+
+const ActiveLink = styled(NavLink)`
+  &.active {
+    color: var(--color-main);
+  }
+`;
 
 const HeaderLayer = styled.div`
   border-bottom: 1px solid var(--color-gray-100);
