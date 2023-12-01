@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-interface SectionTitleProps {
+interface ContentsTitleProps {
   title: string;
   customStyle?: React.CSSProperties;
 }
@@ -9,23 +9,23 @@ interface SectionTitleProps {
  * 다음과 같은 방법으로 사용이 가능합니다.
  *
  * 기본 사용 방법
- *    <SectionTitle title="로그인" />
+ *    <ContentsTitle title="로그인" />
  * 커스텀 스타일 사용 방법
- *    <SectionTitle title="로그인" customStyle={{color:"red"}} />
+ *    <ContentsTitle title="로그인" customStyle={{color:"red"}} />
  *
  */
 
-const SectionTitle = ({ title = "", customStyle = {} }: SectionTitleProps) => {
+const ContentsTitle = ({ title = "", customStyle = {} }: ContentsTitleProps) => {
   return (
-    <SectionTitleLayer $customStyle={customStyle}>
+    <ContentsTitleLayer $customStyle={customStyle}>
       <h1>{title}</h1>
-    </SectionTitleLayer>
+    </ContentsTitleLayer>
   );
 };
 
-export default SectionTitle;
+export default ContentsTitle;
 
-const SectionTitleLayer = styled.div<{ $customStyle: React.CSSProperties }>`
+const ContentsTitleLayer = styled.div<{ $customStyle: React.CSSProperties }>`
   display: flex;
   justify-content: center;
   align-items: center;
