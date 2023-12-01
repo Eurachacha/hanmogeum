@@ -1,15 +1,13 @@
-import { useState } from "react";
 import { styled } from "styled-components";
 import QuantitySettingButton from "@/components/cart/QuantitySettingButton";
 
 interface QuantityControllerProps {
-  initQuantity: number;
   stock: number;
+  quantity: number;
+  setQuantity: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const QuantityContainer = ({ initQuantity, stock }: QuantityControllerProps) => {
-  const [quantity, setQuantity] = useState(initQuantity);
-
+const QuantityContainer = ({ stock, quantity, setQuantity }: QuantityControllerProps) => {
   const handleMinus = () => {
     if (quantity === 1) return;
     setQuantity(quantity - 1);
@@ -25,7 +23,7 @@ const QuantityContainer = ({ initQuantity, stock }: QuantityControllerProps) => 
       <QuantitySettingButton handleQuantity={handleMinus}>-</QuantitySettingButton>
       <QuantityWrapper
         type="number"
-        max={stock}
+        maxLength={stock}
         value={quantity}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           setQuantity(Number(e.target.value));
