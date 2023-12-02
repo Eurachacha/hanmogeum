@@ -5,11 +5,11 @@ interface ButtonProps {
   handleQuantity: () => void;
 }
 
-const QuantitySettingButton = ({ handleQuantity, children }: PropsWithChildren<ButtonProps>) => {
+const CounterButton = ({ handleQuantity, children }: PropsWithChildren<ButtonProps>) => {
   return <ButtonContainer onClick={handleQuantity}>{children}</ButtonContainer>;
 };
 
-export default QuantitySettingButton;
+export default CounterButton;
 
 const ButtonContainer = styled.button`
   background: none;

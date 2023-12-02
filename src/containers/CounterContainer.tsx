@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-import QuantitySettingButton from "@/components/cart/QuantitySettingButton";
+import CounterButton from "@/components/cart/CounterButton";
 
 interface QuantityControllerProps {
   stock: number;
@@ -20,7 +20,7 @@ const CounterContainer = ({ stock, quantity, setQuantity }: QuantityControllerPr
 
   return (
     <CounterLayer>
-      <QuantitySettingButton handleQuantity={handleMinus}>-</QuantitySettingButton>
+      <CounterButton handleQuantity={handleMinus}>-</CounterButton>
       <QuantityWrapper
         type="number"
         maxLength={stock}
@@ -29,7 +29,7 @@ const CounterContainer = ({ stock, quantity, setQuantity }: QuantityControllerPr
           setQuantity(Number(e.target.value));
         }}
       ></QuantityWrapper>
-      <QuantitySettingButton handleQuantity={handlePlus}>+</QuantitySettingButton>
+      <CounterButton handleQuantity={handlePlus}>+</CounterButton>
     </CounterLayer>
   );
 };
