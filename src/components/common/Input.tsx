@@ -9,6 +9,13 @@ type InputType = "text" | "email" | "password" | "search" | "tel" | "url";
  */
 type InputStyle = "normal";
 
+interface CustomStyle {
+  "font-size"?: string;
+  color?: string;
+  padding?: string;
+  margin?: string;
+}
+
 /**
  * Input 컴포넌트의 props
  */
@@ -22,7 +29,7 @@ interface InputProps {
   value: string;
   disabled?: boolean;
   inputStyle?: InputStyle; // 정의된 스타일을 적용
-  customStyle?: React.CSSProperties; // 사용자 정의 스타일을 추가
+  customStyle?: CustomStyle; // 사용자 정의 스타일을 추가
 }
 
 const Input = ({
@@ -64,11 +71,12 @@ const INPUT_STYLES = Object.freeze({
 });
 
 const InputContainer = styled.input<{ $inputStyle: RuleSet<object>; $customStyle: React.CSSProperties }>`
-  ${(props) => props.$inputStyle}
-
+  ${(props) => props.$inputStyle};
   border-radius: var(--radius-input);
   border-style: solid;
   border-width: 1px;
+  padding: 0 1rem;
+  font-size: 1.6rem;
 
   ${(props) => props.$customStyle && { ...props.$customStyle }}
 `;
