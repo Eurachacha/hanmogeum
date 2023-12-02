@@ -137,6 +137,7 @@ const HeaderWrapper = styled.div`
   align-items: center;
   margin: 0 auto;
   max-width: 1280px;
+  /* overflow: hidden; */
 `;
 
 const LogoWrapper = styled.div`

@@ -11,7 +11,7 @@ const Footer = () => {
   const notice = `이 사이트는 포트폴리오용 사이트로 연습용 사이트 입니다.`;
 
   return (
-    <FooterContainer>
+    <FooterLayer>
       <FooterWrapper>
         <StyledInfo>
           {footerInfo.map((contents, idx) => {
@@ -21,16 +21,18 @@ const Footer = () => {
         </StyledInfo>
         <span>{notice}</span>
       </FooterWrapper>
-    </FooterContainer>
+    </FooterLayer>
   );
 };
 
-const FooterContainer = styled.div`
+const FooterLayer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   font-size: 1.3rem;
   font-weight: var(--weight-thin);
+  /* overflow: hidden; */
+  border-top: 1px solid var(--color-gray-100);
 `;
 
 const FooterWrapper = styled.span`
@@ -38,10 +40,9 @@ const FooterWrapper = styled.span`
   flex-direction: column;
   justify-content: end;
   align-items: center;
-  width: 1280px;
+  max-width: 1280px;
   padding: 3.4rem 0rem 1.5rem 0rem;
-  height: 8.5rem;
-  border-top: 1px solid var(--color-gray-100);
+  height: 10rem;
   text-align: center;
 `;
 
