@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 import styled from "styled-components";
-import CircleCheckIcon from "public/icons/circleCheck.svg?react";
+import CircleCheckIcon from "@/assets/icons/circleCheck.svg?react";
 
 interface ModalProps {
   isOpen: boolean;
