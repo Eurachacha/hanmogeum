@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
-import CartItemListContainer from "@/containers/CartItemListContainer";
-import PriceInfoContainer from "@/containers/PriceInfoContainer";
+import CartItemListContainer from "@/containers/cart/CartItemListContainer";
+import PriceInfoContainer from "@/containers/cart/PriceInfoContainer";
 import CART_STORAGE_KEY from "@/constants/cart";
 import { CartItemInfo } from "@/types/cart";
 
