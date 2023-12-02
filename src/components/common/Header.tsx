@@ -1,28 +1,43 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import IconShoppingCart from "@/assets/icons/shoppingCart_40.svg?react";
 import IconSearchCart from "@/assets/icons/search_24.svg?react";
+import loggedInUserState from "@/recoil/atoms/loggedInUserState";
+import { getUserTypeState } from "@/recoil/selectors/loggedInUserSelector";
+
+// constants
 import { AUTH_TOKEN_KEY } from "@/constants/api";
+import { MANAGE_TYPE } from "@/constants/user";
 
 const Header = () => {
   const [cartCount, setCartCount] = useState(0);
   const [isManager, setIsManager] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  const userType = useRecoilValue(getUserTypeState);
 
   useEffect(() => {
-    // 로컬 스토리지의 토큰이 있는 경우, 로그인 된 사용자로 인식한다.
     const authToken = localStorage.getItem(AUTH_TOKEN_KEY);
     if (authToken) {
       setIsLogin(true);
-      // TODO: 로그인한 사용자의 로그인 정보를 조회하여, 일반사용자인지 관리자인지를 구분한다.
-      setIsManager(false);
       // TODO: 로그인한 사용자의 장바구니를 불러온다.
       setCartCount(0);
+      if (MANAGE_TYPE.some((manageType) => userType === manageType)) {
+        setIsManager(true);
+      }
     } else {
       setIsLogin(false);
     }
-  }, []);
+  }, [userType]);
+
+  const logoutClickHandle = () => {
+    console.log("로그 아웃 됨");
+    localStorage.clear();
+    setIsManager(false);
+    setCartCount(0);
+    setIsLogin(false);
+  };
 
   const categoryList = {
     common: [
@@ -38,8 +53,8 @@ const Header = () => {
   };
   const userControlList = {
     isLogin: [
-      { name: "마이페이지", router: "/mypage" },
-      { name: "로그아웃", router: "/" }, // TODO: 라우터 이동 전에 로그아웃 처리
+      { name: "마이페이지", router: "/mypage", onClick: () => {} },
+      { name: "로그아웃", router: "/", onClick: logoutClickHandle },
     ],
     isLogout: [
       { name: "로그인", router: "/login" },
@@ -78,7 +93,7 @@ const Header = () => {
         <UserControlWrapper>
           {isLogin
             ? userControlList.isLogin.map((userControl) => (
-                <NavLink key={userControl.name} to={userControl.router}>
+                <NavLink key={userControl.name} to={userControl.router} onClick={userControl.onClick}>
                   {userControl.name}
                 </NavLink>
               ))
@@ -125,6 +140,7 @@ const HeaderWrapper = styled.div`
 `;
 
 const LogoWrapper = styled.div`
+  min-width: 12rem;
   font: var(--weight-bold) 4rem "maruburi";
   color: var(--color-main);
   cursor: pointer;
@@ -132,8 +148,10 @@ const LogoWrapper = styled.div`
 const CategoryWrapper = styled.div`
   display: flex;
   align-items: center;
-  font: var(--weight-bold) 1.6rem "suit";
   padding: 0 2rem;
+  background-color: red;
+  min-width: 46rem;
+  font: var(--weight-bold) 1.6rem "suit";
   a {
     padding: 0 1rem;
   }
