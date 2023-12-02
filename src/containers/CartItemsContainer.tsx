@@ -29,6 +29,11 @@ const CartItemsContainer = ({ cartItems, setCartItems }: CartItemsContainerProps
     setCartItems(newCartData);
   };
 
+  const handleDeleteChecked = () => {
+    const newCartData = cartItems.filter((item) => item.checked === false);
+    setCartItems(newCartData);
+  };
+
   useEffect(() => {
     setIsAllChecked(cartItems.every((item) => item.checked === true));
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
@@ -41,7 +46,7 @@ const CartItemsContainer = ({ cartItems, setCartItems }: CartItemsContainerProps
           {isAllChecked ? <CheckedBoxIcon /> : <UncheckedBoxIcon />}
           <p>전체선택</p>
         </CheckAllButton>
-        <DeleteCheckedButton>선택삭제</DeleteCheckedButton>
+        <DeleteCheckedButton onClick={handleDeleteChecked}>선택삭제</DeleteCheckedButton>
       </ItemsHeader>
       {cartItems.map((item, idx) => {
         const itemKey = idx.toString();
