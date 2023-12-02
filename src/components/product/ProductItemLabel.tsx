@@ -2,6 +2,8 @@ import styled, { RuleSet, css } from "styled-components";
 
 interface LabelProps {
   variant: "new" | "best" | "decaf";
+  padding: string;
+  margin: string;
   children: string;
 }
 
@@ -19,11 +21,11 @@ const VARIANTS = {
   `,
 }
 
-const ProductItemLabel = ({ variant, children }: LabelProps) => {
+const ProductItemLabel = ({ variant, children, padding, margin }: LabelProps) => {
   const variantStyle = VARIANTS[variant];
 
   return (
-    <ProductItemLabelLayer $variantStyle={variantStyle}>
+    <ProductItemLabelLayer padding={padding} margin={margin} $variantStyle={variantStyle}>
       {children}
     </ProductItemLabelLayer>
   );
@@ -31,7 +33,7 @@ const ProductItemLabel = ({ variant, children }: LabelProps) => {
 export default ProductItemLabel;
 
 
-const ProductItemLabelLayer = styled.span<{ $variantStyle: RuleSet<object> }>`
+const ProductItemLabelLayer = styled.span<{ padding: string, margin: string, $variantStyle: RuleSet<object> }>`
   ${(props) => props.$variantStyle}
 
   color: var(--color-white);
@@ -39,8 +41,10 @@ const ProductItemLabelLayer = styled.span<{ $variantStyle: RuleSet<object> }>`
   border-radius: 5px;
   border: 0;
 
-  padding: 4px 8px;
   font-size: 1.2rem;
+
+  padding: ${(props) => props.padding};
+  margin: ${(props) => props.margin};
 
   cursor: pointer;
 `;
