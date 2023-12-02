@@ -79,16 +79,15 @@ const CartItemsContainer = () => {
 
 export default CartItemsContainer;
 
-const CartItemsLayer = styled.section`
+const CartItemsLayer = styled.div`
   margin: 2rem 0;
-  max-width: 830px;
+  flex: 1;
 `;
 
 const ItemsHeader = styled.div`
   padding: 8px;
   display: flex;
   justify-content: space-between;
-
   border-bottom: 1px solid var(--color-gray-100);
 `;
 

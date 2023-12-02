@@ -7,7 +7,7 @@ interface QuantityControllerProps {
   setQuantity: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const QuantityContainer = ({ stock, quantity, setQuantity }: QuantityControllerProps) => {
+const CounterContainer = ({ stock, quantity, setQuantity }: QuantityControllerProps) => {
   const handleMinus = () => {
     if (quantity === 1) return;
     setQuantity(quantity - 1);
@@ -19,7 +19,7 @@ const QuantityContainer = ({ stock, quantity, setQuantity }: QuantityControllerP
   };
 
   return (
-    <QuantityContainerLayer>
+    <CounterLayer>
       <QuantitySettingButton handleQuantity={handleMinus}>-</QuantitySettingButton>
       <QuantityWrapper
         type="number"
@@ -30,16 +30,15 @@ const QuantityContainer = ({ stock, quantity, setQuantity }: QuantityControllerP
         }}
       ></QuantityWrapper>
       <QuantitySettingButton handleQuantity={handlePlus}>+</QuantitySettingButton>
-    </QuantityContainerLayer>
+    </CounterLayer>
   );
 };
 
-export default QuantityContainer;
+export default CounterContainer;
 
-const QuantityContainerLayer = styled.div`
+const CounterLayer = styled.div`
   width: 10rem;
-  height: 4rem;
-  margin: 0 8px;
+  height: 3.5rem;
   border: 1px solid var(--color-gray-200);
   display: flex;
   justify-content: space-between;
@@ -58,8 +57,9 @@ const QuantityContainerLayer = styled.div`
 `;
 
 const QuantityWrapper = styled.input`
-  font-size: var(--size-20);
-  width: 2rem;
+  font-size: var(--size-16);
+  padding: 0;
+  width: 3rem;
   height: 2rem;
   text-align: center;
   border: none;
