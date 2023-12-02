@@ -26,6 +26,7 @@
     "import/newline-after-import": ["warn"],
     "import/no-extraneous-dependencies": ["off"],
     "arrow-body-style": ["off", "never"],
-    "import/extensions": ["off"]
+    "import/extensions": ["off"],
+    "object-shorthand": ["off"]
   }
 }
