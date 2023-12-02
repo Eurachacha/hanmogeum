@@ -1,3 +1,2 @@
-type UserType = "user" | "seller" | "admin";
-
-export default UserType;
+export const USER_TYPE = ["user"];
+export const MANAGE_TYPE = ["seller", "admin"];
