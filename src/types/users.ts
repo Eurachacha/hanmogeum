@@ -1,4 +1,4 @@
-import UserType from "@/constants/user";
+type UserType = "user" | "seller" | "admin";
 
 export interface LoginData {
   email: string;
