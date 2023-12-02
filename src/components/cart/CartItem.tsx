@@ -7,12 +7,13 @@ import { CartItemInfo } from "@/types/cart";
 
 interface CartItemProps {
   handleCheckBox: () => void;
+  handleDeleteItem: () => void;
   data: CartItemInfo;
   quantity: number;
   setQuantity: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const CartItem = ({ handleCheckBox, data, quantity, setQuantity }: CartItemProps) => {
+const CartItem = ({ handleCheckBox, handleDeleteItem, data, quantity, setQuantity }: CartItemProps) => {
   return (
     <CartItemLayer>
       <CartItemLeft>
@@ -30,7 +31,7 @@ const CartItem = ({ handleCheckBox, data, quantity, setQuantity }: CartItemProps
           <CounterContainer stock={data.stock} quantity={quantity} setQuantity={setQuantity} />
           <Price>{(data.price * quantity).toLocaleString()}원</Price>
         </CountPrice>
-        <CancelIconWrapper style={{ width: 20, height: 20 }}>
+        <CancelIconWrapper style={{ width: 20, height: 20 }} onClick={handleDeleteItem}>
           <CancelIcon />
         </CancelIconWrapper>
       </CartItemRight>

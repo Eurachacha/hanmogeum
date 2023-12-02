@@ -11,6 +11,11 @@ interface CartItemProps {
 const CartItemContainer = ({ data, cartItems, setCartItems }: CartItemProps) => {
   const [quantity, setQuantity] = useState(data.quantity);
 
+  const handleDeleteItem = () => {
+    const newCartItems = cartItems.filter((item) => data.product_id === item.product_id);
+    setCartItems(newCartItems);
+  };
+
   const handleCheckBox = () => {
     const targetItem = cartItems.find((item) => item.product_id === data.product_id);
     const targetIndex = cartItems.findIndex((item) => item.product_id === data.product_id);
@@ -37,7 +42,15 @@ const CartItemContainer = ({ data, cartItems, setCartItems }: CartItemProps) => 
     }
   }, [quantity]);
 
-  return <CartItem handleCheckBox={handleCheckBox} data={data} quantity={quantity} setQuantity={setQuantity} />;
+  return (
+    <CartItem
+      handleCheckBox={handleCheckBox}
+      handleDeleteItem={handleDeleteItem}
+      data={data}
+      quantity={quantity}
+      setQuantity={setQuantity}
+    />
+  );
 };
 
 export default CartItemContainer;
