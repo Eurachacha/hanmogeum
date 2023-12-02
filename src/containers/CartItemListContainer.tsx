@@ -16,12 +16,12 @@ export interface CartItemInfo {
   quantity: number;
 }
 
-interface CartItemsContainerProps {
+interface CartItemListContainerProps {
   cartItems: CartItemInfo[];
   setCartItems: React.Dispatch<React.SetStateAction<CartItemInfo[]>>;
 }
 
-const CartItemsContainer = ({ cartItems, setCartItems }: CartItemsContainerProps) => {
+const CartItemListContainer = ({ cartItems, setCartItems }: CartItemListContainerProps) => {
   const [isAllChecked, setIsAllChecked] = useState(true);
 
   const handleAllChecked = () => {
@@ -40,7 +40,7 @@ const CartItemsContainer = ({ cartItems, setCartItems }: CartItemsContainerProps
   }, [cartItems]);
 
   return (
-    <CartItemsLayer>
+    <CartItemListContainerLayer>
       <ItemsHeader>
         <CheckAllButton onClick={handleAllChecked}>
           {isAllChecked ? <CheckedBoxIcon /> : <UncheckedBoxIcon />}
@@ -52,13 +52,13 @@ const CartItemsContainer = ({ cartItems, setCartItems }: CartItemsContainerProps
         const itemKey = idx.toString();
         return <CartItem key={itemKey} data={item} cartItems={cartItems} setCartItems={setCartItems} />;
       })}
-    </CartItemsLayer>
+    </CartItemListContainerLayer>
   );
 };
 
-export default CartItemsContainer;
+export default CartItemListContainer;
 
-const CartItemsLayer = styled.div`
+const CartItemListContainerLayer = styled.div`
   margin: 2rem 0;
   flex: 1;
 `;

@@ -4,7 +4,7 @@ import CounterContainer from "@/containers/CounterContainer";
 import CancelIcon from "@/assets/icons/cancel.svg?react";
 import CheckedBoxIcon from "@/assets/icons/checkedBox.svg?react";
 import UncheckedBoxIcon from "@/assets/icons/uncheckedBox.svg?react";
-import { CartItemInfo } from "@/containers/CartItemsContainer";
+import { CartItemInfo } from "@/containers/CartItemListContainer";
 
 interface CartItemProps {
   data: CartItemInfo;

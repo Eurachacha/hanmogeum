@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
-import CartItemsContainer, { CartItemInfo } from "@/containers/CartItemsContainer";
+import CartItemListContainer, { CartItemInfo } from "@/containers/CartItemListContainer";
 import PriceInfoContainer from "@/containers/PriceInfoContainer";
 import CART_STORAGE_KEY from "@/constants/cart";
 
@@ -41,7 +41,7 @@ const CartPage = () => {
     <>
       <PageTitle>장바구니</PageTitle>
       <Content>
-        <CartItemsContainer cartItems={cartItems} setCartItems={setCartItems} />
+        <CartItemListContainer cartItems={cartItems} setCartItems={setCartItems} />
         <PriceInfoContainer cartItems={cartItems} />
       </Content>
     </>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import Price from "@/components/cart/Price";
 import Button from "@/components/common/Button";
-import { CartItemInfo } from "./CartItemsContainer";
+import { CartItemInfo } from "./CartItemListContainer";
 
 const PriceInfoContainer = ({ cartItems }: { cartItems: CartItemInfo[] }) => {
   const [checkedPrice, setcheckedPrice] = useState(0);
