@@ -149,7 +149,6 @@ const CategoryWrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 0 2rem;
-  background-color: red;
   min-width: 46rem;
   font: var(--weight-bold) 1.6rem "suit";
   a {
