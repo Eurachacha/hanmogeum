@@ -16,44 +16,18 @@ export interface CartItemInfo {
   quantity: number;
 }
 
-const CartItemsContainer = () => {
-  const [cartItems, setCartItems] = useState<CartItemInfo[]>([]);
+interface CartItemsContainerProps {
+  cartItems: CartItemInfo[];
+  setCartItems: React.Dispatch<React.SetStateAction<CartItemInfo[]>>;
+}
+
+const CartItemsContainer = ({ cartItems, setCartItems }: CartItemsContainerProps) => {
   const [isAllChecked, setIsAllChecked] = useState(true);
 
   const handleAllChecked = () => {
     const newCartData = [...cartItems].map((item) => ({ ...item, checked: !isAllChecked }));
     setCartItems(newCartData);
   };
-
-  useEffect(() => {
-    const mockCartItems = [
-      {
-        checked: true,
-        product_id: 1,
-        price: 9800,
-        shippingFees: 0,
-        name: "실속 분말 녹차",
-        stock: 15,
-        quantity: 1,
-        mainImages: ["https://localhost:443/uploads/sample-dog.jpg"],
-      },
-      {
-        checked: true,
-        product_id: 2,
-        price: 12000,
-        shippingFees: 0,
-        name: "루이보스 차",
-        stock: 5,
-        quantity: 1,
-        mainImages: ["https://localhost:443/uploads/sample-classic.jpg"],
-      },
-    ];
-
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(mockCartItems));
-
-    const cartData = localStorage.getItem(CART_STORAGE_KEY);
-    if (cartData) setCartItems(JSON.parse(cartData));
-  }, []);
 
   useEffect(() => {
     setIsAllChecked(cartItems.every((item) => item.checked === true));
@@ -91,13 +65,18 @@ const ItemsHeader = styled.div`
   border-bottom: 1px solid var(--color-gray-100);
 `;
 
-const CheckAllButton = styled.div`
+const CheckAllButton = styled.button`
   display: flex;
   align-items: center;
   cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+
   & p {
     margin: 0 4px;
     color: var(--color-gray-400);
+    font-size: 1.4rem;
   }
 `;
 
