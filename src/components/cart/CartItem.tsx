@@ -1,46 +1,18 @@
 import { styled } from "styled-components";
-import { useEffect, useState } from "react";
 import CounterContainer from "@/containers/CounterContainer";
 import CancelIcon from "@/assets/icons/cancel.svg?react";
 import CheckedBoxIcon from "@/assets/icons/checkedBox.svg?react";
 import UncheckedBoxIcon from "@/assets/icons/uncheckedBox.svg?react";
-import { CartItemInfo } from "@/containers/CartItemListContainer";
+import { CartItemInfo } from "@/types/cart";
 
 interface CartItemProps {
+  handleCheckBox: () => void;
   data: CartItemInfo;
-  cartItems: CartItemInfo[];
-  setCartItems: React.Dispatch<React.SetStateAction<CartItemInfo[]>>;
+  quantity: number;
+  setQuantity: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const CartItem = ({ data, cartItems, setCartItems }: CartItemProps) => {
-  const [quantity, setQuantity] = useState(data.quantity);
-
-  const handleCheckBox = () => {
-    const targetItem = cartItems.find((item) => item.product_id === data.product_id);
-    const targetIndex = cartItems.findIndex((item) => item.product_id === data.product_id);
-    if (targetItem) {
-      const newItems = [
-        ...cartItems.slice(0, targetIndex),
-        { ...targetItem, checked: !targetItem?.checked },
-        ...cartItems.slice(targetIndex + 1),
-      ];
-      setCartItems(newItems);
-    }
-  };
-
-  useEffect(() => {
-    const targetItem = cartItems.find((item) => item.product_id === data.product_id);
-    const targetIndex = cartItems.findIndex((item) => item.product_id === data.product_id);
-    if (targetItem) {
-      const newItems = [
-        ...cartItems.slice(0, targetIndex),
-        { ...targetItem, quantity: quantity },
-        ...cartItems.slice(targetIndex + 1),
-      ];
-      setCartItems(newItems);
-    }
-  }, [quantity]);
-
+const CartItem = ({ handleCheckBox, data, quantity, setQuantity }: CartItemProps) => {
   return (
     <CartItemLayer>
       <CartItemLeft>

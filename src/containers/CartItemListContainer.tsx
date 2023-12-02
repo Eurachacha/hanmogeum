@@ -1,20 +1,10 @@
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
-import CartItem from "@/components/cart/CartItem";
 import CheckedBoxIcon from "@/assets/icons/checkedBox.svg?react";
 import UncheckedBoxIcon from "@/assets/icons/uncheckedBox.svg?react";
 import CART_STORAGE_KEY from "@/constants/cart";
-
-export interface CartItemInfo {
-  checked: boolean;
-  product_id: number;
-  price: number;
-  shippingFees: number;
-  name: string;
-  mainImages: string[];
-  stock: number;
-  quantity: number;
-}
+import CartItemContainer from "./CartItemContainer";
+import { CartItemInfo } from "@/types/cart";
 
 interface CartItemListContainerProps {
   cartItems: CartItemInfo[];
@@ -50,7 +40,7 @@ const CartItemListContainer = ({ cartItems, setCartItems }: CartItemListContaine
       </ItemsHeader>
       {cartItems.map((item, idx) => {
         const itemKey = idx.toString();
-        return <CartItem key={itemKey} data={item} cartItems={cartItems} setCartItems={setCartItems} />;
+        return <CartItemContainer key={itemKey} data={item} cartItems={cartItems} setCartItems={setCartItems} />;
       })}
     </CartItemListContainerLayer>
   );

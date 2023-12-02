@@ -1,8 +1,9 @@
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
-import CartItemListContainer, { CartItemInfo } from "@/containers/CartItemListContainer";
+import CartItemListContainer from "@/containers/CartItemListContainer";
 import PriceInfoContainer from "@/containers/PriceInfoContainer";
 import CART_STORAGE_KEY from "@/constants/cart";
+import { CartItemInfo } from "@/types/cart";
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState<CartItemInfo[]>([]);
