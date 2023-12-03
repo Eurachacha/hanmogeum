@@ -72,6 +72,7 @@ const INPUT_STYLES = Object.freeze({
 
 const InputContainer = styled.input<{ $inputStyle: RuleSet<object>; $customStyle: React.CSSProperties }>`
   ${(props) => props.$inputStyle};
+  width: inherit;
   border-radius: var(--radius-input);
   border-style: solid;
   border-width: 1px;
