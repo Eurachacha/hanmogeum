@@ -69,6 +69,7 @@ const ButtonContainer = styled.button<CustomProperties>`
   ${(props) => props.$variantStyle}
 
   width: 100%;
+  height: 100%;
   margin: 0;
   border-radius: var(--radius-button);
   cursor: pointer;
