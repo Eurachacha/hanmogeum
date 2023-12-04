@@ -27,6 +27,7 @@
     "import/no-extraneous-dependencies": ["off"],
     "arrow-body-style": ["off", "never"],
     "import/extensions": ["off"],
-    "object-shorthand": ["off"]
+    "object-shorthand": ["off"],
+    "no-console": ["error", { "allow": ["warn", "error"] }]
   }
 }

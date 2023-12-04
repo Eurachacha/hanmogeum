@@ -1,11 +1,11 @@
 import { privateInstance } from "../instance";
-import { RequestOrders, ResponseOrders, ResponseOrderList } from "@/types/orders";
+import { RequestCreateOrder, ResponseCreateOrder, ResponseGetOrderList } from "@/types/orders";
 
 const ordersApi = {
-  // POST/orders
-  postOrder: (data: RequestOrders) => privateInstance.post<ResponseOrders>("/orders", data),
-  // GET/orders
-  getOrderList: () => privateInstance.get<ResponseOrderList>("/orders"),
+  // POST /orders
+  createOrder: (data: { product: RequestCreateOrder[] }) => privateInstance.post<ResponseCreateOrder>("/orders", data),
+  // GET /orders
+  getOrderList: () => privateInstance.get<ResponseGetOrderList>("/orders"),
 };
 
 export default ordersApi;
