@@ -1,12 +1,6 @@
-// POST /orders 상품 구매
-export interface RequestOrders {
-  products: OrderProduct[];
-  address: OrderAddress;
-}
-
 interface OrderProduct {
   _id: number;
-  count: number;
+  quantity: number;
 }
 
 interface OrderAddress {
@@ -14,34 +8,53 @@ interface OrderAddress {
   value: string;
 }
 
-export interface ResponseOrders {
-  ok: number;
-  item: OrderItem;
-}
-
-interface OrderItem extends RequestOrders {
-  user_id: number;
-  _id: number;
-  createdAt: string;
-  cost: OrderCost;
-}
-
-interface OrderCost {
-  products: number;
-  shippingFees: number;
-  total: number;
-}
-
-interface OrderProduct {
-  _id: number;
-  quantity: number;
+interface OrderProductDetail extends OrderProduct {
   name: string;
   image: string;
   price: number;
 }
 
-// GET /orders 구매 목록 조회
-export interface ResponseOrderList {
+interface Discount {
+  products: number;
+  shippingFees: number;
+}
+
+interface OrderCost {
+  products: number;
+  shippingFees: number;
+  discount: Discount;
+  total: number;
+}
+
+interface OrderDetail {
+  products: OrderProductDetail[];
+  address: OrderAddress;
+  state: string;
+  user_id: number;
+  _id: number;
+  createdAt: string;
+  updatedAt: string;
+  cost: OrderCost;
+}
+
+// Request Types
+
+// POST /orders 구매 목록 조회
+export interface RequestCreateOrder {
+  products: OrderProduct[];
+  address: OrderAddress;
+}
+
+// Response Types
+
+// POST /orders 구매 목록 조회
+export interface ResponseCreateOrder {
   ok: number;
-  item: OrderItem[];
+  item: OrderDetail;
+}
+
+// GET /orders 구매 목록 조회
+export interface ResponseGetOrderList {
+  ok: number;
+  item: OrderDetail[];
 }
