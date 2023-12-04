@@ -9,8 +9,9 @@ export interface SignUpData {
   email: string;
   password: string;
   name: string;
-  phone: string;
-  address: string;
+  phone?: string;
+  address?: string;
+  type: string;
 }
 
 export interface UserExtra {
@@ -41,6 +42,10 @@ export interface User {
   extra?: UserExtra;
   createdAt: string;
   updatedAt: string;
+}
+export interface ResponseEmailDuplicateCheck {
+  ok: number;
+  message: string;
 }
 
 // POST /users/login 로그인
