@@ -1,36 +1,5 @@
 import styled, { css, RuleSet } from "styled-components";
-/**
- * InputType : input태그의 type 형태 중 글자 입력 형태의 목록
- */
-type InputType = "text" | "email" | "password" | "search" | "tel" | "url";
-
-/**
- * inputStyle : 정의된 input 태그의 style 목록
- */
-type InputStyle = "normal";
-
-interface CustomStyle {
-  "font-size"?: string;
-  color?: string;
-  padding?: string;
-  margin?: string;
-}
-
-/**
- * Input 컴포넌트의 props
- */
-interface InputProps {
-  type?: InputType;
-  placeholder?: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void;
-  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
-  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
-  value: string;
-  disabled?: boolean;
-  inputStyle?: InputStyle; // 정의된 스타일을 적용
-  customStyle?: CustomStyle; // 사용자 정의 스타일을 추가
-}
+import { InputProps } from "@/types/input";
 
 const Input = ({
   type = "text",
@@ -40,15 +9,22 @@ const Input = ({
   onBlur = () => {},
   onKeyDown = () => {},
   value,
+  name = "",
   disabled = false,
   inputStyle = "normal",
   customStyle = {},
+  required = false,
+  minLength,
+  maxLength,
+  min,
+  max,
 }: InputProps) => {
   const currentStyle = INPUT_STYLES[inputStyle];
   return (
     <InputContainer
       type={type}
       value={value}
+      name={name}
       placeholder={placeholder}
       onChange={onChange}
       onFocus={onFocus}
@@ -57,6 +33,11 @@ const Input = ({
       disabled={disabled}
       $inputStyle={currentStyle}
       $customStyle={customStyle}
+      required={required}
+      minLength={minLength}
+      maxLength={maxLength}
+      min={min}
+      max={max}
     ></InputContainer>
   );
 };
