@@ -18,6 +18,7 @@ const FormInput = ({ children, title, $marginBottom = "14px" }: PropsWithChildre
 export default FormInput;
 
 const FormInputLayer = styled.div<{ $marginBottom: string }>`
+  padding: 0 4px;
   margin-bottom: ${(props) => props.$marginBottom};
   display: flex;
   align-items: center;
@@ -28,9 +29,12 @@ const FormInputLayer = styled.div<{ $marginBottom: string }>`
   }
 
   input {
-    min-width: 300px;
+    width: 300px;
+    min-width: 200px;
     height: 45px;
-    margin: 0 4px;
+    padding: 8px 12px;
+    margin-left: 14px;
+    margin-right: 4px;
   }
 
   input::placeholder {

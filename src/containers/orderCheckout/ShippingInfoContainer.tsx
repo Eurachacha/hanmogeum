@@ -1,4 +1,5 @@
 import { useState } from "react";
+import styled from "styled-components";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
 import FormInput from "@/components/orderCheckout/FormInput";
@@ -17,7 +18,7 @@ const ShippingInfoContainer = () => {
   };
 
   return (
-    <>
+    <ShippingInfoContainerLayer>
       <FormInput title="받는 분">
         <Input
           type="text"
@@ -47,12 +48,12 @@ const ShippingInfoContainer = () => {
           inputStyle="normal"
           customStyle={{ padding: "8px", "font-size": "1.4rem" }}
         />
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <Button value="주소검색" size="md" variant="sub" />
-        </div>
+        <ButtonWrapper>
+          <Button value="주소검색" size="sm" variant="sub" />
+        </ButtonWrapper>
       </FormInput>
       <FormInput title="">
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <InputWrapper>
           <Input
             type="text"
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleInputChange(event, setDetailAddress)}
@@ -61,10 +62,24 @@ const ShippingInfoContainer = () => {
             inputStyle="normal"
             customStyle={{ padding: "8px", "font-size": "1.4rem" }}
           />
-        </div>
+        </InputWrapper>
       </FormInput>
-    </>
+    </ShippingInfoContainerLayer>
   );
 };
 
 export default ShippingInfoContainer;
+
+const ShippingInfoContainerLayer = styled.div`
+  padding: 24px 0;
+`;
+
+const ButtonWrapper = styled.div`
+  height: 45px;
+  min-width: 72px;
+`;
+
+const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;

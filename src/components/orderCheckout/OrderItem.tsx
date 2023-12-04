@@ -33,7 +33,7 @@ const OrderItemLayer = styled.li`
   justify-content: space-between;
   align-items: center;
 
-  border-bottom: 1px solid var(--color-gray-50);
+  border-bottom: 1px solid var(--color-gray-100);
   padding: 10px;
 `;
 
@@ -44,7 +44,7 @@ const ItemLeft = styled.div`
 
   p {
     font-size: 1.6rem;
-    margin: 0 8px;
+    margin: 0 12px;
   }
 `;
 
