@@ -17,7 +17,7 @@ const OrderListContainer = () => {
 
   useEffect(() => {
     fetchAllCartItems();
-  });
+  }, []);
 
   return (
     <div>
