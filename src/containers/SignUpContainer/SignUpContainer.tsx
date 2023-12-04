@@ -2,6 +2,7 @@ import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
+import { useDaumPostcodePopup } from "react-daum-postcode";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 /* types */
 import { InputType, InputProps } from "@/types/input";
@@ -17,6 +18,8 @@ import userApi from "@/apis/services/users";
 /* constants */
 import PASSWORD_MIN_LENGTH from "@/constants/signUpValidation";
 import { AUTH_TOKEN_KEY } from "@/constants/api";
+
+import getPostCodeDaum from "@/utils/getPostCodeDaum";
 
 interface InputDataType {
   title: string;
@@ -75,7 +78,7 @@ const SignUpContainer = () => {
         password: signUpData?.password,
         name: signUpData.name,
         phone: onlyNumberPhone,
-        address: `${signUpData.address + signUpData.addressDetail}`,
+        address: `${`${signUpData.address} ${signUpData.addressDetail}`}`,
         type: "user",
       });
       if (response.data.ok === 1) {
@@ -122,8 +125,22 @@ const SignUpContainer = () => {
     }
   };
 
-  // TODO: 카카오 API 붙이기
-  const addressSearchHandleClick = (event: React.MouseEvent<HTMLDivElement>) => {};
+  // TODO: 커스텀 훅 사용하도록 ㄱ수정
+  const openPostcode = useDaumPostcodePopup();
+  const addressSearchHandleClick = () => {
+    openPostcode({
+      onComplete: (data) => {
+        // 주소 검색 결과 처리
+        const fullAddress = data.address;
+        const extraAddress = data.buildingName ? ` (${data.buildingName})` : "";
+        setSignUpData((prevState) => ({
+          ...prevState,
+          address: fullAddress,
+          addressDetail: extraAddress,
+        }));
+      },
+    });
+  };
 
   // 가입하기 버튼을 눌렀을때 발생하는 이벤트 함수입니다.
   const signUpFormHandleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -336,6 +353,7 @@ const SignUpContainer = () => {
             );
           })}
         </InputListStyle>
+
         <ButtonWrapper onClick={signUpSubmitClick}>
           <Button disabled={!isActiveSignUpButton} value="가입하기" size="lg" variant="point"></Button>
         </ButtonWrapper>
