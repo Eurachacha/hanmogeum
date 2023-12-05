@@ -4,6 +4,7 @@ interface PriceProps {
   priceTitle: string;
   number: number;
 }
+
 const Price = ({ priceTitle, number }: PriceProps) => {
   return (
     <PriceLayer>

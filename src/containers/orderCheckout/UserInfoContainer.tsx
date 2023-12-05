@@ -2,7 +2,7 @@ import { useRecoilValue } from "recoil";
 import Info from "@/components/orderCheckout/Info";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 
-const InfoContainer = () => {
+const UserInfoContainer = () => {
   const userInfo = useRecoilValue(loggedInUserState);
 
   return (
@@ -14,4 +14,4 @@ const InfoContainer = () => {
   );
 };
 
-export default InfoContainer;
+export default UserInfoContainer;

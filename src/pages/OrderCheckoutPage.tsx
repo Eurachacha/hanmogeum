@@ -1,26 +1,39 @@
 import { styled } from "styled-components";
-import InfoContainer from "@/containers/orderCheckout/InfoContainer";
-import ShippingInfoContainer from "@/containers/orderCheckout/ShippingInfoContainer";
-import OrderListContainer from "@/containers/orderCheckout/OrderListContainer";
+import { useEffect, useState } from "react";
+import OrderInfo from "@/containers/orderCheckout/OrderInfo";
+import OrderPriceContainer from "@/containers/orderCheckout/OrderPriceContainer";
+import { CartItem } from "@/types/cart";
+import cartApi from "@/apis/services/cart";
+import Button from "@/components/common/Button";
 
 const OrderCheckoutPage = () => {
+  const [cartItems, setCartItems] = useState<CartItem[]>();
+
+  const fetchAllCartItems = async () => {
+    try {
+      const response = await cartApi.getAllItems();
+      const { item } = response.data;
+      setCartItems(item);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllCartItems();
+  }, []);
+
   return (
     <OrderCheckoutPageLayer>
-      <OrderInfo>
-        <Section>
-          <SectionTitle>주문 상품</SectionTitle>
-          <OrderListContainer />
-        </Section>
-        <Section>
-          <SectionTitle>주문자 정보</SectionTitle>
-          <InfoContainer />
-        </Section>
-        <Section>
-          <SectionTitle>배송 정보</SectionTitle>
-          <ShippingInfoContainer />
-        </Section>
-      </OrderInfo>
-      <OrderPriceInfo>금액안내</OrderPriceInfo>
+      <PageLeft>
+        <OrderInfo cartItems={cartItems} />
+      </PageLeft>
+      <PageRight>
+        <OrderPriceContainer cartItems={cartItems} />
+        <div>
+          <Button value="결제하기" size="lg" variant="point" />
+        </div>
+      </PageRight>
     </OrderCheckoutPageLayer>
   );
 };
@@ -29,26 +42,26 @@ export default OrderCheckoutPage;
 
 const OrderCheckoutPageLayer = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  justify-content: space-between;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
-const OrderInfo = styled.div`
+const PageLeft = styled.div`
   flex: 7;
-  max-width: 700px;
+  max-width: 768px;
 `;
 
-const Section = styled.section`
-  margin: 40px 0;
-`;
-
-const SectionTitle = styled.p`
-  font-size: 1.8rem;
-  font-weight: var(--weight-bold);
-  padding: 12px 4px;
-  border-bottom: 1px solid var(--color-gray-300);
-`;
-
-const OrderPriceInfo = styled.div`
+const PageRight = styled.div`
   flex: 3;
+  margin: 5rem 0;
+  margin-left: 1rem;
   min-width: 300px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin: 0;
+  }
 `;

@@ -28,6 +28,7 @@
     "arrow-body-style": ["off", "never"],
     "import/extensions": ["off"],
     "object-shorthand": ["off"],
-    "no-console": ["error", { "allow": ["warn", "error"] }]
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-underscore-dangle": ["off"]
   }
 }
