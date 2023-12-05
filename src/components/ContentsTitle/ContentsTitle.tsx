@@ -1,8 +1,9 @@
 import styled from "styled-components";
+import { CommonCustomStyle } from "@/types/customStyle";
 
 interface ContentsTitleProps {
   title: string;
-  customStyle?: React.CSSProperties;
+  customStyle?: CommonCustomStyle;
 }
 
 /**
