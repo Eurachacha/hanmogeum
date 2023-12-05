@@ -2,7 +2,7 @@ import { styled } from "styled-components";
 import { useEffect, useState } from "react";
 import CartItemListContainer from "@/containers/cart/CartItemListContainer";
 import CartPriceContainer from "@/containers/cart/CartPriceContainer";
-import CART_STORAGE_KEY from "@/constants/cart";
+import { CART_STORAGE_KEY } from "@/constants/localstorageKeys";
 import { CartItemInfo } from "@/types/cart";
 
 const CartPage = () => {

@@ -2,7 +2,7 @@ import { styled } from "styled-components";
 import { useEffect, useState } from "react";
 import CheckedBoxIcon from "@/assets/icons/checkedBox.svg?react";
 import UncheckedBoxIcon from "@/assets/icons/uncheckedBox.svg?react";
-import CART_STORAGE_KEY from "@/constants/cart";
+import { CART_STORAGE_KEY } from "@/constants/localstorageKeys";
 import CartItemContainer from "./CartItemContainer";
 import { CartItemInfo } from "@/types/cart";
 
