@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
 import CartItemListContainer from "@/containers/cart/CartItemListContainer";
-import PriceInfoContainer from "@/containers/cart/PriceInfoContainer";
+import CartPriceContainer from "@/containers/cart/CartPriceContainer";
 import CART_STORAGE_KEY from "@/constants/cart";
 import { CartItemInfo } from "@/types/cart";
 
@@ -43,7 +43,7 @@ const CartPage = () => {
       <PageTitle>장바구니</PageTitle>
       <Content>
         <CartItemListContainer cartItems={cartItems} setCartItems={setCartItems} />
-        <PriceInfoContainer cartItems={cartItems} />
+        <CartPriceContainer cartItems={cartItems} />
       </Content>
     </>
   );
