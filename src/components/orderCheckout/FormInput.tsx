@@ -41,4 +41,13 @@ const FormInputLayer = styled.div<{ $marginBottom: string }>`
     color: var(--color-gray-200);
     font-weight: var(--weight-light);
   }
+
+  @media (max-width: 768px) {
+    margin-bottom: ${(props) => props.$marginBottom};
+
+    input {
+      margin-right: 4px;
+      min-width: 200px;
+    }
+  }
 `;
