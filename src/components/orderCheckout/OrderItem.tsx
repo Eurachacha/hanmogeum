@@ -29,12 +29,16 @@ export default OrderItem;
 
 const OrderItemLayer = styled.li`
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
 
   border-bottom: 1px solid var(--color-gray-100);
   padding: 10px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: unset;
+  }
 `;
 
 const ItemLeft = styled.div`
@@ -45,6 +49,9 @@ const ItemLeft = styled.div`
   p {
     font-size: 1.6rem;
     margin: 0 12px;
+  }
+  @media (max-width: 768px) {
+    justify-content: flex-start;
   }
 `;
 
@@ -66,5 +73,9 @@ const ItemRight = styled.div`
   span {
     color: var(--color-gray-300);
     padding: 0 8px;
+  }
+
+  @media (max-width: 768px) {
+    justify-content: flex-end;
   }
 `;
