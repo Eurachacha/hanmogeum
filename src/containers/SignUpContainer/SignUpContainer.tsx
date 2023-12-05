@@ -6,7 +6,7 @@ import { useDaumPostcodePopup } from "react-daum-postcode";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 /* types */
 import { InputType, InputProps } from "@/types/input";
-import { CommonCustomStyle } from "@/types/inputItem";
+import { CommonCustomStyle } from "@/types/customStyle";
 /* components */
 import ItemInput from "@/components/ItemInput/ItemInput";
 import Button from "@/components/common/Button";
