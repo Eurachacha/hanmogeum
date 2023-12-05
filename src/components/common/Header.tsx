@@ -1,21 +1,28 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate, useSearchParams, Link, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import IconShoppingCart from "@/assets/icons/shoppingCart_40.svg?react";
 import IconSearchCart from "@/assets/icons/search_24.svg?react";
-import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import { getUserTypeState } from "@/recoil/selectors/loggedInUserSelector";
 
 // constants
 import { AUTH_TOKEN_KEY } from "@/constants/api";
 import { MANAGE_TYPE } from "@/constants/user";
 
+interface CategoryLinkProps {
+  $isActive?: boolean;
+  key: string;
+}
+
 const Header = () => {
   const [cartCount, setCartCount] = useState(0);
   const [isManager, setIsManager] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  const [searchParams] = useSearchParams();
   const userType = useRecoilValue(getUserTypeState);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const authToken = localStorage.getItem(AUTH_TOKEN_KEY);
@@ -31,8 +38,7 @@ const Header = () => {
     }
   }, [userType]);
 
-  const logoutClickHandle = () => {
-    console.log("로그 아웃 됨");
+  const logoutHandleClick = () => {
     localStorage.clear();
     setIsManager(false);
     setCartCount(0);
@@ -41,20 +47,20 @@ const Header = () => {
 
   const categoryList = {
     common: [
-      { name: "모든 상품", router: "/products" },
-      { name: "티백", router: "/products/teabags" },
-      { name: "잎차", router: "/products/tealeaves" },
-      { name: "분말", router: "/products/powders" },
-      { name: "음료/원액", router: "/products/liquids" },
+      { name: "모든 상품", router: "/products", location: "/products", categoryParams: null },
+      { name: "티백", router: "/products?pack=teabags", location: "/products", categoryParams: "teabags" },
+      { name: "잎차", router: "/products?pack=tealeaves", location: "/products", categoryParams: "tealeaves" },
+      { name: "분말", router: "/products?pack=powders", location: "/products", categoryParams: "powders" },
+      { name: "음료/원액", router: "/products?pack=liquids", location: "/products", categoryParams: "liquids" },
     ],
     admin: [
-      { name: "관리자페이지", router: "/", isPublic: false }, // TODO: api 개발 완료 후 라우터 수정
+      { name: "관리자페이지", router: "/manage", isPublic: false, location: "/manage" }, // TODO: api 개발 완료 후 라우터 수정
     ],
   };
   const userControlList = {
     isLogin: [
       { name: "마이페이지", router: "/mypage", onClick: () => {} },
-      { name: "로그아웃", router: "/", onClick: logoutClickHandle },
+      { name: "로그아웃", router: "/", onClick: logoutHandleClick },
     ],
     isLogout: [
       { name: "로그인", router: "/login" },
@@ -65,23 +71,35 @@ const Header = () => {
   return (
     <HeaderLayer>
       <HeaderWrapper>
-        <LogoWrapper>
+        <LogoWrapper onClick={() => navigate("/")}>
           <span>한모금</span>
         </LogoWrapper>
         <CategoryWrapper>
           <div>
             {categoryList.common.map((category) => (
-              <ActiveLink end key={category.name} to={category.router}>
-                {category.name}
-              </ActiveLink>
+              <ProductCategoryLink
+                key={`${category.name}Link`}
+                $isActive={
+                  location.pathname === category.location && searchParams.get("pack") === category.categoryParams
+                }
+              >
+                <Link key={`${category.name}Link`} to={category.router}>
+                  {category.name}
+                </Link>
+              </ProductCategoryLink>
             ))}
           </div>
           {isManager && (
             <AdminCategoryStyle>
               {categoryList.admin.map((category) => (
-                <ActiveLink end key={category.name} to={category.router}>
-                  {category.name}
-                </ActiveLink>
+                <AdminCategoryLink
+                  key={`${category.name}AdminCategoryLink`}
+                  $isActive={location.pathname === category.location}
+                >
+                  <Link key={`${category.name}Link`} to={category.router}>
+                    {category.name}
+                  </Link>
+                </AdminCategoryLink>
               ))}
             </AdminCategoryStyle>
           )}
@@ -116,10 +134,12 @@ const Header = () => {
   );
 };
 
-const ActiveLink = styled(NavLink)`
-  &.active {
-    color: var(--color-main);
-  }
+const ProductCategoryLink = styled.span<CategoryLinkProps>`
+  color: ${({ $isActive }) => ($isActive ? "var(--color-main)" : "inherit")};
+`;
+
+const AdminCategoryLink = styled.span<CategoryLinkProps>`
+  color: ${({ $isActive }) => ($isActive ? "var(--color-main)" : "inherit")};
 `;
 
 const HeaderLayer = styled.div`

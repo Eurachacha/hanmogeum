@@ -14,6 +14,7 @@ import MyOrderDetailPage from "@/pages/MyOrderDetailPage";
 import MyProfilePage from "@/pages/MyProfilePage";
 import MyLikePage from "@/pages/MyLikePage";
 import MyReviewPage from "@/pages/MyReviewPage";
+import ManagePage from "./pages/ManagePage";
 
 const router = createBrowserRouter([
   {
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
       {
         path: "/orders/complete",
         element: <OrderCompletePage />,
+      },
+      {
+        path: "/manage",
+        element: <ManagePage />,
       },
     ],
     errorElement: <ErrorPage />,
