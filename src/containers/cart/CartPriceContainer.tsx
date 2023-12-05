@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
-import Price from "@/components/cart/Price";
+import Price from "@/components/common/Price";
 import Button from "@/components/common/Button";
-import { CartItemInfo } from "./CartItemListContainer";
+import { CartItemInfo } from "@/types/cart";
 
-const PriceInfoContainer = ({ cartItems }: { cartItems: CartItemInfo[] }) => {
+const CartPriceContainer = ({ cartItems }: { cartItems: CartItemInfo[] }) => {
   const [checkedPrice, setcheckedPrice] = useState(0);
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const PriceInfoContainer = ({ cartItems }: { cartItems: CartItemInfo[] }) => {
   }, [cartItems]);
 
   return (
-    <PriceInfoContainerLayer>
+    <CartPriceContainerLayer>
       <PriceWrapper>
         <Price priceTitle="선택 상품 금액" number={checkedPrice} />
         <Price priceTitle="배송비" number={0} />
@@ -23,13 +23,13 @@ const PriceInfoContainer = ({ cartItems }: { cartItems: CartItemInfo[] }) => {
         </div>
       </PriceWrapper>
       <Button value="구매하기" size="lg" variant="point" />
-    </PriceInfoContainerLayer>
+    </CartPriceContainerLayer>
   );
 };
 
-export default PriceInfoContainer;
+export default CartPriceContainer;
 
-const PriceInfoContainerLayer = styled.div`
+const CartPriceContainerLayer = styled.div`
   margin: 5rem 0;
   margin-left: 1rem;
   min-width: 250px;

@@ -1,27 +1,14 @@
-import { useEffect, useState } from "react";
-import cartApi from "@/apis/services/cart";
 import OrderItem from "@/components/orderCheckout/OrderItem";
 import { CartItem } from "@/types/cart";
 
-const OrderListContainer = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>();
-  const fetchAllCartItems = async () => {
-    try {
-      const response = await cartApi.getAllItems();
-      const { item } = response.data;
-      setCartItems(item);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+interface OrderListContainerProps {
+  cartItems: CartItem[];
+}
 
-  useEffect(() => {
-    fetchAllCartItems();
-  }, []);
-
+const OrderListContainer = ({ cartItems }: OrderListContainerProps) => {
   return (
-    <div>
-      {cartItems?.map((item, idx) => {
+    <>
+      {cartItems.map((item, idx) => {
         const key = idx.toString();
         return (
           <OrderItem
@@ -33,7 +20,7 @@ const OrderListContainer = () => {
           />
         );
       })}
-    </div>
+    </>
   );
 };
 
