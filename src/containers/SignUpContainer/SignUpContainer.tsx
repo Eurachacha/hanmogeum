@@ -8,7 +8,7 @@ import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import { InputType, InputProps } from "@/types/input";
 import { CommonCustomStyle } from "@/types/customStyle";
 /* components */
-import ItemInput from "@/components/ItemInput/ItemInput";
+import ItemInput from "@/components/itemInput/ItemInput";
 import Button from "@/components/common/Button";
 import Modal from "@/components/common/Modal";
 /* util */
