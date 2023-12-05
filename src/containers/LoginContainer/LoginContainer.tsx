@@ -69,7 +69,7 @@ const LoginContainer = () => {
         </div>
         <div>
           <NavLink to="/signUp">
-            <Button size="lg" value="화원가입" variant="sub" />
+            <Button size="lg" value="회원가입" variant="sub" />
           </NavLink>
         </div>
       </ButtonWrapper>
