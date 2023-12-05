@@ -1,5 +1,5 @@
-import ContentsTitle from "@/components/ContentsTitle/ContentsTitle";
-import LoginContainer from "@/containers/LoginContainer/LoginContainer";
+import ContentsTitle from "@/components/contentsTitle/ContentsTitle";
+import LoginContainer from "@/containers/loginContainer/LoginContainer";
 
 const LoginPage = () => {
   return (

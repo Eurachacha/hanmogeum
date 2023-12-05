@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 import { User } from "@/types/users";
-import { LOGIN_USER_INFO_KEY } from "@/constants/localstorageKeys";
+import LOGIN_USER_INFO_KEY from "@/constants/localstorageKeys";
 
 const { persistAtom } = recoilPersist({ key: LOGIN_USER_INFO_KEY });
 
