@@ -71,7 +71,8 @@ const ShippingInfoContainer = () => {
 export default ShippingInfoContainer;
 
 const ShippingInfoContainerLayer = styled.div`
-  padding: 24px 0;
+  padding-top: 24px;
+  min-width: 300px;
 `;
 
 const ButtonWrapper = styled.div`
