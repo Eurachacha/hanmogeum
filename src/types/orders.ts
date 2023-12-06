@@ -19,7 +19,7 @@ interface Discount {
   shippingFees: number;
 }
 
-interface OrderCost {
+export interface OrderCost {
   products: number;
   shippingFees: number;
   discount: Discount;
