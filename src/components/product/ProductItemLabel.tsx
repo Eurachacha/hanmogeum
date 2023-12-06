@@ -19,21 +19,20 @@ const VARIANTS = {
   decaf: css`
     background-color: var(--color-gray-500);
   `,
-}
+};
 
 const ProductItemLabel = ({ variant, children, padding, margin }: LabelProps) => {
   const variantStyle = VARIANTS[variant];
 
   return (
-    <ProductItemLabelLayer padding={padding} margin={margin} $variantStyle={variantStyle}>
+    <ProductItemLabelLayer $padding={padding} $margin={margin} $variantStyle={variantStyle}>
       {children}
     </ProductItemLabelLayer>
   );
 };
 export default ProductItemLabel;
 
-
-const ProductItemLabelLayer = styled.span<{ padding: string, margin: string, $variantStyle: RuleSet<object> }>`
+const ProductItemLabelLayer = styled.span<{ $padding: string; $margin: string; $variantStyle: RuleSet<object> }>`
   ${(props) => props.$variantStyle}
 
   color: var(--color-white);
@@ -43,9 +42,8 @@ const ProductItemLabelLayer = styled.span<{ padding: string, margin: string, $va
 
   font-size: 1.2rem;
 
-  padding: ${(props) => props.padding};
-  margin: ${(props) => props.margin};
+  padding: ${(props) => props.$padding};
+  margin: ${(props) => props.$margin};
 
   cursor: pointer;
 `;
-

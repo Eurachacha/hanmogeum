@@ -1,29 +1,22 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
-
-import productsApi from "@/apis/services/products";
 import ProductItem from "./ProductItem";
-import { ResponseProductsList } from "@/types/products";
+import { Product } from "@/types/products";
 
-const ProductItemList = () => {
-  const [products, setProducts] = useState<ResponseProductsList[]>([]);
+interface ProductItemListProps {
+  products: Product[];
+}
 
-  useEffect(() => {
-    productsApi.getAllProducts().then(response => {
-      setProducts(response.data.item);
-    })
-  }, []);
-
+const ProductItemList = ({ products }: ProductItemListProps) => {
   return (
     <ProductItemListLayer>
-      {
-        products && products.map(product => {
-          return <ProductItem product={product} />
-        })
-      }
+      {products &&
+        products.map((product, idx) => {
+          const key = idx.toString();
+          return <ProductItem product={product} key={key} />;
+        })}
     </ProductItemListLayer>
-  )
-}
+  );
+};
 
 export default ProductItemList;
 
@@ -31,4 +24,4 @@ const ProductItemListLayer = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-`
+`;

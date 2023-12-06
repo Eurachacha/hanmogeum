@@ -9,14 +9,20 @@ interface ProductItemProps {
 const ProductItem = ({ product }: ProductItemProps) => {
   return (
     <ProductItemLayer>
-      <ProductItemImageWrapper imageUrl={product.mainImages}>
+      <ProductItemImageWrapper $imageUrl={product.mainImages}>
         <StyledLabel>
           <li>
-            <ProductItemLabel padding="6px 10px" margin="0 8px 0 0" variant="new">new</ProductItemLabel>
-            <ProductItemLabel padding="6px 10px" margin="0 8px 0 0" variant="best">best</ProductItemLabel>
+            <ProductItemLabel padding="4px 8px" margin="0 8px 0 0" variant="new">
+              new
+            </ProductItemLabel>
+            <ProductItemLabel padding="4px 8px" margin="0 8px 0 0" variant="best">
+              best
+            </ProductItemLabel>
           </li>
           <li>
-            <ProductItemLabel padding="6px 10px" margin="0 0 8px 0" variant="decaf">디카페인</ProductItemLabel>
+            <ProductItemLabel padding="4px 8px" margin="0 0 8px 0" variant="decaf">
+              디카페인
+            </ProductItemLabel>
           </li>
         </StyledLabel>
       </ProductItemImageWrapper>
@@ -34,15 +40,17 @@ const ProductItem = ({ product }: ProductItemProps) => {
           </StyledPrice>
 
           <StyledHashTag>
-            <p>{product.extra.hashTag.map((hashtag) => {
-              return `#${hashtag} `
-            })}</p>
+            <p>
+              {product.extra.hashTag.map((hashtag) => {
+                return `#${hashtag} `;
+              })}
+            </p>
           </StyledHashTag>
         </ul>
       </ProductItemContentWrapper>
     </ProductItemLayer>
   );
-}
+};
 
 export default ProductItem;
 
@@ -53,42 +61,42 @@ const ProductItemLayer = styled.div`
   border-radius: 5px;
   overflow: hidden;
   box-shadow: 0 6px 6px -3px rgba(0, 0, 0, 0.2);
-`
+`;
 
-const ProductItemImageWrapper = styled.div`
+const ProductItemImageWrapper = styled.div<{ $imageUrl: string[] }>`
   width: 100%;
-  aspect-ratio: 1/0.5;
+  aspect-ratio: 1/0.7;
   overflow: hidden;
 
-  background: url(${(props) => props.imageUrl}) no-repeat;
+  background: url(${(props) => props.$imageUrl}) no-repeat;
   background-size: cover;
-`
+`;
 const StyledLabel = styled.ul`
   display: flex;
   justify-content: space-between;
   padding: 12px 14px;
-`
+`;
 const ProductItemContentWrapper = styled.div`
   padding: 18px 14px;
-`
+`;
 
 const StyledTeaType = styled.li`
   font-size: 1.2rem;
   color: var(--color-gray-300);
 
   margin-bottom: 10px;
-`
+`;
 
 const StyledName = styled.li`
   line-height: 2.4rem;
-`
+`;
 
 const StyledPrice = styled.li`
   text-align: right;
   font-weight: var(--weight-extrabold);
 
   margin-top: 10px;
-`
+`;
 
 const StyledHashTag = styled.li`
   & ::before {
@@ -106,4 +114,4 @@ const StyledHashTag = styled.li`
   color: var(--color-gray-300);
   font-size: 1.2rem;
   line-height: 2.4rem;
-`
+`;
