@@ -3,7 +3,7 @@ import styled, { RuleSet, css } from "styled-components";
 interface ButtonProps {
   variant: "active" | "default";
   children: string;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const VARIANTS = {
@@ -34,8 +34,8 @@ const StyledButton = styled.button<{ $variantStyle: RuleSet<object> }>`
   border-radius: 2px;
   border: 0;
 
-  padding: 10px 18px;
-
+  color: var(--color-white);
+  padding: 10px 20px;
   cursor: pointer;
 `;
 
