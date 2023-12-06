@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import ProductSortButtons from "@/components/product/ProductSortButtons";
-import ProductItemList from "@/components/product/ProductItemList";
+import ProductSortButtons from "@/components/product/productlist/ProductSortButtons";
+import ProductItemList from "@/components/product/productlist/ProductItemList";
 import { Product } from "@/types/products";
 import productsApi from "@/apis/services/products";
 
