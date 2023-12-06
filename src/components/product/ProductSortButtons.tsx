@@ -1,10 +1,15 @@
 import styled from "styled-components";
+import { Product } from "@/types/products";
 
-const ProductSortButtons = () => {
+interface ProductItemListProps {
+  products: Product[];
+}
+
+const ProductSortButtons = ({ products }: ProductItemListProps) => {
   return (
     <CategorySortWrapper>
       <li>
-        <StyledProductCount>전체 3230개</StyledProductCount>
+        <StyledProductCount>전체 {products.length}개</StyledProductCount>
       </li>
       <li>
         <StyledCategorySortButton>인기순</StyledCategorySortButton>
