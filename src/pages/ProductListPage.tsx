@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import CategoryList from "@/components/category/CategoryList";
+import CategoryList from "@/components/product/productlist/CategoryList";
 import ProductSortContainer from "@/containers/product/ProductSortContainer";
 
 const ProductListPage = () => {
