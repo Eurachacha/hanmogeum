@@ -1,48 +1,17 @@
 import { styled } from "styled-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CartItemListContainer from "@/containers/cart/CartItemListContainer";
 import CartPriceContainer from "@/containers/cart/CartPriceContainer";
-import CART_STORAGE_KEY from "@/constants/cart";
-import { CartItemInfo } from "@/types/cart";
+import { CartItem } from "@/types/cart";
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState<CartItemInfo[]>([]);
-
-  useEffect(() => {
-    const mockCartItems = [
-      {
-        checked: true,
-        product_id: 1,
-        price: 9800,
-        shippingFees: 0,
-        name: "실속 분말 녹차",
-        stock: 15,
-        quantity: 1,
-        mainImages: ["https://localhost:443/uploads/sample-dog.jpg"],
-      },
-      {
-        checked: true,
-        product_id: 2,
-        price: 12000,
-        shippingFees: 0,
-        name: "루이보스 차",
-        stock: 5,
-        quantity: 1,
-        mainImages: ["https://localhost:443/uploads/sample-classic.jpg"],
-      },
-    ];
-
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(mockCartItems));
-
-    const cartData = localStorage.getItem(CART_STORAGE_KEY);
-    if (cartData) setCartItems(JSON.parse(cartData));
-  }, []);
-
+  // TODO: CartPrice내에서 로그인 여부 recoil 상태에 따라 처리하고 useState 지우기
+  const [cartItems, setCartItems] = useState<CartItem[]>();
   return (
     <>
       <PageTitle>장바구니</PageTitle>
       <Content>
-        <CartItemListContainer cartItems={cartItems} setCartItems={setCartItems} />
+        <CartItemListContainer />
         <CartPriceContainer cartItems={cartItems} />
       </Content>
     </>
