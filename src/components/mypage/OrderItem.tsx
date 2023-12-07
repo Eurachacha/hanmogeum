@@ -18,6 +18,8 @@ const OrderItem = ({ productImageURL, children }: PropsWithChildren<OrderItemPro
   );
 };
 
+export default OrderItem;
+
 const OrderItemLayer = styled.div`
   display: flex;
   flex-direction: column;
@@ -38,7 +40,6 @@ const ProductImageStyle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: pink;
   width: 18rem;
   height: 16rem;
   overflow: hidden;
@@ -47,5 +48,3 @@ const ProductImageStyle = styled.div`
     height: 100%;
   }
 `;
-
-export default OrderItem;

@@ -23,6 +23,7 @@ const MypageLayoutContainer = ({ ContentsTitle, children }: PropsWithChildren<My
     </MypageLayoutContainerLayer>
   );
 };
+export default MypageLayoutContainer;
 
 const MypageLayoutContainerLayer = styled.div`
   display: flex;
@@ -50,6 +51,5 @@ const ContentsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  gap: 2rem;
 `;
-
-export default MypageLayoutContainer;
