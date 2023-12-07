@@ -59,7 +59,7 @@ const Header = () => {
   };
   const userControlList = {
     isLogin: [
-      { name: "마이페이지", router: "/mypage", onClick: () => {} },
+      { name: "마이페이지", router: "/mypage/orders", onClick: () => {} },
       { name: "로그아웃", router: "/", onClick: logoutHandleClick },
     ],
     isLogout: [
