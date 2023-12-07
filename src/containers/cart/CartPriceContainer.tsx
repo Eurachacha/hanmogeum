@@ -22,7 +22,9 @@ const CartPriceContainer = ({ cartItems }: { cartItems: CartItemInfo[] }) => {
           <Price priceTitle="총 결제 금액" number={checkedPrice + 0} />
         </div>
       </PriceWrapper>
-      <Button value="구매하기" size="lg" variant="point" />
+      <div>
+        <Button value="구매하기" size="lg" variant="point" />
+      </div>
     </CartPriceContainerLayer>
   );
 };
