@@ -11,6 +11,7 @@ import cartApi from "@/apis/services/cart";
 import { cartState } from "@/recoil/atoms/cartState";
 
 interface CartItemProps {
+  setCartData: React.Dispatch<React.SetStateAction<CartItemType[]>>;
   checkedItems: number[];
   toggleCheckBox: (_id: number) => void;
   handleDeleteItem: (_id: number) => void;
@@ -18,7 +19,7 @@ interface CartItemProps {
   idx: number;
 }
 
-const CartItem = ({ checkedItems, toggleCheckBox, handleDeleteItem, data, idx }: CartItemProps) => {
+const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem, data, idx }: CartItemProps) => {
   const user = useRecoilValue(loggedInUserState);
   const setCartStorage = useSetRecoilState(cartState);
   const [quantityInput, setQuantityInput] = useState(data.quantity);
@@ -40,14 +41,19 @@ const CartItem = ({ checkedItems, toggleCheckBox, handleDeleteItem, data, idx }:
     }
     if (valueAsNumber > data.product.quantity - data.product.buyQuantity) return;
 
+    const newCartItem = { ...data, quantity: valueAsNumber };
     // 로그인 시
     if (user) {
       updateQuantity(_id, valueAsNumber);
       setQuantityInput(valueAsNumber);
+      setCartData((prev) => {
+        const newCartStorage = [...prev];
+        newCartStorage.splice(idx, 1, newCartItem);
+        return newCartStorage;
+      });
       return;
     }
     // 비로그인 시
-    const newCartItem = { ...data, quantity: valueAsNumber };
     setCartStorage((prev) => {
       const newCartStorage = [...prev];
       newCartStorage.splice(idx, 1, newCartItem);
@@ -59,14 +65,20 @@ const CartItem = ({ checkedItems, toggleCheckBox, handleDeleteItem, data, idx }:
   const handleMinus = (_id: number) => {
     // input상태가 1이라면 return
     if (quantityInput === 1) return;
+
+    const newCartItem = { ...data, quantity: quantityInput - 1 };
     // 로그인 시
     if (user) {
       updateQuantity(_id, quantityInput - 1);
       setQuantityInput(quantityInput - 1);
+      setCartData((prev) => {
+        const newCartStorage = [...prev];
+        newCartStorage.splice(idx, 1, newCartItem);
+        return newCartStorage;
+      });
       return;
     }
     // 비로그인 시
-    const newCartItem = { ...data, quantity: quantityInput - 1 };
     setCartStorage((prev) => {
       const newCartStorage = [...prev];
       newCartStorage.splice(idx, 1, newCartItem);
@@ -78,14 +90,20 @@ const CartItem = ({ checkedItems, toggleCheckBox, handleDeleteItem, data, idx }:
   const handlePlus = (_id: number) => {
     // input상태가 재고와 같다면 return
     if (quantityInput === data.product.quantity - data.product.buyQuantity) return;
+
+    const newCartItem = { ...data, quantity: quantityInput + 1 };
     // 로그인 시
     if (user) {
       updateQuantity(_id, quantityInput + 1);
       setQuantityInput(quantityInput + 1);
+      setCartData((prev) => {
+        const newCartStorage = [...prev];
+        newCartStorage.splice(idx, 1, newCartItem);
+        return newCartStorage;
+      });
       return;
     }
     // 비로그인 시
-    const newCartItem = { ...data, quantity: quantityInput + 1 };
     setCartStorage((prev) => {
       const newCartStorage = [...prev];
       newCartStorage.splice(idx, 1, newCartItem);

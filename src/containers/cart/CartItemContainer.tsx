@@ -62,6 +62,7 @@ const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
             return (
               <CartItem
                 key={keyIndex}
+                setCartData={setCartData}
                 checkedItems={checkedItems}
                 toggleCheckBox={toggleCheckBox}
                 handleDeleteItem={handleDeleteItem}
@@ -75,6 +76,7 @@ const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
             return (
               <CartItem
                 key={keyIndex}
+                setCartData={setCartData}
                 checkedItems={checkedItems}
                 toggleCheckBox={toggleCheckBox}
                 handleDeleteItem={handleDeleteItem}
