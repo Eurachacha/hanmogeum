@@ -1,12 +1,12 @@
 import { OrderCost } from "./orders";
 
 export interface CartItemSummary {
-  _id: number; // cartItem id
+  _id: number;
   quantity: number; // 수량
 }
 
 export interface CartItemDetail {
-  _id: number;
+  _id: number; // === product_id
   name: string;
   price: number;
   seller_id: number;
@@ -16,7 +16,7 @@ export interface CartItemDetail {
 }
 
 export interface CartItem {
-  _id: number; // cartItem id
+  _id: number; // cartItem _id
   product_id: number; // 상품 id
   quantity: number;
   createdAt: string;

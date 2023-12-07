@@ -38,6 +38,7 @@ const CartItemListContainer = () => {
       console.error(error);
     }
   };
+
   // [전체선택버튼 토글]
   const handleAllChecked = () => {
     if (isAllChecked) {
@@ -54,7 +55,7 @@ const CartItemListContainer = () => {
     // 로그인 시
     if (user && cartData) {
       const newCartData = cartData.filter((item) => !checkedItems.includes(item._id));
-      const newCartSummary = newCartData.map((item) => ({ _id: item.product._id, quantity: item.quantity }));
+      const newCartSummary = newCartData.map((item) => ({ _id: item.product_id, quantity: item.quantity }));
       replaceCarts({ products: newCartSummary });
       return;
     }
@@ -89,16 +90,7 @@ const CartItemListContainer = () => {
         </CheckAllButton>
         <DeleteCheckedButton onClick={handleDeleteChecked}>선택삭제</DeleteCheckedButton>
       </ItemsHeader>
-      {/* 로그인시: DB 데이터 반영 / 비로그인시: 로컬 상태 반영 */}
-      {user
-        ? cartData.map((item, idx) => {
-            const itemKey = idx.toString();
-            return <CartItemContainer key={itemKey} cartItem={item} idx={idx} />;
-          })
-        : cartStorage.map((item, idx) => {
-            const itemKey = idx.toString();
-            return <CartItemContainer key={itemKey} cartItem={item} idx={idx} />;
-          })}
+      <CartItemContainer cartData={user ? cartData : []} setCartData={setCartData} />
     </CartItemListContainerLayer>
   );
 };

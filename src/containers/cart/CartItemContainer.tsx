@@ -1,55 +1,89 @@
-import { useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import CartItem from "@/components/cart/CartItem";
-import { CartItemInfo } from "@/types/cart";
+import { CartItem as CartItemType } from "@/types/cart";
+import { cartState, cartCheckedItemState } from "@/recoil/atoms/cartState";
+import cartApi from "@/apis/services/cart";
+import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 
 interface CartItemProps {
-  data: CartItemInfo;
-  cartItems: CartItemInfo[];
-  setCartItems: React.Dispatch<React.SetStateAction<CartItemInfo[]>>;
+  cartData: CartItemType[];
+  setCartData: React.Dispatch<React.SetStateAction<CartItemType[]>>;
 }
 
-const CartItemContainer = ({ data, cartItems, setCartItems }: CartItemProps) => {
-  const [quantity, setQuantity] = useState(data.quantity);
+const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
+  const user = useRecoilValue(loggedInUserState);
+  const [cartStorage, setCartStorage] = useRecoilState(cartState);
+  const [checkedItems, setCheckedItems] = useRecoilState(cartCheckedItemState);
 
-  const handleDeleteItem = () => {
-    const newCartItems = cartItems.filter((item) => data.product_id === item.product_id);
-    setCartItems(newCartItems);
+  // [단일상품 체크박스 토글]
+  const toggleCheckBox = (_id: number) => {
+    if (checkedItems.includes(_id)) setCheckedItems(checkedItems.filter((item) => item !== _id));
+    else setCheckedItems((prev) => [...prev, _id]);
   };
 
-  const handleCheckBox = () => {
-    const targetItem = cartItems.find((item) => item.product_id === data.product_id);
-    const targetIndex = cartItems.findIndex((item) => item.product_id === data.product_id);
-    if (targetItem) {
-      const newItems = [
-        ...cartItems.slice(0, targetIndex),
-        { ...targetItem, checked: !targetItem?.checked },
-        ...cartItems.slice(targetIndex + 1),
-      ];
-      setCartItems(newItems);
+  const fetchCartItems = async () => {
+    try {
+      const response = await cartApi.getAllItems();
+      const { item } = response.data;
+      return item;
+    } catch (error) {
+      return console.error(error);
     }
   };
 
-  useEffect(() => {
-    const targetItem = cartItems.find((item) => item.product_id === data.product_id);
-    const targetIndex = cartItems.findIndex((item) => item.product_id === data.product_id);
-    if (targetItem) {
-      const newItems = [
-        ...cartItems.slice(0, targetIndex),
-        { ...targetItem, quantity: quantity },
-        ...cartItems.slice(targetIndex + 1),
-      ];
-      setCartItems(newItems);
+  const deleteCartItem = async (_id: number) => {
+    try {
+      const response = await cartApi.deleteItem(_id);
+      return response.data.ok;
+    } catch (error) {
+      return console.error(error);
     }
-  }, [quantity]);
+  };
+
+  // [단일상품삭제]
+  const handleDeleteItem = async (_id: number) => {
+    // 로그인 시
+    if (user) {
+      deleteCartItem(_id);
+      const newCartItems = await fetchCartItems();
+      if (newCartItems) setCartData(newCartItems);
+      return;
+    }
+    // 비로그인 시
+    const newCartItems = cartStorage.filter((item) => item._id === _id);
+    setCartStorage(newCartItems);
+  };
 
   return (
-    <CartItem
-      handleCheckBox={handleCheckBox}
-      handleDeleteItem={handleDeleteItem}
-      data={data}
-      quantity={quantity}
-      setQuantity={setQuantity}
-    />
+    <div>
+      {user
+        ? cartData.map((item, idx) => {
+            const keyIndex = idx.toString();
+            return (
+              <CartItem
+                key={keyIndex}
+                checkedItems={checkedItems}
+                toggleCheckBox={toggleCheckBox}
+                handleDeleteItem={handleDeleteItem}
+                data={item}
+                idx={idx}
+              />
+            );
+          })
+        : cartStorage.map((item, idx) => {
+            const keyIndex = idx.toString();
+            return (
+              <CartItem
+                key={keyIndex}
+                checkedItems={checkedItems}
+                toggleCheckBox={toggleCheckBox}
+                handleDeleteItem={handleDeleteItem}
+                data={item}
+                idx={idx}
+              />
+            );
+          })}
+    </div>
   );
 };
 
