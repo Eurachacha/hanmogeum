@@ -1,20 +1,35 @@
 import "@/App.css";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
-import { RecoilRoot } from "recoil";
+import { useSetRecoilState } from "recoil";
+import { useEffect } from "react";
 
+import codeApi from "@/apis/services/code";
+import codeState from "@/recoil/atoms/codeState";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 
 const App = () => {
+  const setCodeState = useSetRecoilState(codeState);
+  const getCodeData = async () => {
+    try {
+      const { data } = await codeApi.getCode();
+      setCodeState(data.item);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    getCodeData();
+  }, []);
   return (
-    <RecoilRoot>
+    <>
       <Header />
       <ContentsWrapper>
         <Outlet />
       </ContentsWrapper>
       <Footer />
-    </RecoilRoot>
+    </>
   );
 };
 
