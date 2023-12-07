@@ -6,9 +6,9 @@ import { useDaumPostcodePopup } from "react-daum-postcode";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 /* types */
 import { InputType, InputProps } from "@/types/input";
-import { CommonCustomStyle } from "@/types/inputItem";
+import { CommonCustomStyle } from "@/types/customStyle";
 /* components */
-import ItemInput from "@/components/ItemInput/ItemInput";
+import ItemInput from "@/components/itemInput/ItemInput";
 import Button from "@/components/common/Button";
 import Modal from "@/components/common/Modal";
 /* util */
@@ -18,8 +18,6 @@ import userApi from "@/apis/services/users";
 /* constants */
 import PASSWORD_MIN_LENGTH from "@/constants/signUpValidation";
 import { AUTH_TOKEN_KEY } from "@/constants/api";
-
-import getPostCodeDaum from "@/utils/getPostCodeDaum";
 
 interface InputDataType {
   title: string;
@@ -42,6 +40,14 @@ interface SignUpDataType {
   phoneNumber: string;
   address: string;
   addressDetail: string;
+}
+
+interface SignUpErrorType extends Error {
+  response?: {
+    data: any;
+    status: number;
+    headers: string;
+  };
 }
 
 const inputCustomStyle: CommonCustomStyle = { width: "32rem" };
@@ -71,7 +77,7 @@ const SignUpContainer = () => {
 
   // 가입하기 버튼을 눌렀을 때 발생하는 이벤트 함수입니다.
   const signUpSubmitClick = async () => {
-    const onlyNumberPhone = signUpData.phoneNumber.replace(/[^0-9]/, "");
+    const onlyNumberPhone = signUpData.phoneNumber.replace(/[^0-9]/g, "");
     try {
       const response = await userApi.signUpUser({
         email: signUpData.email,
@@ -92,6 +98,10 @@ const SignUpContainer = () => {
       }
     } catch (error) {
       console.error(error);
+      const signupError = error as SignUpErrorType;
+      const errorMessage = signupError.message || "회원가입 중 문제가 발생했습니다.";
+      setShowModal({ isOpen: true, message: errorMessage });
+      setIsActiveEmailButton(true);
     }
   };
 
@@ -118,9 +128,15 @@ const SignUpContainer = () => {
         setShowModal({ isOpen: true, message: "이미 가입한 이메일 입니다." });
         setIsActiveEmailButton(true);
       }
-    } catch (error) {
-      console.error(error);
-      setShowModal({ isOpen: true, message: "유효하지 않은 이메일 형식입니다." });
+    } catch (error: unknown) {
+      const signupError = error as SignUpErrorType;
+      let errorMessage = "";
+      if (signupError.response?.status === 409) {
+        errorMessage = "이미 등록된 이메일입니다.";
+      } else {
+        errorMessage = "유효하지 않은 이메일 형식입니다.";
+      }
+      setShowModal({ isOpen: true, message: errorMessage });
       setIsActiveEmailButton(true);
     }
   };
@@ -165,15 +181,15 @@ const SignUpContainer = () => {
 
   useEffect(() => {
     setIsActiveEmailButton(true);
-    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signUpData.email)) {
-      setValidationMessage((prevState) => ({ ...prevState, email: "" }));
-    } else {
+    if (signUpData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signUpData.email)) {
       setValidationMessage((prevState) => ({ ...prevState, email: "유효한 이메일 주소를 입력해주세요." }));
+    } else {
+      setValidationMessage((prevState) => ({ ...prevState, email: "" }));
     }
   }, [signUpData.email]);
 
   useEffect(() => {
-    if (signUpData.password.length < PASSWORD_MIN_LENGTH) {
+    if (signUpData.password && signUpData.password.length < PASSWORD_MIN_LENGTH) {
       setValidationMessage((prevState) => ({ ...prevState, password: "패스워드는 8글자 이상으로 입력해주세요." }));
     } else {
       setValidationMessage((prevState) => ({ ...prevState, password: "" }));
@@ -181,7 +197,7 @@ const SignUpContainer = () => {
   }, [signUpData.password]);
 
   useEffect(() => {
-    if (signUpData.password !== signUpData.passwordAgain) {
+    if (signUpData.passwordAgain && signUpData.password !== signUpData.passwordAgain) {
       setValidationMessage((prevState) => ({ ...prevState, passwordAgain: "동일한 패스워드로 입력해주세요." }));
     } else {
       setValidationMessage((prevState) => ({ ...prevState, passwordAgain: "" }));
@@ -190,7 +206,7 @@ const SignUpContainer = () => {
   useEffect(() => {
     const formattingPhoneNumber = autoHypenPhone(signUpData.phoneNumber);
     setSignUpData((prevState) => ({ ...prevState, phoneNumber: formattingPhoneNumber }));
-    if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test(signUpData.phoneNumber)) {
+    if (signUpData.phoneNumber && !/^01[016789]-?\d{3,4}-?\d{4}$/.test(signUpData.phoneNumber)) {
       setValidationMessage((prevState) => ({ ...prevState, phoneNumber: "올바른 휴대폰 번호를 입력해주세요." }));
     } else {
       setValidationMessage((prevState) => ({ ...prevState, phoneNumber: "" }));

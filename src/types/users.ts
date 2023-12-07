@@ -43,11 +43,6 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
-export interface ResponseEmailDuplicateCheck {
-  ok: number;
-  message: string;
-}
-
 // POST /users/login 로그인
 export interface ResponseLogin {
   ok: number;
