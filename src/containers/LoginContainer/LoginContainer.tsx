@@ -28,6 +28,7 @@ const LoginContainer = () => {
         setLoggedInUserState(data.item);
         navigate("/");
         localStorage.setItem(AUTH_TOKEN_KEY, data.item.token.accessToken);
+        localStorage.setItem("refreshToken", data.item.token.refreshToken);
       }
     } catch (error) {
       setShowLoginCheckAlert(true);
@@ -69,7 +70,7 @@ const LoginContainer = () => {
         </div>
         <div>
           <NavLink to="/signUp">
-            <Button size="lg" value="회원가입" variant="sub" />
+            <Button size="lg" value="화원가입" variant="sub" />
           </NavLink>
         </div>
       </ButtonWrapper>

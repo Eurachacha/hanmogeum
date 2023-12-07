@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { INSTANCE_TIMEOUT, AUTH_TOKEN_KEY } from "@/constants/api";
 
 const publicInstance = axios.create({
@@ -32,12 +32,39 @@ privateInstance.interceptors.request.use(
   },
 );
 
+const getNewToken = async () => {
+  try {
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    const response = await axios.get<{ ok: number; accessToken: string }>(
+      `${import.meta.env.VITE_API_BASE_URL}/users/refresh`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${refreshToken}`,
+        },
+      },
+    );
+    const { accessToken: newAccessToken } = response.data;
+    return newAccessToken;
+  } catch (error) {
+    return console.error(error);
+  }
+};
+
 // 에러를 처리하는 응답 인터셉터
 privateInstance.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
+  async (error: AxiosError<{ errorName: string; message: string; ok: number }>) => {
+    if (error.response?.data.errorName === "TokenExpiredError") {
+      const newAccessToken = await getNewToken();
+      if (newAccessToken) {
+        localStorage.setItem("token", newAccessToken);
+        window.location.reload();
+      }
+    }
     return Promise.reject(error);
   },
 );
