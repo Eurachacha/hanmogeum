@@ -1,25 +1,51 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { useRecoilValue } from "recoil";
 import Price from "@/components/common/Price";
 import Button from "@/components/common/Button";
-import { CartItemInfo } from "@/types/cart";
+import { CartItem } from "@/types/cart";
+import loggedInUserState from "@/recoil/atoms/loggedInUserState";
+import { cartCheckedItemState, cartState } from "@/recoil/atoms/cartState";
+import { FREE_SHIPPING_FEES, SHIPPING_FEES } from "@/constants/order";
 
-const CartPriceContainer = ({ cartItems }: { cartItems: CartItemInfo[] }) => {
+interface CartPriceContainerProps {
+  cartData: CartItem[];
+}
+
+const CartPriceContainer = ({ cartData }: CartPriceContainerProps) => {
+  const user = useRecoilValue(loggedInUserState);
+  const checkedItems = useRecoilValue(cartCheckedItemState);
+  const cartStorage = useRecoilValue(cartState);
   const [checkedPrice, setcheckedPrice] = useState(0);
 
   useEffect(() => {
-    const checkedPrices = cartItems.filter((item) => item.checked === true).map((item) => item.price * item.quantity);
+    // 로그인 시 선택상품금액 세팅
+    if (user) {
+      const checkedPrices = cartData
+        .filter((item) => checkedItems.includes(item._id))
+        .map((item) => item.product.price * item.quantity);
+      const sum = checkedPrices.reduce((a: number, b: number) => a + b, 0);
+      setcheckedPrice(sum);
+      return;
+    }
+    // 비로그인 시 선택상품금액 세팅
+    const checkedPrices = cartStorage
+      .filter((item) => checkedItems.includes(item._id))
+      .map((item) => item.product.price * item.quantity);
     const sum = checkedPrices.reduce((a: number, b: number) => a + b, 0);
     setcheckedPrice(sum);
-  }, [cartItems]);
+  }, [checkedItems, cartData, cartStorage]);
 
   return (
     <CartPriceContainerLayer>
       <PriceWrapper>
         <Price priceTitle="선택 상품 금액" number={checkedPrice} />
-        <Price priceTitle="배송비" number={0} />
+        <Price priceTitle="배송비" number={checkedPrice > 0 && checkedPrice < FREE_SHIPPING_FEES ? SHIPPING_FEES : 0} />
         <div>
-          <Price priceTitle="총 결제 금액" number={checkedPrice + 0} />
+          <Price
+            priceTitle="총 결제 금액"
+            number={checkedPrice > 0 && checkedPrice < FREE_SHIPPING_FEES ? SHIPPING_FEES + checkedPrice : checkedPrice}
+          />
         </div>
       </PriceWrapper>
       <div>
