@@ -177,7 +177,7 @@ const SignUpContainer = () => {
     } else {
       setIsActiveSignUpButton(false);
     }
-  }, [signUpData, isActiveEmailButton]);
+  }, [signUpData, validationMessage, isActiveEmailButton]);
 
   useEffect(() => {
     setIsActiveEmailButton(true);
