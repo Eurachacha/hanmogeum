@@ -13,6 +13,7 @@ import truncateString from "@/utils/truncateString";
 
 import { flattenCodeState } from "@/recoil/atoms/codeState";
 import { FlattenData } from "@/types/code";
+import getPriceFormat from "@/utils/getPriceFormat";
 
 const MyOrderListContainer = () => {
   const maxTitleLength = 15;
@@ -53,7 +54,7 @@ const MyOrderListContainer = () => {
       id: orderItem._id,
       title: title,
       date: getData.getDateYearMonthDay(),
-      totalPrice: `${orderItem.cost.total.toLocaleString("ko-KR")} 원`,
+      totalPrice: getPriceFormat({ price: orderItem.cost.total }),
       imgURL: orderItem.products[0].image,
       shippingState: shippingState,
     };

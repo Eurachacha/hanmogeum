@@ -1,5 +1,7 @@
+import MyOrderDetailContainer from "@/containers/mypageContainer/MyOrderDetailContainer";
+
 const MyOrderDetailPage = () => {
-  return <div>주문 상세 페이지</div>;
+  return <MyOrderDetailContainer />;
 };
 
 export default MyOrderDetailPage;
