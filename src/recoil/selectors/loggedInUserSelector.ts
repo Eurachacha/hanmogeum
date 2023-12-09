@@ -1,4 +1,4 @@
-import { selector } from "recoil";
+import { selector, selectorFamily } from "recoil";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 
 export const getUserIdState = selector({
@@ -20,5 +20,16 @@ export const getUserTypeState = selector({
       return null;
     }
     return userInfo.type;
+  },
+});
+
+export const getUserNameState = selector({
+  key: "userNametate",
+  get: ({ get }) => {
+    const userInfo = get(loggedInUserState);
+    if (userInfo === null) {
+      return null;
+    }
+    return userInfo.name;
   },
 });
