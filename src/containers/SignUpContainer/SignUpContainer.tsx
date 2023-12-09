@@ -202,7 +202,7 @@ const SignUpContainer = () => {
     } else {
       setValidationMessage((prevState) => ({ ...prevState, passwordAgain: "" }));
     }
-  }, [signUpData.passwordAgain]);
+  }, [signUpData.passwordAgain, signUpData.password]);
   useEffect(() => {
     const formattingPhoneNumber = autoHypenPhone(signUpData.phoneNumber);
     setSignUpData((prevState) => ({ ...prevState, phoneNumber: formattingPhoneNumber }));
