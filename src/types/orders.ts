@@ -42,7 +42,8 @@ interface OrderDetail {
 // POST /orders 구매 목록 조회
 export interface RequestCreateOrder {
   products: OrderProduct[];
-  address: OrderAddress;
+  address?: OrderAddress;
+  dryRun?: boolean;
 }
 
 // Response Types

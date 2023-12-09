@@ -3,7 +3,7 @@ import { RequestCreateOrder, ResponseCreateOrder, ResponseGetOrderList } from "@
 
 const ordersApi = {
   // POST /orders
-  createOrder: (data: { product: RequestCreateOrder[] }) => privateInstance.post<ResponseCreateOrder>("/orders", data),
+  createOrder: (data: RequestCreateOrder) => privateInstance.post<ResponseCreateOrder>("/orders", data),
   // GET /orders
   getOrderList: () => privateInstance.get<ResponseGetOrderList>("/orders"),
 };
