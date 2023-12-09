@@ -1,5 +1,5 @@
 import { selector } from "recoil";
-import loggedInUserState from "../atoms/loggedInUserState";
+import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 
 export const getUserIdState = selector({
   key: "userIdState",

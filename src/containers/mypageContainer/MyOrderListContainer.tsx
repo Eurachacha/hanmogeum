@@ -11,14 +11,15 @@ import { MyOrderItem } from "../../types/myPage";
 import GetDate from "@/utils/getDate";
 import truncateString from "@/utils/truncateString";
 
-import codeState from "@/recoil/atoms/codeState";
+import { flattenCodeState } from "@/recoil/atoms/codeState";
+import { FlattenData } from "@/types/code";
 
 const MyOrderListContainer = () => {
   const maxTitleLength = 15;
   const [orderList, setOrderList] = useState<MyOrderItem[]>([]);
   const navigator = useNavigate();
 
-  const codeStateData = useRecoilValue(codeState);
+  const flattenCodeDataState: FlattenData = useRecoilValue(flattenCodeState);
 
   const requestGetMyOrderList = async () => {
     try {
@@ -46,13 +47,15 @@ const MyOrderListContainer = () => {
     }
 
     const ShippingCode = orderItem.state || orderItem?.products[0]?.state;
+    const shippingState = flattenCodeDataState[ShippingCode]?.value;
+
     return {
       id: orderItem._id,
       title: title,
       date: getData.getDateYearMonthDay(),
       totalPrice: `${orderItem.cost.total.toLocaleString("ko-KR")} 원`,
       imgURL: orderItem.products[0].image,
-      shippingState: codeStateData?.flatten[ShippingCode]?.value,
+      shippingState: shippingState,
     };
   };
 

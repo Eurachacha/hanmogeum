@@ -1,20 +1,28 @@
-type Flatten = Record<string, FlattenCode>;
-
-export interface FlattenCode {
-  sort: number;
-  code: string;
-  value: string;
-  parent?: string;
-  depth: number;
-}
-
-export interface CodeStateType {
-  flatten: Flatten;
-}
-
 export interface ResponseStateCode {
   ok: number;
   item: CodeStateType;
+}
+
+export interface CodeStateType {
+  flatten: FlattenData;
+  nested: NestedData;
+}
+
+export type FlattenData = Record<string, FlattenDataItem>;
+
+export interface FlattenDataItem {
+  sort: number;
+  code: string;
+  value: string;
+  depth?: number;
+  parent?: string;
+  discountRate?: number;
+}
+
+export interface NestedData {
+  productCategory: ProductCategory;
+  orderState: OrderState;
+  membershipClass: MembershipClass;
 }
 
 export interface CodeWithSub {

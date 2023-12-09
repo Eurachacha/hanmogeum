@@ -9,6 +9,8 @@ import { getUserTypeState } from "@/recoil/selectors/loggedInUserSelector";
 // constants
 import { AUTH_TOKEN_KEY } from "@/constants/api";
 import { MANAGE_TYPE } from "@/constants/user";
+import { FlattenData } from "@/types/code";
+import getProductCategoryValueByCode from "@/recoil/selectors/codeSelector";
 
 interface CategoryLinkProps {
   $isActive?: boolean;
@@ -25,6 +27,8 @@ const Header = () => {
   const location = useLocation();
 
   useEffect(() => {
+    // const code = myCode("티백");
+
     const authToken = localStorage.getItem(AUTH_TOKEN_KEY);
     if (authToken) {
       setIsLogin(true);
@@ -45,13 +49,40 @@ const Header = () => {
     setIsLogin(false);
   };
 
+  const categoryCode = {
+    티백: useRecoilValue(getProductCategoryValueByCode({ oneDepthValue: "pack", twoDepthValue: "티백" })),
+    잎차: useRecoilValue(getProductCategoryValueByCode({ oneDepthValue: "pack", twoDepthValue: "잎차" })),
+    분말: useRecoilValue(getProductCategoryValueByCode({ oneDepthValue: "pack", twoDepthValue: "분말" })),
+    "음료/원액": useRecoilValue(getProductCategoryValueByCode({ oneDepthValue: "pack", twoDepthValue: "음료-원액" })),
+  };
+
   const categoryList = {
     common: [
       { name: "모든 상품", router: "/products", location: "/products", categoryParams: null },
-      { name: "티백", router: "/products?pack=teabags", location: "/products", categoryParams: "teabags" },
-      { name: "잎차", router: "/products?pack=tealeaves", location: "/products", categoryParams: "tealeaves" },
-      { name: "분말", router: "/products?pack=powders", location: "/products", categoryParams: "powders" },
-      { name: "음료/원액", router: "/products?pack=liquids", location: "/products", categoryParams: "liquids" },
+      {
+        name: "티백",
+        router: `/products?pack=${categoryCode.티백}`,
+        location: "/products",
+        categoryParams: categoryCode.티백,
+      },
+      {
+        name: "잎차",
+        router: `/products?pack=${categoryCode.잎차}`,
+        location: "/products",
+        categoryParams: categoryCode.잎차,
+      },
+      {
+        name: "분말",
+        router: `/products?pack=${categoryCode.분말}`,
+        location: "/products",
+        categoryParams: categoryCode.분말,
+      },
+      {
+        name: "음료/원액",
+        router: `/products?pack=${categoryCode["음료/원액"]}`,
+        location: "/products",
+        categoryParams: categoryCode["음료/원액"],
+      },
     ],
     admin: [
       { name: "관리자페이지", router: "/manage", isPublic: false, location: "/manage" }, // TODO: api 개발 완료 후 라우터 수정
