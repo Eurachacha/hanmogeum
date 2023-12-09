@@ -1,9 +1,12 @@
 import { atom } from "recoil";
-import { FlattenData } from "@/types/code";
+import { FlattenData, NestedData } from "@/types/code";
 
-const flattenCodeState = atom<FlattenData | {}>({
+export const flattenCodeState = atom<FlattenData>({
   key: "flattenCodeState",
   default: {},
 });
 
-export default flattenCodeState;
+export const nestedCodeState = atom<NestedData | null>({
+  key: "nestedCodeState",
+  default: null,
+});

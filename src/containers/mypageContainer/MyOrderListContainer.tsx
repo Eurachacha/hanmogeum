@@ -11,7 +11,7 @@ import { MyOrderItem } from "../../types/myPage";
 import GetDate from "@/utils/getDate";
 import truncateString from "@/utils/truncateString";
 
-import flattenCodeState from "@/recoil/atoms/codeState";
+import { flattenCodeState } from "@/recoil/atoms/codeState";
 import { FlattenData } from "@/types/code";
 
 const MyOrderListContainer = () => {
