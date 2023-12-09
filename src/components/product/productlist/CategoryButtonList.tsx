@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { useState } from "react";
 import CategoryButton from "./CategoryButton";
 import useQueryParams from "@/hooks/useQueryParams";
 
@@ -16,12 +15,12 @@ type SubCategoryType = {
 };
 
 const CategoryButtonList = ({ value, subCategory }: CategoryButtonListProps) => {
-  const { toggleFilter, curQueryData } = useQueryParams(`${value}`);
+  const { toggleFilter } = useQueryParams(`${value}`);
 
   return (
     <CategoryButtonListLayer>
       {subCategory.map((category) => (
-        <CategoryButton key={category.sort} variant="default" onClick={() => toggleFilter(`${category.value}`)}>
+        <CategoryButton key={category.sort} variant="default" onClick={() => toggleFilter(`${category.code}`)}>
           {category.value}
         </CategoryButton>
       ))}
