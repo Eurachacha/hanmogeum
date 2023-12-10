@@ -41,16 +41,16 @@ const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
   };
 
   // [단일상품삭제]
-  const handleDeleteItem = async (_id: number) => {
+  const handleDeleteItem = async (_id: number, product_id: number) => {
     // 로그인 시
     if (user) {
-      deleteCartItem(_id);
+      deleteCartItem(_id!);
       const newCartItems = await fetchCartItems();
       if (newCartItems) setCartData(newCartItems);
       return;
     }
     // 비로그인 시
-    const newCartItems = cartStorage.filter((item) => item._id === _id);
+    const newCartItems = cartStorage.filter((item) => item.product._id === product_id);
     setCartStorage(newCartItems);
   };
 
