@@ -29,6 +29,15 @@
     "import/extensions": ["off"],
     "object-shorthand": ["off"],
     "no-console": ["error", { "allow": ["warn", "error"] }],
-    "no-underscore-dangle": ["off"]
+    "no-underscore-dangle": ["off"],
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "format": ["camelCase", "UPPER_CASE", "PascalCase", "snake_case"],
+        "selector": "variable",
+        "leadingUnderscore": "allow",
+        "trailingUnderscore": "allow"
+      }
+    ]
   }
 }

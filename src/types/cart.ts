@@ -24,6 +24,17 @@ export interface CartItem {
   product: CartItemDetail;
 }
 
+// 로컬 장바구니 아이템 타입
+export interface CartStorageItem {
+  quantity: number;
+  product: {
+    _id: number;
+    name: string;
+    image: string;
+    price: number;
+  };
+}
+
 // Request Types
 // 장바구니에 상품 추가 요청 POST /carts
 export interface RequestAddItem {

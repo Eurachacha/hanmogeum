@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { useRecoilValue } from "recoil";
+import { useNavigate } from "react-router-dom";
 import Price from "@/components/common/Price";
 import Button from "@/components/common/Button";
 import { CartItem } from "@/types/cart";
@@ -18,11 +19,13 @@ const CartPriceContainer = ({ cartData }: CartPriceContainerProps) => {
   const cartStorage = useRecoilValue(cartState);
   const [checkedPrice, setcheckedPrice] = useState(0);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     // 로그인 시 선택상품금액 세팅
     if (user) {
       const checkedPrices = cartData
-        .filter((item) => checkedItems.includes(item._id))
+        .filter((item) => checkedItems.includes(item.product._id))
         .map((item) => item.product.price * item.quantity);
       const sum = checkedPrices.reduce((a: number, b: number) => a + b, 0);
       setcheckedPrice(sum);
@@ -30,7 +33,7 @@ const CartPriceContainer = ({ cartData }: CartPriceContainerProps) => {
     }
     // 비로그인 시 선택상품금액 세팅
     const checkedPrices = cartStorage
-      .filter((item) => checkedItems.includes(item._id))
+      .filter((item) => checkedItems.includes(item.product._id))
       .map((item) => item.product.price * item.quantity);
     const sum = checkedPrices.reduce((a: number, b: number) => a + b, 0);
     setcheckedPrice(sum);
@@ -48,9 +51,9 @@ const CartPriceContainer = ({ cartData }: CartPriceContainerProps) => {
           />
         </div>
       </PriceWrapper>
-      <div>
+      <ButtonWrapper onClick={() => navigate("/orders/checkout")}>
         <Button value="구매하기" size="lg" variant="point" />
-      </div>
+      </ButtonWrapper>
     </CartPriceContainerLayer>
   );
 };
@@ -79,3 +82,5 @@ const PriceWrapper = styled.div`
     color: var(--color-black);
   }
 `;
+
+const ButtonWrapper = styled.div``;
