@@ -8,6 +8,7 @@ import { cartState, cartCheckedItemState } from "@/recoil/atoms/cartState";
 import { CartItem, CartItemSummary } from "@/types/cart";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import cartApi from "@/apis/services/cart";
+import ordersApi from "@/apis/services/orders";
 
 interface CartItemListContainerProps {
   cartData: CartItem[]; // DB장바구니 state
@@ -21,6 +22,17 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
   const [cartStorage, setCartStorage] = useRecoilState(cartState);
   // 체크박스 상태
   const [checkedItems, setCheckedItems] = useRecoilState(cartCheckedItemState);
+
+  // 재고 체크용 dryRun 구매요청
+  const checkIsInStock = async (data: { _id: number; quantity: number }[]) => {
+    try {
+      ordersApi.checkStocks({ products: data });
+    } catch (error) {
+      console.error(error);
+      // 재고 다시 반영
+      // TODO: dryRun 요청 api 에러 형태 확정 후 재고 반영 작업
+    }
+  };
 
   const replaceCarts = async (newCart: { products: CartItemSummary[] }) => {
     try {
@@ -38,29 +50,42 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
       setCheckedItems([]);
       return;
     }
-    if (user) setCheckedItems(cartData.map((item) => item._id));
-    else setCheckedItems(cartStorage.map((item) => item._id));
+    if (user) setCheckedItems(cartData.map((item) => item.product_id));
+    else setCheckedItems(cartStorage.map((item) => item.product._id));
   };
 
   // [선택삭제]
   const handleDeleteChecked = () => {
     // 로그인 시
     if (user && cartData) {
-      const newCartData = cartData.filter((item) => !checkedItems.includes(item._id));
+      const newCartData = cartData.filter((item) => !checkedItems.includes(item.product_id));
       const newCartSummary = newCartData.map((item) => ({ _id: item.product_id, quantity: item.quantity }));
       replaceCarts({ products: newCartSummary });
       return;
     }
     // 비로그인 시
-    const newCartData = cartStorage.filter((item) => !checkedItems.includes(item._id));
+    const newCartData = cartStorage.filter((item) => !checkedItems.includes(item.product._id));
     setCartStorage(newCartData);
   };
 
   useEffect(() => {
-    if (user) {
-      setCheckedItems([...cartData].map((item) => item._id));
-    } else setCheckedItems([...cartStorage].map((item) => item._id));
-  }, [cartData]);
+    // 첫 렌더링 시
+    // checkedItems 배열에 모든 product_id 추가
+    if (user) setCheckedItems([...cartData].map((item) => item.product_id));
+    else {
+      setCheckedItems([...cartStorage].map((item) => item.product._id));
+      // [재고체크]
+      // - 로그인 시: cartData 내부 확인(CartItem 컴포넌트에서 체크)
+      // - 비로그인 시 : cartStorage 데이터로 dryRun 구매요청
+      const targetData = cartStorage.map((item) => {
+        return {
+          _id: item.product._id,
+          quantity: item.quantity,
+        };
+      });
+      checkIsInStock(targetData);
+    }
+  }, [cartData, cartStorage]);
 
   // 체크박스 상태가 바뀌면 모든 아이템이 체크되어있는지 확인
   useEffect(() => {

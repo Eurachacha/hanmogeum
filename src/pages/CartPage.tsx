@@ -21,7 +21,7 @@ const CartPage = () => {
     }
   };
 
-  // 초기 렌더링 시 로그인 상태면 카트 데이터 GET 요청, checkedItems 배열에 모든 product 추가
+  // 초기 렌더링 시 로그인 상태면 카트 데이터 GET 요청
   useEffect(() => {
     if (user) fetchCartItems();
   }, []);

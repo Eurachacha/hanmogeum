@@ -16,9 +16,9 @@ const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
   const [checkedItems, setCheckedItems] = useRecoilState(cartCheckedItemState);
 
   // [단일상품 체크박스 토글]
-  const toggleCheckBox = (_id: number) => {
-    if (checkedItems.includes(_id)) setCheckedItems(checkedItems.filter((item) => item !== _id));
-    else setCheckedItems((prev) => [...prev, _id]);
+  const toggleCheckBox = (product_id: number) => {
+    if (checkedItems.includes(product_id)) setCheckedItems(checkedItems.filter((item) => item !== product_id));
+    else setCheckedItems((prev) => [...prev, product_id]);
   };
 
   const fetchCartItems = async () => {
@@ -41,16 +41,16 @@ const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
   };
 
   // [단일상품삭제]
-  const handleDeleteItem = async (_id: number) => {
+  const handleDeleteItem = async (_id: number, product_id: number) => {
     // 로그인 시
     if (user) {
-      deleteCartItem(_id);
+      deleteCartItem(_id!);
       const newCartItems = await fetchCartItems();
       if (newCartItems) setCartData(newCartItems);
       return;
     }
     // 비로그인 시
-    const newCartItems = cartStorage.filter((item) => item._id === _id);
+    const newCartItems = cartStorage.filter((item) => item.product._id === product_id);
     setCartStorage(newCartItems);
   };
 

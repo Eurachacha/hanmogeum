@@ -12,7 +12,7 @@ import ItemInput from "@/components/itemInput/ItemInput";
 import Button from "@/components/common/Button";
 import Modal from "@/components/common/Modal";
 /* util */
-import autoHypenPhone from "@/utils/autoHyphenPhoneNumber";
+import autoHyphenPhoneNumber from "@/utils/autoHyphenPhoneNumber";
 /* api */
 import userApi from "@/apis/services/users";
 /* constants */
@@ -86,6 +86,7 @@ const SignUpContainer = () => {
         phone: onlyNumberPhone,
         address: `${`${signUpData.address} ${signUpData.addressDetail}`}`,
         type: "user",
+        extra: {},
       });
       if (response.data.ok === 1) {
         const credentials = { email: signUpData.email, password: signUpData.password };
@@ -115,7 +116,7 @@ const SignUpContainer = () => {
   };
 
   // 이메일 중복확인 버튼을 눌렀을때 발생하는 이벤트 함수입니다.
-  const emailDuplicateHandleClick = async (event: React.MouseEvent<HTMLDivElement>) => {
+  const emailDuplicateHandleClick = async () => {
     /// users/email?email=s1@market.com
     try {
       const { data } = await userApi.emailDuplicateCheck(signUpData.email);
@@ -204,7 +205,7 @@ const SignUpContainer = () => {
     }
   }, [signUpData.passwordAgain, signUpData.password]);
   useEffect(() => {
-    const formattingPhoneNumber = autoHypenPhone(signUpData.phoneNumber);
+    const formattingPhoneNumber = autoHyphenPhoneNumber(signUpData.phoneNumber);
     setSignUpData((prevState) => ({ ...prevState, phoneNumber: formattingPhoneNumber }));
     if (signUpData.phoneNumber && !/^01[016789]-?\d{3,4}-?\d{4}$/.test(signUpData.phoneNumber)) {
       setValidationMessage((prevState) => ({ ...prevState, phoneNumber: "올바른 휴대폰 번호를 입력해주세요." }));

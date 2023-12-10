@@ -39,11 +39,15 @@ interface OrderDetail {
 
 // Request Types
 
+// POST /orders dryRun 재고 체크
+export interface RequestCheckStocks {
+  products: OrderProduct[];
+}
+
 // POST /orders 구매 목록 조회
 export interface RequestCreateOrder {
   products: OrderProduct[];
-  address?: OrderAddress;
-  dryRun?: boolean;
+  address: OrderAddress;
 }
 
 // Response Types

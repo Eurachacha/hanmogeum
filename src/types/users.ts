@@ -5,6 +5,12 @@ export interface LoginData {
   password: string;
 }
 
+export interface UserExtra {
+  like?: number[];
+  birthday?: string;
+  address?: UserAddress[];
+}
+
 export interface SignUpData {
   email: string;
   password: string;
@@ -12,12 +18,7 @@ export interface SignUpData {
   phone?: string;
   address?: string;
   type: string;
-}
-
-export interface UserExtra {
-  like?: number[];
-  birthday?: string;
-  address?: UserAddress[];
+  extra: UserExtra;
 }
 
 export interface UserAddress {

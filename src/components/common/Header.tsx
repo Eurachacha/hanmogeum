@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { NavLink, useNavigate, useSearchParams, Link, useLocation } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import IconShoppingCart from "@/assets/icons/shoppingCart_40.svg?react";
 import IconSearchCart from "@/assets/icons/search_24.svg?react";
 import { getUserTypeState } from "@/recoil/selectors/loggedInUserSelector";
+import loggedInUserState from "@/recoil/atoms/loggedInUserState";
+import { cartState } from "@/recoil/atoms/cartState";
+import { FlattenData } from "@/types/code";
+import getProductCategoryValueByCode from "@/recoil/selectors/codeSelector";
 
 // constants
 import { AUTH_TOKEN_KEY } from "@/constants/api";
 import { MANAGE_TYPE } from "@/constants/user";
-import { FlattenData } from "@/types/code";
-import getProductCategoryValueByCode from "@/recoil/selectors/codeSelector";
 
 interface CategoryLinkProps {
   $isActive?: boolean;
@@ -23,6 +25,9 @@ const Header = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [searchParams] = useSearchParams();
   const userType = useRecoilValue(getUserTypeState);
+  const [user, setUser] = useRecoilState(loggedInUserState);
+  const setCartStorage = useSetRecoilState(cartState);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -40,13 +45,17 @@ const Header = () => {
     } else {
       setIsLogin(false);
     }
-  }, [userType]);
+  }, [user]);
 
   const logoutHandleClick = () => {
-    localStorage.clear();
+    localStorage.removeItem("cartChecked");
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
     setIsManager(false);
     setCartCount(0);
     setIsLogin(false);
+    setUser(null);
+    setCartStorage([]);
   };
 
   const categoryCode = {
