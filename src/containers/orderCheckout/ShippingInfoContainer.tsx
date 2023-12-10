@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
 import FormInput from "@/components/orderCheckout/FormInput";
+import { ShippingInfoType } from "@/types/orders";
 
-const ShippingInfoContainer = () => {
+interface ShippingInfoContainerProps {
+  setShippingInfo: React.Dispatch<React.SetStateAction<ShippingInfoType | undefined>>;
+}
+const ShippingInfoContainer = ({ setShippingInfo }: ShippingInfoContainerProps) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -27,6 +31,14 @@ const ShippingInfoContainer = () => {
       },
     });
   };
+
+  useEffect(() => {
+    setShippingInfo({
+      name,
+      phone,
+      address: { value: address + detailAddress },
+    });
+  }, [name, phone, address, detailAddress]);
 
   return (
     <ShippingInfoContainerLayer>
