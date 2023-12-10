@@ -71,5 +71,5 @@ const MessageWrapper = styled.p`
 const ButtonArea = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 `;
