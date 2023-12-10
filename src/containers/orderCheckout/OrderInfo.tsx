@@ -5,15 +5,15 @@ import ShippingInfoContainer from "./ShippingInfoContainer";
 import { CartItem } from "@/types/cart";
 
 interface OrderInfoProps {
-  cartItems: CartItem[] | undefined;
+  cartData: CartItem[] | undefined;
 }
 
-const OrderInfo = ({ cartItems }: OrderInfoProps) => {
+const OrderInfo = ({ cartData }: OrderInfoProps) => {
   return (
     <>
       <Section>
         <SectionTitle>주문 상품</SectionTitle>
-        {cartItems ? <OrderListContainer cartItems={cartItems} /> : <p>상품이 없습니다.</p>}
+        {cartData ? <OrderListContainer cartData={cartData} /> : <p>상품이 없습니다.</p>}
       </Section>
       <Section>
         <SectionTitle>주문자 정보</SectionTitle>

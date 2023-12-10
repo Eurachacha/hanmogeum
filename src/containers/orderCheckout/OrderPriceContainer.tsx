@@ -5,17 +5,17 @@ import { CartItem } from "@/types/cart";
 import { SHIPPING_FEES, FREE_SHIPPING_FEES } from "@/constants/order";
 
 interface OrderPriceContainerProps {
-  cartItems: CartItem[] | undefined;
+  cartData: CartItem[] | undefined;
 }
 
-const OrderPriceContainer = ({ cartItems }: OrderPriceContainerProps) => {
+const OrderPriceContainer = ({ cartData }: OrderPriceContainerProps) => {
   const [priceSum, setPriceSum] = useState(0);
 
   useEffect(() => {
-    if (cartItems) {
-      setPriceSum(cartItems.map((item) => item.quantity * item.product.price).reduce((a, b) => a + b, 0));
+    if (cartData) {
+      setPriceSum(cartData.map((item) => item.quantity * item.product.price).reduce((a, b) => a + b, 0));
     }
-  }, [cartItems]);
+  }, [cartData]);
 
   return (
     <PriceWrapper>

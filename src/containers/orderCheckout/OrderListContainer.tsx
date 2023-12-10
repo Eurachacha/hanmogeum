@@ -2,13 +2,13 @@ import OrderItem from "@/components/orderCheckout/OrderItem";
 import { CartItem } from "@/types/cart";
 
 interface OrderListContainerProps {
-  cartItems: CartItem[];
+  cartData: CartItem[];
 }
 
-const OrderListContainer = ({ cartItems }: OrderListContainerProps) => {
+const OrderListContainer = ({ cartData }: OrderListContainerProps) => {
   return (
     <>
-      {cartItems.map((item, idx) => {
+      {cartData.map((item, idx) => {
         const key = idx.toString();
         return (
           <OrderItem
