@@ -12,7 +12,7 @@ import ItemInput from "@/components/itemInput/ItemInput";
 import Button from "@/components/common/Button";
 import Modal from "@/components/common/Modal";
 /* util */
-import autoHypenPhone from "@/utils/autoHypenPhonNumber";
+import autoHypenPhone from "@/utils/autoHyphenPhoneNumber";
 /* api */
 import userApi from "@/apis/services/users";
 /* constants */
