@@ -4,7 +4,7 @@ interface OrderProduct {
 }
 
 interface OrderAddress {
-  name: string;
+  name?: string;
   value: string;
 }
 
@@ -37,6 +37,12 @@ interface OrderDetail {
   cost: OrderCost;
 }
 
+interface ShippingInfoType {
+  name: string;
+  phone: string;
+  address: OrderAddress;
+}
+
 // Request Types
 
 // POST /orders dryRun 재고 체크
@@ -47,7 +53,7 @@ export interface RequestCheckStocks {
 // POST /orders 구매 목록 조회
 export interface RequestCreateOrder {
   products: OrderProduct[];
-  address: OrderAddress;
+  shippingInfo: ShippingInfoType;
 }
 
 // Response Types
