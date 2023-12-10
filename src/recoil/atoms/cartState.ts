@@ -1,13 +1,13 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
-import { CartItem } from "@/types/cart";
+import { CartStorageItem } from "@/types/cart";
 import { CART_CHECKED_KEY, CART_STORAGE_KEY } from "@/constants/localstorageKeys";
 
 const { persistAtom: cartStatePersistAtom } = recoilPersist({ key: CART_STORAGE_KEY });
 const { persistAtom: cartCheckedItemPersistAtom } = recoilPersist({ key: CART_CHECKED_KEY });
 
 // 비로그인 상태에만 관리 / 로그인 시 combine 요청 후 초기화
-export const cartState = atom<CartItem[]>({
+export const cartState = atom<CartStorageItem[]>({
   key: "cartState",
   default: [],
   effects: [cartStatePersistAtom],
