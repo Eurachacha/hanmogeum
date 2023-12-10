@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { useDaumPostcodePopup } from "react-daum-postcode";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
 import FormInput from "@/components/orderCheckout/FormInput";
@@ -15,6 +16,16 @@ const ShippingInfoContainer = () => {
     setState: React.Dispatch<React.SetStateAction<string>>,
   ) => {
     return setState(event.target.value);
+  };
+
+  const openPostcode = useDaumPostcodePopup();
+  const handleAddressSearch = () => {
+    openPostcode({
+      onComplete: (data) => {
+        setAddress(data.address);
+        setDetailAddress(data.buildingName ? ` (${data.buildingName})` : "");
+      },
+    });
   };
 
   return (
@@ -48,7 +59,7 @@ const ShippingInfoContainer = () => {
           inputStyle="normal"
           customStyle={{ padding: "8px", "font-size": "1.4rem" }}
         />
-        <ButtonWrapper>
+        <ButtonWrapper onClick={handleAddressSearch}>
           <Button value="주소검색" size="sm" variant="sub" />
         </ButtonWrapper>
       </FormInput>
