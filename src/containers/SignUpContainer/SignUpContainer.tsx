@@ -86,6 +86,7 @@ const SignUpContainer = () => {
         phone: onlyNumberPhone,
         address: `${`${signUpData.address} ${signUpData.addressDetail}`}`,
         type: "user",
+        extra: {},
       });
       if (response.data.ok === 1) {
         const credentials = { email: signUpData.email, password: signUpData.password };
@@ -115,7 +116,7 @@ const SignUpContainer = () => {
   };
 
   // 이메일 중복확인 버튼을 눌렀을때 발생하는 이벤트 함수입니다.
-  const emailDuplicateHandleClick = async (event: React.MouseEvent<HTMLDivElement>) => {
+  const emailDuplicateHandleClick = async () => {
     /// users/email?email=s1@market.com
     try {
       const { data } = await userApi.emailDuplicateCheck(signUpData.email);
