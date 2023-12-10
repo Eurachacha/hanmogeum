@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { useRecoilValue } from "recoil";
+import { useNavigate } from "react-router-dom";
 import Price from "@/components/common/Price";
 import Button from "@/components/common/Button";
 import { CartItem } from "@/types/cart";
@@ -17,6 +18,8 @@ const CartPriceContainer = ({ cartData }: CartPriceContainerProps) => {
   const checkedItems = useRecoilValue(cartCheckedItemState);
   const cartStorage = useRecoilValue(cartState);
   const [checkedPrice, setcheckedPrice] = useState(0);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     // 로그인 시 선택상품금액 세팅
@@ -48,9 +51,9 @@ const CartPriceContainer = ({ cartData }: CartPriceContainerProps) => {
           />
         </div>
       </PriceWrapper>
-      <div>
+      <ButtonWrapper onClick={() => navigate("/orders/checkout")}>
         <Button value="구매하기" size="lg" variant="point" />
-      </div>
+      </ButtonWrapper>
     </CartPriceContainerLayer>
   );
 };
@@ -79,3 +82,5 @@ const PriceWrapper = styled.div`
     color: var(--color-black);
   }
 `;
+
+const ButtonWrapper = styled.div``;
