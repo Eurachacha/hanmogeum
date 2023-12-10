@@ -16,9 +16,9 @@ const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
   const [checkedItems, setCheckedItems] = useRecoilState(cartCheckedItemState);
 
   // [단일상품 체크박스 토글]
-  const toggleCheckBox = (_id: number) => {
-    if (checkedItems.includes(_id)) setCheckedItems(checkedItems.filter((item) => item !== _id));
-    else setCheckedItems((prev) => [...prev, _id]);
+  const toggleCheckBox = (product_id: number) => {
+    if (checkedItems.includes(product_id)) setCheckedItems(checkedItems.filter((item) => item !== product_id));
+    else setCheckedItems((prev) => [...prev, product_id]);
   };
 
   const fetchCartItems = async () => {

@@ -13,7 +13,7 @@ import { cartState } from "@/recoil/atoms/cartState";
 interface CartItemProps {
   setCartData: React.Dispatch<React.SetStateAction<CartItemType[]>>;
   checkedItems: number[];
-  toggleCheckBox: (_id: number) => void;
+  toggleCheckBox: (product_id: number) => void;
   handleDeleteItem: (_id: number) => void;
   data: CartItemType; // 로컬스토리지 데이터 || DB데이터
   idx: number;

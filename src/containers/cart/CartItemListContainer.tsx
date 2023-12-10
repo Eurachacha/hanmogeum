@@ -38,29 +38,30 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
       setCheckedItems([]);
       return;
     }
-    if (user) setCheckedItems(cartData.map((item) => item._id));
-    else setCheckedItems(cartStorage.map((item) => item._id));
+    if (user) setCheckedItems(cartData.map((item) => item.product_id));
+    else setCheckedItems(cartStorage.map((item) => item.product._id));
   };
 
   // [선택삭제]
   const handleDeleteChecked = () => {
     // 로그인 시
     if (user && cartData) {
-      const newCartData = cartData.filter((item) => !checkedItems.includes(item._id));
+      const newCartData = cartData.filter((item) => !checkedItems.includes(item.product_id));
       const newCartSummary = newCartData.map((item) => ({ _id: item.product_id, quantity: item.quantity }));
       replaceCarts({ products: newCartSummary });
       return;
     }
     // 비로그인 시
-    const newCartData = cartStorage.filter((item) => !checkedItems.includes(item._id));
+    const newCartData = cartStorage.filter((item) => !checkedItems.includes(item.product._id));
     setCartStorage(newCartData);
   };
 
   useEffect(() => {
-    if (user) {
-      setCheckedItems([...cartData].map((item) => item._id));
-    } else setCheckedItems([...cartStorage].map((item) => item._id));
-  }, [cartData]);
+    // 첫 렌더링 시
+    // checkedItems 배열에 모든 product_id 추가
+    if (user) setCheckedItems([...cartData].map((item) => item.product_id));
+    else {
+      setCheckedItems([...cartStorage].map((item) => item.product._id));
 
   // 체크박스 상태가 바뀌면 모든 아이템이 체크되어있는지 확인
   useEffect(() => {
