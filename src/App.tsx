@@ -5,23 +5,29 @@ import { useSetRecoilState } from "recoil";
 import { useEffect } from "react";
 
 import codeApi from "@/apis/services/code";
-import codeState from "@/recoil/atoms/codeState";
+import { flattenCodeState, nestedCodeState } from "@/recoil/atoms/codeState";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 
 const App = () => {
-  const setCodeState = useSetRecoilState(codeState);
+  const setFlattenCodeState = useSetRecoilState(flattenCodeState);
+  const setNestedCodeState = useSetRecoilState(nestedCodeState);
+
+  // API를 요청하여 Code를 Set해오는 함수
   const getCodeData = async () => {
     try {
       const { data } = await codeApi.getCode();
-      setCodeState(data.item);
+      setFlattenCodeState(data.item.flatten);
+      setNestedCodeState(data.item.nested);
     } catch (error) {
       console.error(error);
     }
   };
+
   useEffect(() => {
     getCodeData();
   }, []);
+
   return (
     <>
       <Header />

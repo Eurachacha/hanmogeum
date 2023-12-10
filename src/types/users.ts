@@ -75,3 +75,8 @@ export interface RequestUpdateUser {
 interface UpdatedUser extends RequestUpdateUser {
   updatedAt: string;
 }
+
+export interface ResponseEmailDuplicateCheck {
+  ok: number;
+  message: string;
+}

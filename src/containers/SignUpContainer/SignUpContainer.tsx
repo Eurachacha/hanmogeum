@@ -178,7 +178,7 @@ const SignUpContainer = () => {
     } else {
       setIsActiveSignUpButton(false);
     }
-  }, [signUpData, isActiveEmailButton]);
+  }, [signUpData, validationMessage, isActiveEmailButton]);
 
   useEffect(() => {
     setIsActiveEmailButton(true);
@@ -203,7 +203,7 @@ const SignUpContainer = () => {
     } else {
       setValidationMessage((prevState) => ({ ...prevState, passwordAgain: "" }));
     }
-  }, [signUpData.passwordAgain]);
+  }, [signUpData.passwordAgain, signUpData.password]);
   useEffect(() => {
     const formattingPhoneNumber = autoHypenPhone(signUpData.phoneNumber);
     setSignUpData((prevState) => ({ ...prevState, phoneNumber: formattingPhoneNumber }));
