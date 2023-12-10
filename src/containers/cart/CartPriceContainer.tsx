@@ -21,6 +21,11 @@ const CartPriceContainer = ({ cartData }: CartPriceContainerProps) => {
 
   const navigate = useNavigate();
 
+  const handleCreateOrder = () => {
+    if (!user) navigate("/login");
+    else navigate("/orders/checkout");
+  };
+
   useEffect(() => {
     // 로그인 시 선택상품금액 세팅
     if (user) {
@@ -51,7 +56,7 @@ const CartPriceContainer = ({ cartData }: CartPriceContainerProps) => {
           />
         </div>
       </PriceWrapper>
-      <ButtonWrapper onClick={() => navigate("/orders/checkout")}>
+      <ButtonWrapper onClick={handleCreateOrder}>
         <Button value="구매하기" size="lg" variant="point" />
       </ButtonWrapper>
     </CartPriceContainerLayer>
