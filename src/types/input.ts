@@ -32,4 +32,5 @@ export interface InputProps {
   pattern?: string;
   inputStyle?: InputStyle; // 정의된 스타일을 적용
   customStyle?: CommonCustomStyle; // 사용자 정의 스타일을 추가
+  readonly?: boolean;
 }

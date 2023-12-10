@@ -14,7 +14,8 @@ const userApi = {
   loginUser: (credentials: LoginData) => publicInstance.post<ResponseLogin>("/users/login", credentials),
   signUpUser: (data: SignUpData) => publicInstance.post<ResponseSignUp>("/users", data),
   getUserProfile: (_id: number) => privateInstance.get<ResponseUpdateUser>(`/users/${_id}`),
-  updateUserProfile: (_id: number, data: SignUpData) => privateInstance.put<ResponseUpdateUser>(`/users/${_id}`, data),
+  updateUserProfile: (_id: number, data: RequestUpdateUser) =>
+    privateInstance.patch<ResponseUpdateUser>(`/users/${_id}`, data),
 };
 
 export default userApi;

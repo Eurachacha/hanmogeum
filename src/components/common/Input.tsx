@@ -18,6 +18,7 @@ const Input = ({
   maxLength,
   min,
   max,
+  readonly = false,
 }: InputProps) => {
   const currentStyle = INPUT_STYLES[inputStyle];
   return (
@@ -38,6 +39,7 @@ const Input = ({
       maxLength={maxLength}
       min={min}
       max={max}
+      readOnly={readonly}
     ></InputContainer>
   );
 };
