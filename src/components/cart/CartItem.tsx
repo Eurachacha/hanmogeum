@@ -26,7 +26,7 @@ const isLocalData = (object: CartStorageItem | CartItemType) => {
 const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem, data, idx }: CartItemProps) => {
   const user = useRecoilValue(loggedInUserState);
   const setCartStorage = useSetRecoilState(cartState);
-  const [quantityInput, setQuantityInput] = useState(data.quantity);
+  const [quantityInput, setQuantityInput] = useState(0);
   const [cartItemPrice, setCartItemPrice] = useState(data.product.price * quantityInput);
 
   const updateQuantity = (_id: number, newQuantity: number) => {
@@ -125,7 +125,14 @@ const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem,
   };
 
   useEffect(() => {
-    setQuantityInput(data.quantity);
+    if (user) {
+      const cartData = data as CartItemType;
+      if (data.quantity > cartData.product.quantity - cartData.product.buyQuantity) {
+        setQuantityInput(cartData.product.quantity - cartData.product.buyQuantity);
+        updateQuantity((data as CartItemType)._id, cartData.product.quantity - cartData.product.buyQuantity);
+      } else setQuantityInput(data.quantity);
+    } else setQuantityInput(data.quantity);
+    // TODO: [비로그인] dryRun 에러 형태 확정 시 작업
   }, [data]);
 
   useEffect(() => {
