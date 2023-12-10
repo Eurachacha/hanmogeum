@@ -10,12 +10,16 @@ import Button from "@/components/common/Button";
 import { cartCheckedItemState } from "@/recoil/atoms/cartState";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import Modal from "@/components/common/Modal";
+import { RequestCreateOrder, ShippingInfoType } from "@/types/orders";
+import ordersApi from "@/apis/services/orders";
 
 const OrderCheckoutPage = () => {
   const user = useRecoilValue(loggedInUserState);
   const checkedItems = useRecoilValue(cartCheckedItemState);
   const [cartData, setCartData] = useState<CartItem[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [shippingInfo, setShippingInfo] = useState<ShippingInfoType>();
+  const [isStockModalOpen, setIsStockModalOpen] = useState(false);
+  const [isShippingModalOpen, setIsShippingModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const fetchAllCartItems = async () => {
@@ -24,15 +28,43 @@ const OrderCheckoutPage = () => {
       const { item: items } = response.data;
       setCartData(items.filter((item) => checkedItems.includes(item.product_id)));
       const isAllInStock = items.every((item) => item.quantity <= item.product.quantity - item.product.buyQuantity);
-      if (!isAllInStock) setIsModalOpen(true);
+      if (!isAllInStock) setIsStockModalOpen(true);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleModalClose = () => {
+  const createOrder = async (data: RequestCreateOrder) => {
+    try {
+      ordersApi.createOrder(data);
+      navigate("/orders/complete");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleStockModalClose = () => {
     navigate(-1);
-    setIsModalOpen(false);
+    setIsStockModalOpen(false);
+  };
+
+  const handleShippingModalClose = () => {
+    setIsShippingModalOpen(false);
+  };
+
+  const handlePostOrder = () => {
+    if (!shippingInfo?.name || !shippingInfo?.phone || !shippingInfo?.address.value) {
+      setIsShippingModalOpen(true);
+      return;
+    }
+    const productsData = cartData.map((item) => {
+      return { _id: item.product._id, quantity: item.quantity };
+    });
+    const data = {
+      products: productsData,
+      shippingInfo: shippingInfo,
+    };
+    createOrder(data);
   };
 
   useEffect(() => {
@@ -41,19 +73,24 @@ const OrderCheckoutPage = () => {
 
   return (
     <OrderCheckoutPageLayer>
-      <Modal isOpen={isModalOpen} message="재고가 부족한 상품이 있습니다.">
-        <ButtonWrapper onClick={handleModalClose}>
+      <Modal isOpen={isStockModalOpen} message="재고가 부족한 상품이 있습니다.">
+        <ButtonWrapper onClick={handleStockModalClose}>
+          <Button value="확인" size="sm" variant="sub" />
+        </ButtonWrapper>
+      </Modal>
+      <Modal isOpen={isShippingModalOpen} message="배송정보를 올바르게 입력해주세요.">
+        <ButtonWrapper onClick={handleShippingModalClose}>
           <Button value="확인" size="sm" variant="sub" />
         </ButtonWrapper>
       </Modal>
       <PageLeft>
-        <OrderInfo cartData={cartData} />
+        <OrderInfo cartData={cartData} setShippingInfo={setShippingInfo} />
       </PageLeft>
       <PageRight>
         <OrderPriceContainer cartData={cartData} />
-        <div>
+        <OrderButtonWrapper onClick={handlePostOrder}>
           <Button value="결제하기" size="lg" variant="point" />
-        </div>
+        </OrderButtonWrapper>
       </PageRight>
     </OrderCheckoutPageLayer>
   );
@@ -92,3 +129,5 @@ const PageRight = styled.div`
     margin: 0;
   }
 `;
+
+const OrderButtonWrapper = styled.div``;

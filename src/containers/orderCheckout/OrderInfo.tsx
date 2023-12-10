@@ -3,12 +3,14 @@ import OrderListContainer from "./OrderListContainer";
 import UserInfoContainer from "@/containers/orderCheckout/UserInfoContainer";
 import ShippingInfoContainer from "./ShippingInfoContainer";
 import { CartItem } from "@/types/cart";
+import { ShippingInfoType } from "@/types/orders";
 
 interface OrderInfoProps {
   cartData: CartItem[] | undefined;
+  setShippingInfo: React.Dispatch<React.SetStateAction<ShippingInfoType | undefined>>;
 }
 
-const OrderInfo = ({ cartData }: OrderInfoProps) => {
+const OrderInfo = ({ cartData, setShippingInfo }: OrderInfoProps) => {
   return (
     <>
       <Section>
@@ -21,7 +23,7 @@ const OrderInfo = ({ cartData }: OrderInfoProps) => {
       </Section>
       <Section>
         <SectionTitle>배송 정보</SectionTitle>
-        <ShippingInfoContainer />
+        <ShippingInfoContainer setShippingInfo={setShippingInfo} />
       </Section>
     </>
   );

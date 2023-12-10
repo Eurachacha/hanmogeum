@@ -37,7 +37,7 @@ interface OrderDetail {
   cost: OrderCost;
 }
 
-interface ShippingInfoType {
+export interface ShippingInfoType {
   name: string;
   phone: string;
   address: OrderAddress;
