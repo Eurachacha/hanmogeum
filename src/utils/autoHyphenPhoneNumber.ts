@@ -1,4 +1,4 @@
-const autoHypenPhone = (rawString: string) => {
+const autoHyphenPhoneNumber = (rawString: string) => {
   const numberString: string = rawString.replace(/[^0-9]/g, "");
   let result = "";
   if (numberString.length < 4) {
@@ -26,4 +26,4 @@ const autoHypenPhone = (rawString: string) => {
   return result;
 };
 
-export default autoHypenPhone;
+export default autoHyphenPhoneNumber;

@@ -1,3 +1,6 @@
+import { InputType, InputProps } from "./input";
+
+// 마이페이지 > 주문 내역
 export interface ResponseDataMyOrderList {
   ok: number;
   item: MyOrderItem[] | [];
@@ -32,6 +35,7 @@ export interface Delivery {
   trackingNumber: string;
   url: string;
 }
+
 export interface Reply {
   rating: number;
   content: string;
@@ -53,4 +57,27 @@ export interface Discount {
 export interface Address {
   name: string;
   value: string;
+}
+
+// 마이페이지 > 내정보 수정
+export interface InputDataType {
+  title: string;
+  showValidationMessage: boolean;
+  validationMessage?: string;
+  type?: InputType;
+  isTitleImportant?: boolean;
+  inputProps: InputProps;
+  includeButton?: boolean;
+  buttonValue?: string;
+  buttonOnClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  buttonDisabled?: boolean;
+}
+export interface SignUpDataType {
+  email: string;
+  password: string;
+  passwordAgain: string;
+  name: string;
+  phoneNumber: string;
+  address: string;
+  addressDetail: string;
 }

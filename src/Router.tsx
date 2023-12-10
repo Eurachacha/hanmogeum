@@ -11,10 +11,11 @@ import OrderCheckoutPage from "@/pages/OrderCheckoutPage";
 import OrderCompletePage from "@/pages/OrderCompletePage";
 import MyOrderListPage from "@/pages/MyOrderListPage";
 import MyOrderDetailPage from "@/pages/MyOrderDetailPage";
-import MyProfilePage from "@/pages/MyProfilePage";
 import MyLikePage from "@/pages/MyLikePage";
 import MyReviewPage from "@/pages/MyReviewPage";
-import ManagePage from "./pages/ManagePage";
+import ManagePage from "@/pages/ManagePage";
+import MyProfileLoginPage from "@/pages/MyProfileLoginPage";
+import MyProfileModifyPage from "@/pages/MyProfileModifyPage";
 
 const router = createBrowserRouter([
   {
@@ -47,7 +48,15 @@ const router = createBrowserRouter([
       },
       {
         path: "/mypage/profile",
-        element: <MyProfilePage />,
+        element: <MyProfileLoginPage />,
+      },
+      {
+        path: "/mypage/profile/login",
+        element: <MyProfileLoginPage />,
+      },
+      {
+        path: "/mypage/profile/modify",
+        element: <MyProfileModifyPage />,
       },
       {
         path: "mypage/reviews",
