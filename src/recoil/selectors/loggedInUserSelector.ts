@@ -24,7 +24,7 @@ export const getUserTypeState = selector({
 });
 
 export const getUserNameState = selector({
-  key: "userNametate",
+  key: "UserNameState",
   get: ({ get }) => {
     const userInfo = get(loggedInUserState);
     if (userInfo === null) {
