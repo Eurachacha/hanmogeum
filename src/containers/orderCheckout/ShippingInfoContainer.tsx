@@ -5,6 +5,7 @@ import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
 import FormInput from "@/components/orderCheckout/FormInput";
 import { ShippingInfoType } from "@/types/orders";
+import autoHyphenPhoneNumber from "@/utils/autoHyphenPhoneNumber";
 
 interface ShippingInfoContainerProps {
   setShippingInfo: React.Dispatch<React.SetStateAction<ShippingInfoType | undefined>>;
@@ -56,7 +57,7 @@ const ShippingInfoContainer = ({ setShippingInfo }: ShippingInfoContainerProps) 
         <Input
           type="tel"
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleInputChange(event, setPhone)}
-          value={phone}
+          value={autoHyphenPhoneNumber(phone)}
           placeholder="전화번호를 입력해주세요."
           inputStyle="normal"
           customStyle={{ padding: "8px", "font-size": "1.4rem" }}
