@@ -71,7 +71,7 @@ const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem,
 
   const handleMinus = (_id: number) => {
     // input상태가 1이라면 return
-    if (quantityInput === 1) return;
+    if (quantityInput <= 1) return;
 
     // 로그인 시 (data가 DB데이터인 경우)
     if (user && !isLocalData(data)) {
@@ -159,7 +159,7 @@ const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem,
               </CounterButton>
               <QuantityWrapper
                 type="number"
-                min={1}
+                min={0}
                 max={
                   user ? (data as CartItemType).product.quantity - (data as CartItemType).product.buyQuantity : 10
                 } /* TODO: dryRun 에러 형태 확정시 반영 */
