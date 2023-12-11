@@ -1,4 +1,5 @@
-import { OrderCost } from "./orders";
+import { OrderCost, OrderProductDetail } from "./orders";
+import { Extra } from "./products";
 
 export interface CartItemSummary {
   _id: number;
@@ -61,4 +62,18 @@ export interface ResponseUpdateQuantity {
     quantity: number;
     updatedAt: string;
   };
+}
+
+export interface ProductWithQuantityInStock extends OrderProductDetail {
+  quantityInStock: number;
+  seller_id: number;
+  extra: Extra;
+}
+
+export interface ResponseCheckStockStates {
+  ok: number;
+  item: {
+    products: ProductWithQuantityInStock[];
+  };
+  cost: OrderCost;
 }

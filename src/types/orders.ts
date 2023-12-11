@@ -8,7 +8,7 @@ interface OrderAddress {
   value: string;
 }
 
-interface OrderProductDetail extends OrderProduct {
+export interface OrderProductDetail extends OrderProduct {
   name: string;
   image: string;
   price: number;
