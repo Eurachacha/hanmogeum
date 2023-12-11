@@ -3,13 +3,14 @@ import styled, { RuleSet, css } from "styled-components";
 interface ButtonProps {
   variant: "active" | "default";
   children: string;
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const VARIANTS = {
   default: css`
-    background-color: var(--color-gray-100);
-    color: var(--color-black);
+    background-color: var(--color-gray-50);
+    color: var(--color-gray-400);
+    font-weight: var(--weight-regular);
   `,
   active: css`
     background-color: var(--color-sub-500);
@@ -31,10 +32,10 @@ const CategoryButton = ({ variant, children, onClick }: ButtonProps) => {
 const StyledButton = styled.button<{ $variantStyle: RuleSet<object> }>`
   ${(props) => props.$variantStyle}
 
+  font-size: 1.4rem;
   border-radius: 2px;
   border: 0;
-  color: var(---color-black);
-  padding: 10px 20px;
+  padding: 6px 10px;
   cursor: pointer;
 `;
 
