@@ -1,6 +1,6 @@
 /** 사용법
-const getDataInstance = new GetDate('2023.11.14 13:04:08');
-console.log (getDataInstance.getDateYearMonthDay()) // 2023.11.14
+const getDateInstance = new GetDate('2023.11.14 13:04:08');
+console.log (getDateInstance.getDateYearMonthDay()) // 2023.11.14
 */
 
 class GetDate {
