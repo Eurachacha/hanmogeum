@@ -6,6 +6,7 @@ import {
   ResponseSignUp,
   ResponseUpdateUser,
   ResponseEmailDuplicateCheck,
+  RequestUpdateUser,
 } from "@/types/users";
 
 const userApi = {

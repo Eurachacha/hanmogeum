@@ -17,6 +17,7 @@ export interface SignUpData {
   name: string;
   phone?: string;
   address?: string;
+  detailAddress?: string;
   type: string;
   extra: UserExtra;
 }
@@ -69,6 +70,7 @@ export interface RequestUpdateUser {
   phone?: string;
   password?: string;
   address?: string;
+  detailAddress?: string;
   extra?: UserExtra;
 }
 

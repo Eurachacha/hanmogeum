@@ -41,7 +41,7 @@ interface SignUpDataType {
   name: string;
   phoneNumber: string;
   address: string;
-  detailAddress: string;
+  addressDetail: string;
 }
 
 interface SignUpErrorType extends Error {
@@ -65,7 +65,7 @@ const MyProfileEditContainer = () => {
     name: "",
     phoneNumber: "",
     address: "",
-    detailAddress: "",
+    addressDetail: "",
   });
   const [validationMessage, setValidationMessage] = useState({
     email: "",
@@ -84,11 +84,8 @@ const MyProfileEditContainer = () => {
     if (signUpData?.password) updateData.password = signUpData.password;
     if (signUpData?.name) updateData.name = signUpData.name; // 여기서는 옵셔널 체이닝이 필요 없습니다.
     if (onlyNumberPhone) updateData.phone = onlyNumberPhone;
-    if (signUpData.address || signUpData.detailAddress) {
-      updateData.address = signUpData.address;
-      updateData.detailAddress = signUpData.detailAddress;
-    }
-
+    if (signUpData.address || signUpData.addressDetail)
+      updateData.address = `${signUpData.address} ${signUpData.addressDetail}`;
     try {
       const response = await userApi.updateUserProfile(loggedInUser?._id || -1, updateData);
       setShowModal({ isOpen: true, message: "수정이 완료되었습니다." });
@@ -135,7 +132,6 @@ const MyProfileEditContainer = () => {
   // TODO: 다음 useEffect들 커스텀 훅으로 변경
   useEffect(() => {
     if (
-      signUpData.password === signUpData.passwordAgain &&
       validationMessage.password === "" &&
       validationMessage.passwordAgain === "" &&
       validationMessage.phoneNumber === ""
@@ -244,7 +240,7 @@ const MyProfileEditContainer = () => {
         required: true,
         placeholder: "이름을 입력해주세요",
         onChange: inputHandleChange,
-        value: signUpData.name || loggedInUser?.name || "",
+        value: signUpData.name,
         customStyle: inputCustomStyle,
       },
       includeButton: false,
@@ -261,7 +257,7 @@ const MyProfileEditContainer = () => {
         name: "phoneNumber",
         placeholder: "숫자만 입력해주세요.",
         onChange: inputHandleChange,
-        value: signUpData.phoneNumber || autoHyphenPhoneNumber(loggedInUser?.phone || ""),
+        value: signUpData.phoneNumber,
         customStyle: inputCustomStyle,
       },
       includeButton: false,
@@ -277,7 +273,7 @@ const MyProfileEditContainer = () => {
         disabled: true,
         placeholder: "주소 검색",
         onChange: inputHandleChange,
-        value: signUpData.address || loggedInUser?.address || "",
+        value: signUpData.address,
         customStyle: inputCustomStyle,
       },
       includeButton: true,
@@ -291,10 +287,10 @@ const MyProfileEditContainer = () => {
       isTitleImportant: false,
       inputProps: {
         type: "text",
-        name: "detailAddress",
+        name: "addressDetail",
         placeholder: "상세 주소를 입력해주세요.",
         onChange: inputHandleChange,
-        value: signUpData.detailAddress || loggedInUser?.detailAddress || "",
+        value: signUpData.addressDetail,
         customStyle: inputCustomStyle,
       },
     },
