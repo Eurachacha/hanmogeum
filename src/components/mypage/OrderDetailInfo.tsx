@@ -2,19 +2,28 @@ import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import ContainerHeader from "./ContainerHeader.";
 import { MyOrderItem } from "@/types/myPage";
-import { getUserNameState } from "../../recoil/selectors/loggedInUserSelector";
 import getPriceFormat from "@/utils/getPriceFormat";
+import loggedInUserState from "@/recoil/atoms/loggedInUserState";
+import autoHyphenPhoneNumber from "../../utils/autoHyphenPhoneNumber";
 
 interface OrderDetailInfoProps {
   orderData?: MyOrderItem;
 }
 
 const OrderDetailInfo = ({ orderData }: OrderDetailInfoProps) => {
-  const userName = useRecoilValue(getUserNameState);
+  const currentUserInfo = useRecoilValue(loggedInUserState);
   const infoList = [
-    { title: "주문자 정보", value: userName },
-    { title: "배송지", value: orderData?.address?.name },
-    { title: "배송지 주소", value: orderData?.address?.value },
+    { title: "주문자 정보", value: currentUserInfo?.name },
+    { title: "주문자 이메일", value: currentUserInfo?.email },
+    { title: "주문자 전화번호", value: autoHyphenPhoneNumber(currentUserInfo?.phone || "") },
+
+    { title: "받는분 배송지", value: orderData?.shippingInfo?.name },
+    { title: "받는분 연락처", value: autoHyphenPhoneNumber(orderData?.shippingInfo?.phone || "") },
+    {
+      title: "받는분 배송지 주소",
+      value: `${orderData?.shippingInfo?.address.value} ${orderData?.shippingInfo?.address?.detailValue || ""}`,
+    },
+
     { title: "상품 금액", value: getPriceFormat({ price: orderData?.cost.products }) },
     { title: "배송비", value: getPriceFormat({ price: orderData?.cost.shippingFees }) },
     {

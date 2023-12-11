@@ -12,9 +12,21 @@ export interface MyOrderItem {
   state: string;
   products: Product[];
   cost: Cost;
-  address: Address;
+  shippingInfo: ShippingInfo;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ShippingInfo {
+  name: string;
+  phone: string;
+  address: ShippingAddress;
+}
+
+export interface ShippingAddress {
+  name?: string;
+  value?: string;
+  detailValue?: string;
 }
 
 export interface Product {
@@ -52,11 +64,6 @@ export interface Cost {
 export interface Discount {
   products: number;
   shippingFees: number;
-}
-
-export interface Address {
-  name: string;
-  value: string;
 }
 
 // 마이페이지 > 내정보 수정
