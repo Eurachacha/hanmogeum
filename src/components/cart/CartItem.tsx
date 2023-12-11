@@ -128,18 +128,25 @@ const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem,
   };
 
   useEffect(() => {
+    setCartItemPrice(data.product.price * quantityInput);
+  }, [quantityInput, data]);
+
+  useEffect(() => {
+    // [로그인]
     if (user) {
       const cartData = data as CartItemType;
+      const stock = cartData.product.quantity - cartData.product.buyQuantity;
+      if (stock < cartData.quantity) {
+        setQuantityInput(stock);
+      } else setQuantityInput(cartData.quantity);
+      return;
+    }
     // [비로그인]
     const cartStorage = data as CartStorageItem;
     if (cartStorage.stock < cartStorage.quantity) {
       setQuantityInput(cartStorage.stock);
     } else setQuantityInput(cartStorage.quantity);
   }, [data]);
-
-  useEffect(() => {
-    setCartItemPrice(data.product.price * quantityInput);
-  }, [quantityInput, data]);
 
   if (data)
     return (

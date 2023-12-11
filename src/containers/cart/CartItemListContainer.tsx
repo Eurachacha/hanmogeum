@@ -8,7 +8,6 @@ import { cartState, cartCheckedItemState } from "@/recoil/atoms/cartState";
 import { CartItem, CartItemSummary } from "@/types/cart";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import cartApi from "@/apis/services/cart";
-import ordersApi from "@/apis/services/orders";
 
 interface CartItemListContainerProps {
   cartData: CartItem[]; // DB장바구니 state
@@ -39,8 +38,6 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
       });
     } catch (error) {
       console.error(error);
-      // 재고 다시 반영
-      // TODO: dryRun 요청 api 에러 형태 확정 후 재고 반영 작업
     }
   };
 
