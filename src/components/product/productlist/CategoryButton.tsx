@@ -33,8 +33,7 @@ const StyledButton = styled.button<{ $variantStyle: RuleSet<object> }>`
 
   border-radius: 2px;
   border: 0;
-
-  color: var(--color-white);
+  color: var(---color-black);
   padding: 10px 20px;
   cursor: pointer;
 `;
