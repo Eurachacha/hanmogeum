@@ -36,8 +36,8 @@ const MyOrderListContainer = () => {
 
   const orderItemToThumbnailData = (orderItem: MyOrderItem) => {
     const getData = new GetDate(orderItem.createdAt);
-    let title = orderItem.products[0].name;
-    if (title.length > maxTitleLength) {
+    let title = orderItem?.products[0]?.name;
+    if (title?.length > maxTitleLength) {
       if (orderItem.products.length === 1) {
         title = truncateString({ fullString: orderItem.products[0].name, maxLength: maxTitleLength });
       } else {
@@ -55,7 +55,7 @@ const MyOrderListContainer = () => {
       title: title,
       date: getData.getDateYearMonthDay(),
       totalPrice: getPriceFormat({ price: orderItem.cost.total }),
-      imgURL: orderItem.products[0].image,
+      imgURL: orderItem?.products[0]?.image,
       shippingState: shippingState,
     };
   };
