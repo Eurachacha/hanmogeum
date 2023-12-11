@@ -33,6 +33,7 @@ export interface CartStorageItem {
     image: string;
     price: number;
   };
+  stock: number;
 }
 
 // Request Types

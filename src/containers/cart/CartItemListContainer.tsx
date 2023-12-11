@@ -26,7 +26,17 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
   // 재고 체크용 dryRun 구매요청
   const checkIsInStock = async (data: { _id: number; quantity: number }[]) => {
     try {
-      ordersApi.checkStocks({ products: data });
+      const response = await cartApi.checkStockStates(data);
+      const { products } = response.data.item;
+      products.forEach((item) => {
+        if (item.quantityInStock < item.quantity) {
+          const targetIndex = cartStorage.findIndex((e) => e.product._id === item._id);
+          const newCartStorageItem = { ...cartStorage[targetIndex], stock: item.quantityInStock };
+          const newCartStorage = [...cartStorage];
+          newCartStorage.splice(targetIndex, 1, newCartStorageItem);
+          setCartStorage(newCartStorage);
+        }
+      });
     } catch (error) {
       console.error(error);
       // 재고 다시 반영
@@ -76,7 +86,7 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
       setCheckedItems([...cartStorage].map((item) => item.product._id));
       // [재고체크]
       // - 로그인 시: cartData 내부 확인(CartItem 컴포넌트에서 체크)
-      // - 비로그인 시 : cartStorage 데이터로 dryRun 구매요청
+      // - 비로그인 시 : cartStorage 데이터로 POST /carts/local 재고체크 요청
       const targetData = cartStorage.map((item) => {
         return {
           _id: item.product._id,
