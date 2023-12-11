@@ -50,7 +50,7 @@ const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
       return;
     }
     // 비로그인 시
-    const newCartItems = cartStorage.filter((item) => item.product._id === product_id);
+    const newCartItems = cartStorage.filter((item) => item.product._id !== product_id);
     setCartStorage(newCartItems);
   };
 

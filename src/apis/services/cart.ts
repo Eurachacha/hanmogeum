@@ -4,12 +4,16 @@ import {
   ResponseUpdateQuantity,
   ResponseCartItems,
   ResponseCartItemsWithCost,
+  ResponseCheckStockStates,
 } from "@/types/cart";
-import { privateInstance } from "../instance";
+import { privateInstance, publicInstance } from "../instance";
 
 const cartApi = {
   // GET /carts
   getAllItems: () => privateInstance.get<ResponseCartItemsWithCost>("/carts"),
+  // POST /carts/local
+  checkStockStates: (data: CartItemSummary[]) =>
+    publicInstance.post<ResponseCheckStockStates>("/carts/local", { products: data }),
   // POST /carts
   addItem: (data: RequestAddItem) => privateInstance.post<ResponseCartItems>("/carts", data),
   // PATCH /carts/:_id

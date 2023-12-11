@@ -60,6 +60,7 @@ const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem,
     }
     // 비로그인 시 (data가 로컬스토리지 데이터인 경우)
     const cartStorage = data as CartStorageItem;
+    if (cartStorage.stock < valueAsNumber) return;
     const newCartStorageItem = { ...cartStorage, quantity: valueAsNumber };
     setCartStorage((prev) => {
       const newCartStorage = [...prev];
@@ -114,7 +115,9 @@ const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem,
       return;
     }
     // 비로그인 시
+    // input상태가 recoil 재고와 같다면 return
     const cartStorage = data as CartStorageItem;
+    if (quantityInput === cartStorage.stock) return;
     const newCartStorageItem = { ...cartStorage, quantity: quantityInput + 1 };
     setCartStorage((prev) => {
       const newCartStorage = [...prev];
@@ -125,19 +128,25 @@ const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem,
   };
 
   useEffect(() => {
-    if (user) {
-      const cartData = data as CartItemType;
-      if (data.quantity > cartData.product.quantity - cartData.product.buyQuantity) {
-        setQuantityInput(cartData.product.quantity - cartData.product.buyQuantity);
-        updateQuantity((data as CartItemType)._id, cartData.product.quantity - cartData.product.buyQuantity);
-      } else setQuantityInput(data.quantity);
-    } else setQuantityInput(data.quantity);
-    // TODO: [비로그인] dryRun 에러 형태 확정 시 작업
-  }, [data]);
-
-  useEffect(() => {
     setCartItemPrice(data.product.price * quantityInput);
   }, [quantityInput, data]);
+
+  useEffect(() => {
+    // [로그인]
+    if (user) {
+      const cartData = data as CartItemType;
+      const stock = cartData.product.quantity - cartData.product.buyQuantity;
+      if (stock < cartData.quantity) {
+        setQuantityInput(stock);
+      } else setQuantityInput(cartData.quantity);
+      return;
+    }
+    // [비로그인]
+    const cartStorage = data as CartStorageItem;
+    if (cartStorage.stock < cartStorage.quantity) {
+      setQuantityInput(cartStorage.stock);
+    } else setQuantityInput(cartStorage.quantity);
+  }, [data]);
 
   if (data)
     return (
@@ -161,14 +170,17 @@ const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem,
                 type="number"
                 min={0}
                 max={
-                  user ? (data as CartItemType).product.quantity - (data as CartItemType).product.buyQuantity : 10
-                } /* TODO: dryRun 에러 형태 확정시 반영 */
+                  user
+                    ? (data as CartItemType).product.quantity - (data as CartItemType).product.buyQuantity
+                    : (data as CartStorageItem).stock
+                }
                 value={quantityInput}
                 onChange={(event) => handleQuantity(event, user ? (data as CartItemType)._id : -1)}
               ></QuantityWrapper>
               <CounterButton handleQuantity={() => handlePlus(user ? (data as CartItemType)._id : -1)}>+</CounterButton>
             </CounterLayer>
             <Price>{cartItemPrice.toLocaleString()}원</Price>
+            {(data as CartStorageItem).stock < (data as CartStorageItem).quantity ? <p>재고반영됨</p> : null}
           </CountPrice>
           <CancelIconWrapper
             style={{ width: 20, height: 20 }}
