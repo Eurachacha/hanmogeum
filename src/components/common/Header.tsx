@@ -26,7 +26,7 @@ const Header = () => {
   const [searchParams] = useSearchParams();
   const userType = useRecoilValue(getUserTypeState);
   const [user, setUser] = useRecoilState(loggedInUserState);
-  const setCartStorage = useSetRecoilState(cartState);
+  const [cartStorage, setCartStorage] = useRecoilState(cartState);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -38,7 +38,7 @@ const Header = () => {
     if (authToken) {
       setIsLogin(true);
       // TODO: 로그인한 사용자의 장바구니를 불러온다.
-      setCartCount(0);
+      setCartCount(cartStorage.length);
       if (MANAGE_TYPE.some((manageType) => userType === manageType)) {
         setIsManager(true);
       }
