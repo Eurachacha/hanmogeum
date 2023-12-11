@@ -39,7 +39,7 @@ interface SignUpDataType {
   name: string;
   phoneNumber: string;
   address: string;
-  addressDetail: string;
+  detailAddress: string;
 }
 
 interface SignUpErrorType extends Error {
@@ -62,7 +62,7 @@ const SignUpContainer = () => {
     name: "",
     phoneNumber: "",
     address: "",
-    addressDetail: "",
+    detailAddress: "",
   });
   const [validationMessage, setValidationMessage] = useState({
     email: "",
@@ -85,7 +85,8 @@ const SignUpContainer = () => {
         password: signUpData?.password,
         name: signUpData.name,
         phone: onlyNumberPhone,
-        address: `${`${signUpData.address} ${signUpData.addressDetail}`}`,
+        address: signUpData.address,
+        detailAddress: signUpData.detailAddress,
         type: "user",
         extra: {},
       });
@@ -155,7 +156,7 @@ const SignUpContainer = () => {
         setSignUpData((prevState) => ({
           ...prevState,
           address: fullAddress,
-          addressDetail: extraAddress,
+          detailAddress: extraAddress,
         }));
       },
     });
@@ -331,10 +332,10 @@ const SignUpContainer = () => {
       isTitleImportant: false,
       inputProps: {
         type: "text",
-        name: "addressDetail",
+        name: "detailAddress",
         placeholder: "상세 주소를 입력해주세요.",
         onChange: inputHandleChange,
-        value: signUpData.addressDetail,
+        value: signUpData.detailAddress,
         customStyle: inputCustomStyle,
       },
     },
