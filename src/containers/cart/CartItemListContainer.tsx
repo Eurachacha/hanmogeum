@@ -92,7 +92,7 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
       });
       checkIsInStock(targetData);
     }
-  }, [cartData, cartStorage]);
+  }, []);
 
   // 체크박스 상태가 바뀌면 모든 아이템이 체크되어있는지 확인
   useEffect(() => {
