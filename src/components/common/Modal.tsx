@@ -5,10 +5,11 @@ import CircleCheckIcon from "@/assets/icons/circleCheck.svg?react";
 interface ModalProps {
   isOpen: boolean;
   iconRequired?: boolean;
+  targetString?: string;
   message: string;
 }
 
-const Modal = ({ isOpen, iconRequired = false, message, children }: PropsWithChildren<ModalProps>) => {
+const Modal = ({ isOpen, iconRequired = false, targetString, message, children }: PropsWithChildren<ModalProps>) => {
   return (
     <WholeContainer $isOpen={isOpen}>
       <ModalContainer>
@@ -17,7 +18,24 @@ const Modal = ({ isOpen, iconRequired = false, message, children }: PropsWithChi
             <CircleCheckIcon />
           </IconWrapper>
         )}
-        <MessageWrapper>{message}</MessageWrapper>
+        {targetString && (
+          <BoldText>
+            {targetString.split("\n").map((str) => (
+              <>
+                {str}
+                <br />
+              </>
+            ))}
+          </BoldText>
+        )}
+        <MessageWrapper>
+          {message.split("\n").map((str) => (
+            <>
+              {str}
+              <br />
+            </>
+          ))}
+        </MessageWrapper>
         <ButtonArea>{children}</ButtonArea>
       </ModalContainer>
     </WholeContainer>
@@ -61,6 +79,10 @@ const ModalContainer = styled.div`
 const IconWrapper = styled.div`
   color: var(--color-sub-500);
   margin-bottom: 1rem;
+`;
+
+const BoldText = styled.p`
+  font-weight: var(--weight-bold);
 `;
 
 const MessageWrapper = styled.p`
