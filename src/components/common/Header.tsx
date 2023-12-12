@@ -31,13 +31,9 @@ const Header = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // const code = myCode("티백");
-
     const authToken = localStorage.getItem(AUTH_TOKEN_KEY);
     if (authToken) {
       setIsLogin(true);
-      // TODO: 로그인한 사용자의 장바구니를 불러온다.
-      setCartCount(cartStorage.length);
       if (MANAGE_TYPE.some((manageType) => userType === manageType)) {
         setIsManager(true);
       }
@@ -45,6 +41,9 @@ const Header = () => {
       setIsLogin(false);
     }
   }, [user]);
+  useEffect(() => {
+    setCartCount(cartStorage.length);
+  }, [cartStorage]);
 
   const logoutHandleClick = () => {
     localStorage.removeItem("cartChecked");
