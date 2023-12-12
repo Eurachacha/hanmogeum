@@ -19,8 +19,10 @@ const ProductDetailPage = () => {
   const [itemData, setItemData] = useState<ProductDetailWithReplies>();
   const user = useRecoilValue(loggedInUserState);
   const [cartStorage, setCartStorage] = useRecoilState(cartState);
-  const [isAddCartModal, setIsAddCartModal] = useState(false);
+  const [isAddCartModalOpen, setIsAddCartModalOpen] = useState(false);
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isCheckoutConfirmModalOpen, setIsCheckoutConfirmModalOpen] = useState(false);
   const categoryCodes = useRecoilValue(flattenCodeState);
 
   const { id } = useParams();
@@ -49,6 +51,7 @@ const ProductDetailPage = () => {
   const handleAddToCart = () => {
     if (user) {
       addToCartData(Number(id), quantityInput);
+      setIsAddCartModalOpen(true);
       return;
     }
     const sameItemIndex = cartStorage.findIndex((item) => item.product._id === Number(id));
@@ -71,7 +74,7 @@ const ProductDetailPage = () => {
       const newCartStorageData = [...cartStorage];
       newCartStorageData.splice(sameItemIndex, 1, newCartStorageItem);
       setCartStorage(newCartStorageData);
-      setIsAddCartModal(true);
+      setIsAddCartModalOpen(true);
     } else {
       const newCartStorageData = {
         quantity: quantityInput,
@@ -84,11 +87,17 @@ const ProductDetailPage = () => {
         stock: itemQuantity - buyQuantity,
       };
       setCartStorage((prev) => [...prev, newCartStorageData]);
-      setIsAddCartModal(true);
+      setIsAddCartModalOpen(true);
     }
   };
 
-  const handleCheckoutOrder = () => {};
+  const handleCheckoutOrder = () => {
+    if (!user) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    setIsCheckoutConfirmModalOpen(true);
+  };
 
   const handleStockUpdate = () => {
     setIsStockModalOpen(false);
@@ -105,12 +114,32 @@ const ProductDetailPage = () => {
           <Button value="확인" size="sm" variant="sub" />
         </ButtonWrapper>
       </Modal>
-      <Modal isOpen={isAddCartModal} message="상품을 장바구니에 담았습니다.">
-        <ButtonWrapper onClick={() => setIsAddCartModal(false)}>
+      <Modal isOpen={isAddCartModalOpen} message="상품을 장바구니에 담았습니다.">
+        <ButtonWrapper onClick={() => setIsAddCartModalOpen(false)}>
           <Button value="계속 쇼핑하기" size="sm" variant="point" />
         </ButtonWrapper>
         <ButtonWrapper onClick={() => navigate("/cart")}>
           <Button value="장바구니로 가기" size="sm" variant="sub" />
+        </ButtonWrapper>
+      </Modal>
+      <Modal isOpen={isLoginModalOpen} message="로그인 하시겠습니까?">
+        <ButtonWrapper onClick={() => setIsLoginModalOpen(false)}>
+          <Button value="취소" size="sm" variant="sub" />
+        </ButtonWrapper>
+        <ButtonWrapper onClick={() => navigate("/login")}>
+          <Button value="로그인" size="sm" variant="point" />
+        </ButtonWrapper>
+      </Modal>
+      <Modal
+        isOpen={isCheckoutConfirmModalOpen}
+        targetString={`${itemData?.name} X ${quantityInput}개`}
+        message="구매하시겠습니까?"
+      >
+        <ButtonWrapper onClick={() => setIsCheckoutConfirmModalOpen(false)}>
+          <Button value="취소" size="sm" variant="sub" />
+        </ButtonWrapper>
+        <ButtonWrapper onClick={() => navigate("/orders/checkout")}>
+          <Button value="구매하기" size="sm" variant="point" />
         </ButtonWrapper>
       </Modal>
       <ProductDetailLeft>[상품 정보]상품id : {id}</ProductDetailLeft>
@@ -177,6 +206,7 @@ const ProductDetailPageLayer = styled.div`
 `;
 
 const ButtonWrapper = styled.div`
+  min-width: 120px;
   padding: 0 4px;
 `;
 
