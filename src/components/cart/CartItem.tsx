@@ -28,6 +28,7 @@ const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem,
   const user = useRecoilValue(loggedInUserState);
   const setCartStorage = useSetRecoilState(cartState);
   const { handleQuantityInput, quantityInput, setQuantityInputAsStock } = useQuantityCounter(
+    data.quantity,
     user
       ? (data as CartItemType).product.quantity - (data as CartItemType).product.buyQuantity
       : (data as CartStorageItem).stock,

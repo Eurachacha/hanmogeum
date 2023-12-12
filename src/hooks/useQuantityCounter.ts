@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-const useQuantityCounter = (stock: number) => {
-  const [quantityInput, setQuantityInput] = useState(1);
+const useQuantityCounter = (initQuantity: number, stock: number) => {
+  const [quantityInput, setQuantityInput] = useState(initQuantity);
 
   const handleQuantityInput = (action: string, event?: React.ChangeEvent<HTMLInputElement>) => {
     if (event) {
@@ -10,7 +10,7 @@ const useQuantityCounter = (stock: number) => {
         setQuantityInput(0);
         return;
       }
-      if (valueAsNumber < 1 || valueAsNumber > stock) return;
+      if (valueAsNumber < 0 || valueAsNumber > stock) return;
       setQuantityInput(valueAsNumber);
     }
     if (action === "plus") {
@@ -18,7 +18,7 @@ const useQuantityCounter = (stock: number) => {
         setQuantityInput(quantityInput + 1);
       }
     } else if (action === "minus") {
-      if (quantityInput - 1 > 0) {
+      if (quantityInput - 1 >= 0) {
         setQuantityInput(quantityInput - 1);
       }
     }

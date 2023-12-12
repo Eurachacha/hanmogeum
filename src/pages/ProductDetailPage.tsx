@@ -104,6 +104,7 @@ const ProductDetailPage = () => {
   };
 
   const { handleQuantityInput, quantityInput } = useQuantityCounter(
+    1,
     itemData ? itemData.quantity - itemData.buyQuantity : 0,
   );
 
