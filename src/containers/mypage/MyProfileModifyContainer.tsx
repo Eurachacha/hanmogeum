@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
@@ -55,7 +54,6 @@ interface SignUpErrorType extends Error {
 const inputCustomStyle: CommonCustomStyle = { width: "32rem" };
 
 const MyProfileEditContainer = () => {
-  const navigate = useNavigate();
   const loggedInUser = useRecoilValue(loggedInUserState);
 
   const [signUpData, setSignUpData] = useState<SignUpDataType>({
@@ -87,7 +85,7 @@ const MyProfileEditContainer = () => {
     if (signUpData.address || signUpData.addressDetail)
       updateData.address = `${signUpData.address} ${signUpData.addressDetail}`;
     try {
-      const response = await userApi.updateUserProfile(loggedInUser?._id || -1, updateData);
+      await userApi.updateUserProfile(loggedInUser?._id || -1, updateData);
       setShowModal({ isOpen: true, message: "수정이 완료되었습니다." });
     } catch (error) {
       console.error(error);

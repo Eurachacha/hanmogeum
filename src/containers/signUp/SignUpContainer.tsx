@@ -74,7 +74,6 @@ const SignUpContainer = () => {
   const [isActiveSignUpButton, setIsActiveSignUpButton] = useState(false);
   const [isActiveEmailButton, setIsActiveEmailButton] = useState(true);
   const setLoggedInUserState = useSetRecoilState(loggedInUserState);
-  const [showConfetti, setShowConfetti] = useState(false);
 
   // 가입하기 버튼을 눌렀을 때 발생하는 이벤트 함수입니다.
   const signUpSubmitClick = async () => {
@@ -97,7 +96,6 @@ const SignUpContainer = () => {
           setLoggedInUserState(data.item);
           localStorage.setItem(AUTH_TOKEN_KEY, data.item.token.accessToken);
           navigate("/?welcome=true");
-          setShowConfetti(true);
         }
       }
     } catch (error) {
