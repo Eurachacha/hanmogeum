@@ -24,7 +24,13 @@ const useQuantityCounter = (stock: number) => {
     }
   };
 
-  return { handleQuantityInput, quantityInput };
+  const setQuantityInputAsStock = (quantity: number) => {
+    if (stock < quantity) {
+      setQuantityInput(stock);
+    } else setQuantityInput(quantity);
+  };
+
+  return { handleQuantityInput, quantityInput, setQuantityInputAsStock };
 };
 
 export default useQuantityCounter;
