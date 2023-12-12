@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { NavLink, useNavigate, useSearchParams, Link, useLocation } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import IconShoppingCart from "@/assets/icons/shoppingCart_40.svg?react";
 import IconSearchCart from "@/assets/icons/search_24.svg?react";
 import { getUserTypeState } from "@/recoil/selectors/loggedInUserSelector";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
-import { cartState } from "@/recoil/atoms/cartState";
+import { cartState, cartCheckedItemState } from "@/recoil/atoms/cartState";
 import getProductCategoryValueByCode from "@/recoil/selectors/codeSelector";
 
 // constants
@@ -26,6 +26,7 @@ const Header = () => {
   const userType = useRecoilValue(getUserTypeState);
   const [user, setUser] = useRecoilState(loggedInUserState);
   const [cartStorage, setCartStorage] = useRecoilState(cartState);
+  const setCheckedItem = useSetRecoilState(cartCheckedItemState);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -54,6 +55,7 @@ const Header = () => {
     setIsLogin(false);
     setUser(null);
     setCartStorage([]);
+    setCheckedItem([]);
   };
 
   const categoryCode = {
