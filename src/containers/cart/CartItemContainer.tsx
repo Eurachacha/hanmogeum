@@ -44,9 +44,11 @@ const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
   const handleDeleteItem = async (_id: number, product_id: number) => {
     // 로그인 시
     if (user) {
-      deleteCartItem(_id!);
-      const newCartItems = await fetchCartItems();
-      if (newCartItems) setCartData(newCartItems);
+      const response = await deleteCartItem(_id!);
+      if (response) {
+        const newCartItems = await fetchCartItems();
+        if (newCartItems) setCartData(newCartItems);
+      }
       return;
     }
     // 비로그인 시
