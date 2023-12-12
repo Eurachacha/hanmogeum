@@ -76,23 +76,25 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
   };
 
   useEffect(() => {
-    // 첫 렌더링 시
-    // checkedItems 배열에 모든 product_id 추가
+    // 첫 렌더링 시 재고체크
+    // - 로그인 시: cartData 내부 확인(CartItem 컴포넌트에서 체크)
+    // - 비로그인 시 : cartStorage 데이터로 POST /carts/local 재고체크 요청
+    const targetData = cartStorage.map((item) => {
+      return {
+        _id: item.product._id,
+        quantity: item.quantity,
+      };
+    });
+    checkIsInStock(targetData);
+  }, []);
+
+  useEffect(() => {
+    // 첫 렌더링 또는 데이터 변경 시 checkedItems 배열에 모든 product_id 추가
     if (user) setCheckedItems([...cartData].map((item) => item.product_id));
     else {
       setCheckedItems([...cartStorage].map((item) => item.product._id));
-      // [재고체크]
-      // - 로그인 시: cartData 내부 확인(CartItem 컴포넌트에서 체크)
-      // - 비로그인 시 : cartStorage 데이터로 POST /carts/local 재고체크 요청
-      const targetData = cartStorage.map((item) => {
-        return {
-          _id: item.product._id,
-          quantity: item.quantity,
-        };
-      });
-      checkIsInStock(targetData);
     }
-  }, []);
+  }, [cartData, cartStorage]);
 
   // 체크박스 상태가 바뀌면 모든 아이템이 체크되어있는지 확인
   useEffect(() => {
