@@ -7,6 +7,7 @@ const publicInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 const privateInstance = axios.create({
@@ -15,6 +16,7 @@ const privateInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 // 헤더에 토큰을 전달하는 요청 인터셉터
@@ -43,6 +45,7 @@ const getNewToken = async () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${refreshToken}`,
         },
+        withCredentials: true,
       },
     );
     const { accessToken: newAccessToken } = response.data;
