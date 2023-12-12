@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { NavLink, useNavigate, useSearchParams, Link, useLocation } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import IconShoppingCart from "@/assets/icons/shoppingCart_40.svg?react";
 import IconSearchCart from "@/assets/icons/search_24.svg?react";
 import { getUserTypeState } from "@/recoil/selectors/loggedInUserSelector";
