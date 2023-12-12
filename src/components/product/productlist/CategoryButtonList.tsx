@@ -1,19 +1,12 @@
 import styled from "styled-components";
 import CategoryButton from "./CategoryButton";
 import useQueryParams from "@/hooks/useQueryParams";
+import { CodeWithSub } from "@/types/code";
 
 interface CategoryButtonListProps {
   value: string;
-  subCategory: Array<SubCategoryType>;
+  subCategory: CodeWithSub[];
 }
-type SubCategoryType = {
-  sort: number;
-  code: string;
-  value: string;
-  parent: string;
-  depth: number;
-};
-
 const CategoryButtonList = ({ value, subCategory }: CategoryButtonListProps) => {
   const { toggleFilter } = useQueryParams(`${value}`);
 
