@@ -1,5 +1,5 @@
 import ContentsTitle from "@/components/contentsTitle/ContentsTitle";
-import SignUpContainer from "@/containers/signUpContainer/SignUpContainer";
+import SignUpContainer from "@/containers/signUp/SignUpContainer";
 
 const SignUpPage = () => {
   return (

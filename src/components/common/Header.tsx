@@ -7,7 +7,6 @@ import IconSearchCart from "@/assets/icons/search_24.svg?react";
 import { getUserTypeState } from "@/recoil/selectors/loggedInUserSelector";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import { cartState } from "@/recoil/atoms/cartState";
-import { FlattenData } from "@/types/code";
 import getProductCategoryValueByCode from "@/recoil/selectors/codeSelector";
 
 // constants

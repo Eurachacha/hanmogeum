@@ -1,4 +1,4 @@
-import MyOrderDetailContainer from "@/containers/mypageContainer/MyOrderDetailContainer";
+import MyOrderDetailContainer from "@/containers/mypage/MyOrderDetailContainer";
 
 const MyOrderDetailPage = () => {
   return <MyOrderDetailContainer />;

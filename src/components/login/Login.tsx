@@ -1,6 +1,6 @@
 import { useState, PropsWithChildren } from "react";
 import styled from "styled-components";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import userApi from "@/apis/services/users";

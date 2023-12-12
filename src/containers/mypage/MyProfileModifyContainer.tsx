@@ -1,23 +1,24 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 /* types */
 import { InputType, InputProps } from "@/types/input";
 import { CommonCustomStyle } from "@/types/customStyle";
+import { RequestUpdateUser } from "@/types/users";
 /* components */
 import ItemInput from "@/components/itemInput/ItemInput";
 import Button from "@/components/common/Button";
 import Modal from "@/components/common/Modal";
+import MypageLayoutContainer from "./MypageLayoutContainer";
 /* util */
 import autoHyphenPhoneNumber from "@/utils/autoHyphenPhoneNumber";
 /* api */
 import userApi from "@/apis/services/users";
 /* constants */
 import PASSWORD_MIN_LENGTH from "@/constants/signUpValidation";
-import { AUTH_TOKEN_KEY } from "@/constants/api";
+import ContentsTitle from "@/components/contentsTitle/ContentsTitle";
 
 interface InputDataType {
   title: string;
@@ -39,7 +40,7 @@ interface SignUpDataType {
   name: string;
   phoneNumber: string;
   address: string;
-  detailAddress: string;
+  addressDetail: string;
 }
 
 interface SignUpErrorType extends Error {
@@ -52,8 +53,8 @@ interface SignUpErrorType extends Error {
 
 const inputCustomStyle: CommonCustomStyle = { width: "32rem" };
 
-const SignUpContainer = () => {
-  const navigate = useNavigate();
+const MyProfileEditContainer = () => {
+  const loggedInUser = useRecoilValue(loggedInUserState);
 
   const [signUpData, setSignUpData] = useState<SignUpDataType>({
     email: "",
@@ -62,7 +63,7 @@ const SignUpContainer = () => {
     name: "",
     phoneNumber: "",
     address: "",
-    detailAddress: "",
+    addressDetail: "",
   });
   const [validationMessage, setValidationMessage] = useState({
     email: "",
@@ -73,33 +74,19 @@ const SignUpContainer = () => {
   const [showModal, setShowModal] = useState({ isOpen: false, message: "" });
   const [isActiveSignUpButton, setIsActiveSignUpButton] = useState(false);
   const [isActiveEmailButton, setIsActiveEmailButton] = useState(true);
-  const setLoggedInUserState = useSetRecoilState(loggedInUserState);
-  const [showConfetti, setShowConfetti] = useState(false);
 
-  // 가입하기 버튼을 눌렀을 때 발생하는 이벤트 함수입니다.
+  // 수정하기 버튼을 눌렀을 때 발생하는 이벤트 함수입니다.
   const signUpSubmitClick = async () => {
     const onlyNumberPhone = signUpData.phoneNumber.replace(/[^0-9]/g, "");
+    const updateData: RequestUpdateUser = {}; // 빈 객체로 초기화
+    if (signUpData?.password) updateData.password = signUpData.password;
+    if (signUpData?.name) updateData.name = signUpData.name; // 여기서는 옵셔널 체이닝이 필요 없습니다.
+    if (onlyNumberPhone) updateData.phone = onlyNumberPhone;
+    if (signUpData.address || signUpData.addressDetail)
+      updateData.address = `${signUpData.address} ${signUpData.addressDetail}`;
     try {
-      const response = await userApi.signUpUser({
-        email: signUpData.email,
-        password: signUpData?.password,
-        name: signUpData.name,
-        phone: onlyNumberPhone,
-        address: signUpData.address,
-        detailAddress: signUpData.detailAddress,
-        type: "user",
-        extra: {},
-      });
-      if (response.data.ok === 1) {
-        const credentials = { email: signUpData.email, password: signUpData.password };
-        const { data } = await userApi.loginUser(credentials);
-        if (data.ok === 1) {
-          setLoggedInUserState(data.item);
-          localStorage.setItem(AUTH_TOKEN_KEY, data.item.token.accessToken);
-          navigate("/?welcome=true");
-          setShowConfetti(true);
-        }
-      }
+      await userApi.updateUserProfile(loggedInUser?._id || -1, updateData);
+      setShowModal({ isOpen: true, message: "수정이 완료되었습니다." });
     } catch (error) {
       console.error(error);
       const signupError = error as SignUpErrorType;
@@ -118,34 +105,7 @@ const SignUpContainer = () => {
     }));
   };
 
-  // 이메일 중복확인 버튼을 눌렀을때 발생하는 이벤트 함수입니다.
-  const emailDuplicateHandleClick = async () => {
-    /// users/email?email=s1@market.com
-    try {
-      const { data } = await userApi.emailDuplicateCheck(signUpData.email);
-      if (data.ok === 1) {
-        // 사용 가능한 이메일
-        setShowModal({ isOpen: true, message: "가입 가능한 이메일 입니다." });
-        setIsActiveEmailButton(false);
-      } else if (data.ok === 0) {
-        // 사용 불가능한 이메일
-        setShowModal({ isOpen: true, message: "이미 가입한 이메일 입니다." });
-        setIsActiveEmailButton(true);
-      }
-    } catch (error: unknown) {
-      const signupError = error as SignUpErrorType;
-      let errorMessage = "";
-      if (signupError.response?.status === 409) {
-        errorMessage = "이미 등록된 이메일입니다.";
-      } else {
-        errorMessage = "유효하지 않은 이메일 형식입니다.";
-      }
-      setShowModal({ isOpen: true, message: errorMessage });
-      setIsActiveEmailButton(true);
-    }
-  };
-
-  // TODO: 커스텀 훅 사용하도록 ㄱ수정
+  // TODO: 커스텀 훅 사용하도록 수정
   const openPostcode = useDaumPostcodePopup();
   const addressSearchHandleClick = () => {
     openPostcode({
@@ -156,7 +116,7 @@ const SignUpContainer = () => {
         setSignUpData((prevState) => ({
           ...prevState,
           address: fullAddress,
-          detailAddress: extraAddress,
+          addressDetail: extraAddress,
         }));
       },
     });
@@ -170,12 +130,9 @@ const SignUpContainer = () => {
   // TODO: 다음 useEffect들 커스텀 훅으로 변경
   useEffect(() => {
     if (
-      validationMessage.email === "" &&
       validationMessage.password === "" &&
       validationMessage.passwordAgain === "" &&
-      validationMessage.phoneNumber === "" &&
-      signUpData.name !== "" &&
-      isActiveEmailButton === false
+      validationMessage.phoneNumber === ""
     ) {
       setIsActiveSignUpButton(true);
     } else {
@@ -222,7 +179,7 @@ const SignUpContainer = () => {
     {
       // 이메일
       title: "이메일",
-      isTitleImportant: true,
+      isTitleImportant: false,
       showValidationMessage: validationMessage.email !== "",
       validationMessage: validationMessage.email,
       inputProps: {
@@ -231,18 +188,14 @@ const SignUpContainer = () => {
         required: true,
         placeholder: "이메일을 입력해주세요.",
         onChange: inputHandleChange,
-        value: signUpData.email,
-        customStyle: inputCustomStyle,
+        value: loggedInUser?.email || "",
+        customStyle: { width: "32rem", color: "var(--color-gray-200)" },
       },
-      includeButton: true,
-      buttonValue: "중복확인",
-      buttonOnClick: emailDuplicateHandleClick,
-      buttonDisabled: isActiveEmailButton === false,
     },
     {
       // 비밀번호
       title: "비밀번호",
-      isTitleImportant: true,
+      isTitleImportant: false,
       showValidationMessage: validationMessage.password !== "",
       validationMessage: validationMessage.password,
       inputProps: {
@@ -261,7 +214,7 @@ const SignUpContainer = () => {
       title: "비밀번호 확인",
       showValidationMessage: validationMessage.passwordAgain !== "",
       validationMessage: validationMessage.passwordAgain,
-      isTitleImportant: true,
+      isTitleImportant: false,
 
       inputProps: {
         type: "password",
@@ -278,7 +231,7 @@ const SignUpContainer = () => {
       // 이름
       title: "이름",
       showValidationMessage: false,
-      isTitleImportant: true,
+      isTitleImportant: false,
       inputProps: {
         type: "text",
         name: "name",
@@ -293,7 +246,7 @@ const SignUpContainer = () => {
     {
       // 휴대폰 번호
       title: "휴대폰",
-      isTitleImportant: true,
+      isTitleImportant: false,
       showValidationMessage: validationMessage.phoneNumber !== "",
       validationMessage: validationMessage.phoneNumber,
       inputProps: {
@@ -332,53 +285,53 @@ const SignUpContainer = () => {
       isTitleImportant: false,
       inputProps: {
         type: "text",
-        name: "detailAddress",
+        name: "addressDetail",
         placeholder: "상세 주소를 입력해주세요.",
         onChange: inputHandleChange,
-        value: signUpData.detailAddress,
+        value: signUpData.addressDetail,
         customStyle: inputCustomStyle,
       },
     },
   ];
 
   return (
-    <SignUpContainerLayer>
-      <div>
-        <Modal isOpen={showModal.isOpen} iconRequired={false} message={showModal.message}>
-          <CheckModalButton onClick={() => setShowModal({ isOpen: false, message: "" })}>확인</CheckModalButton>
-        </Modal>
-      </div>
-      <NoticeBar>
-        <ImportantSpan>*</ImportantSpan>
-        <span>필수입력사항</span>
-      </NoticeBar>
-      <FromWrapper noValidate onSubmit={signUpFormHandleSubmit}>
-        <InputListStyle>
-          {itemInputData.map((itemInput) => {
-            return (
-              <ItemWrapper key={`${itemInput.inputProps.name}_ItemWrapper`}>
-                <ItemInput
-                  key={`${itemInput.inputProps.name}_ItemInput`}
-                  title={itemInput.title}
-                  isTitleImportant={itemInput.isTitleImportant}
-                  showValidationMessage={itemInput.showValidationMessage}
-                  validationMessage={itemInput.validationMessage}
-                  includeButton={itemInput.includeButton}
-                  inputProps={{ ...itemInput.inputProps }}
-                  buttonValue={itemInput?.buttonValue}
-                  buttonOnClick={itemInput?.buttonOnClick}
-                  buttonDisabled={itemInput?.buttonDisabled}
-                />
-              </ItemWrapper>
-            );
-          })}
-        </InputListStyle>
+    <MypageLayoutContainer ContentsTitle="내 정보 변경">
+      <ContentsTitle title="내 정보 변경"></ContentsTitle>
 
-        <ButtonWrapper onClick={signUpSubmitClick}>
-          <Button disabled={!isActiveSignUpButton} value="가입하기" size="lg" variant="point"></Button>
-        </ButtonWrapper>
-      </FromWrapper>
-    </SignUpContainerLayer>
+      <SignUpContainerLayer>
+        <div>
+          <Modal isOpen={showModal.isOpen} iconRequired={false} message={showModal.message}>
+            <CheckModalButton onClick={() => setShowModal({ isOpen: false, message: "" })}>확인</CheckModalButton>
+          </Modal>
+        </div>
+        <FromWrapper noValidate onSubmit={signUpFormHandleSubmit}>
+          <InputListStyle>
+            {itemInputData.map((itemInput) => {
+              return (
+                <ItemWrapper key={`${itemInput.inputProps.name}_ItemWrapper`}>
+                  <ItemInput
+                    key={`${itemInput.inputProps.name}_ItemInput`}
+                    title={itemInput.title}
+                    isTitleImportant={itemInput.isTitleImportant}
+                    showValidationMessage={itemInput.showValidationMessage}
+                    validationMessage={itemInput.validationMessage}
+                    includeButton={itemInput.includeButton}
+                    inputProps={{ ...itemInput.inputProps }}
+                    buttonValue={itemInput?.buttonValue}
+                    buttonOnClick={itemInput?.buttonOnClick}
+                    buttonDisabled={itemInput?.buttonDisabled}
+                  />
+                </ItemWrapper>
+              );
+            })}
+          </InputListStyle>
+
+          <ButtonWrapper onClick={signUpSubmitClick}>
+            <Button disabled={!isActiveSignUpButton} value="수정완료" size="lg" variant="point"></Button>
+          </ButtonWrapper>
+        </FromWrapper>
+      </SignUpContainerLayer>
+    </MypageLayoutContainer>
   );
 };
 
@@ -387,20 +340,6 @@ const SignUpContainerLayer = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-`;
-
-const NoticeBar = styled.div`
-  display: flex;
-  justify-content: end;
-  border-bottom: 1px solid var(--color-gray-200);
-  width: 55rem;
-  padding-bottom: 0.8rem;
-  margin-bottom: 2rem;
-  font-size: 1.3rem;
-  font-weight: var(----weight-medium);
-`;
-const ImportantSpan = styled.span`
-  color: var(--color-red);
 `;
 
 const ItemWrapper = styled.div`
@@ -442,4 +381,4 @@ const ButtonWrapper = styled.div`
   width: 100%;
 `;
 
-export default SignUpContainer;
+export default MyProfileEditContainer;

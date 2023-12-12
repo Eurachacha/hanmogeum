@@ -1,4 +1,4 @@
-import MyProfileLoginContainer from "@/containers/mypageContainer/MyProfileLoginContainer";
+import MyProfileLoginContainer from "@/containers/mypage/MyProfileLoginContainer";
 
 const MyProfilePage = () => {
   return (

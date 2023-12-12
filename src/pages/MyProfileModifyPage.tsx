@@ -1,4 +1,4 @@
-import MyProfileEditContainer from "@/containers/mypageContainer/MyProfileModifyContainer";
+import MyProfileEditContainer from "@/containers/mypage/MyProfileModifyContainer";
 
 const MyProfileModifyPage = () => {
   return (
