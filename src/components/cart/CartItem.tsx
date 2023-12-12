@@ -9,6 +9,7 @@ import CounterButton from "./CounterButton";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import cartApi from "@/apis/services/cart";
 import { cartState } from "@/recoil/atoms/cartState";
+import useQuantityCounter from "@/hooks/useQuantityCounter";
 
 interface CartItemProps {
   setCartData: React.Dispatch<React.SetStateAction<CartItemType[]>>;
@@ -26,7 +27,11 @@ const isLocalData = (object: CartStorageItem | CartItemType) => {
 const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem, data, idx }: CartItemProps) => {
   const user = useRecoilValue(loggedInUserState);
   const setCartStorage = useSetRecoilState(cartState);
-  const [quantityInput, setQuantityInput] = useState(0);
+  const { handleQuantityInput, quantityInput, setQuantityInputAsStock } = useQuantityCounter(
+    user
+      ? (data as CartItemType).product.quantity - (data as CartItemType).product.buyQuantity
+      : (data as CartStorageItem).stock,
+  );
   const [cartItemPrice, setCartItemPrice] = useState(data.product.price * quantityInput);
 
   const updateQuantity = (_id: number, newQuantity: number) => {
@@ -37,123 +42,44 @@ const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem,
     }
   };
 
-  const handleQuantity = (event: React.ChangeEvent<HTMLInputElement>, _id: number) => {
-    const { value, valueAsNumber } = event.target;
-    if (Number.isNaN(value) || value === "") {
-      setQuantityInput(0);
-      return;
-    }
-
-    // 로그인 시 (data가 DB데이터인 경우)
-    if (user && !isLocalData(data)) {
-      const cartData = data as CartItemType;
-      if (valueAsNumber > cartData.product.quantity - cartData.product.buyQuantity) return;
-      const newCartItem = { ...cartData, quantity: valueAsNumber };
-      updateQuantity(_id, valueAsNumber);
-      setQuantityInput(valueAsNumber);
-      setCartData((prev) => {
-        const newCartStorage = [...prev];
-        newCartStorage.splice(idx, 1, newCartItem);
-        return newCartStorage;
-      });
-      return;
-    }
-    // 비로그인 시 (data가 로컬스토리지 데이터인 경우)
-    const cartStorage = data as CartStorageItem;
-    if (cartStorage.stock < valueAsNumber) return;
-    const newCartStorageItem = { ...cartStorage, quantity: valueAsNumber };
-    setCartStorage((prev) => {
-      const newCartStorage = [...prev];
-      newCartStorage.splice(idx, 1, newCartStorageItem);
-      return newCartStorage;
-    });
-    setQuantityInput(valueAsNumber);
-  };
-
-  const handleMinus = (_id: number) => {
-    // input상태가 1이라면 return
-    if (quantityInput <= 1) return;
-
-    // 로그인 시 (data가 DB데이터인 경우)
-    if (user && !isLocalData(data)) {
-      const cartData = data as CartItemType;
-      const newCartItem = { ...cartData, quantity: quantityInput - 1 };
-      updateQuantity(_id, quantityInput - 1);
-      setQuantityInput(quantityInput - 1);
-      setCartData((prev) => {
-        const newCartStorage = [...prev];
-        newCartStorage.splice(idx, 1, newCartItem);
-        return newCartStorage;
-      });
-      return;
-    }
-    // 비로그인 시 (data가 로컬스토리지 데이터인 경우)
-    const cartStorage = data as CartStorageItem;
-    const newCartStorageItem = { ...cartStorage, quantity: quantityInput - 1 };
-    setCartStorage((prev) => {
-      const newCartStorage = [...prev];
-      newCartStorage.splice(idx, 1, newCartStorageItem);
-      return newCartStorage;
-    });
-    setQuantityInput(quantityInput - 1);
-  };
-
-  const handlePlus = (_id: number) => {
-    // 로그인 시 (data가 DB데이터인 경우)
-    if (user && !isLocalData(data)) {
-      const cartData = data as CartItemType;
-      const newCartItem = { ...cartData, quantity: quantityInput + 1 };
-      // input상태가 재고와 같다면 return
-      if (quantityInput === cartData.product.quantity - cartData.product.buyQuantity) return;
-      updateQuantity(_id, quantityInput + 1);
-      setQuantityInput(quantityInput + 1);
-      setCartData((prev) => {
-        const newCartStorage = [...prev];
-        newCartStorage.splice(idx, 1, newCartItem);
-        return newCartStorage;
-      });
-      return;
-    }
-    // 비로그인 시
-    // input상태가 recoil 재고와 같다면 return
-    const cartStorage = data as CartStorageItem;
-    if (quantityInput === cartStorage.stock) return;
-    const newCartStorageItem = { ...cartStorage, quantity: quantityInput + 1 };
-    setCartStorage((prev) => {
-      const newCartStorage = [...prev];
-      newCartStorage.splice(idx, 1, newCartStorageItem);
-      return newCartStorage;
-    });
-    setQuantityInput(quantityInput + 1);
-  };
-
   useEffect(() => {
     setCartItemPrice(data.product.price * quantityInput);
   }, [quantityInput, data]);
 
   useEffect(() => {
-    // [로그인]
-    if (user) {
+    if (user) setQuantityInputAsStock((data as CartItemType).quantity);
+    else setQuantityInputAsStock((data as CartStorageItem).quantity);
+  }, []);
+
+  useEffect(() => {
+    // 로그인 시 (data가 DB데이터인 경우)
+    if (user && !isLocalData(data)) {
       const cartData = data as CartItemType;
-      const stock = cartData.product.quantity - cartData.product.buyQuantity;
-      if (stock < cartData.quantity) {
-        setQuantityInput(stock);
-      } else setQuantityInput(cartData.quantity);
+      const newCartItem = { ...cartData, quantity: quantityInput };
+      updateQuantity(cartData._id, quantityInput);
+      setCartData((prev) => {
+        const newCartData = [...prev];
+        newCartData.splice(idx, 1, newCartItem);
+        return newCartData;
+      });
       return;
     }
-    // [비로그인]
+    // 비로그인 시 (data가 로컬스토리지 데이터인 경우)
     const cartStorage = data as CartStorageItem;
-    if (cartStorage.stock < cartStorage.quantity) {
-      setQuantityInput(cartStorage.stock);
-    } else setQuantityInput(cartStorage.quantity);
-  }, [data]);
+    const newCartStorageItem = { ...cartStorage, quantity: quantityInput };
+    setCartStorage((prev) => {
+      const newCartStorage = [...prev];
+      newCartStorage.splice(idx, 1, newCartStorageItem);
+      return newCartStorage;
+    });
+  }, [quantityInput]);
 
   if (data)
     return (
       <CartItemLayer>
         <CartItemLeft>
-          <CheckedBox onClick={() => toggleCheckBox(data.product._id)}>
-            {checkedItems.includes(data.product._id) ? <CheckedBoxIcon /> : <UncheckedBoxIcon />}
+          <CheckedBox onClick={() => toggleCheckBox(data.product._id)} disabled={quantityInput <= 0}>
+            {quantityInput > 0 && checkedItems.includes(data.product._id) ? <CheckedBoxIcon /> : <UncheckedBoxIcon />}
           </CheckedBox>
           <ImageWrapper>
             <img src={data.product.image} alt={data.product.name} width="100%" height="100%" />
@@ -163,21 +89,18 @@ const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem,
         <CartItemRight>
           <CountPrice>
             <CounterLayer>
-              <CounterButton handleQuantity={() => handleMinus(user ? (data as CartItemType)._id : -1)}>
-                -
-              </CounterButton>
+              <CounterButton handleQuantity={() => handleQuantityInput("minus")}>-</CounterButton>
               <QuantityWrapper
                 type="number"
-                min={0}
                 max={
                   user
                     ? (data as CartItemType).product.quantity - (data as CartItemType).product.buyQuantity
                     : (data as CartStorageItem).stock
                 }
                 value={quantityInput}
-                onChange={(event) => handleQuantity(event, user ? (data as CartItemType)._id : -1)}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleQuantityInput("", event)}
               ></QuantityWrapper>
-              <CounterButton handleQuantity={() => handlePlus(user ? (data as CartItemType)._id : -1)}>+</CounterButton>
+              <CounterButton handleQuantity={() => handleQuantityInput("plus")}>+</CounterButton>
             </CounterLayer>
             <Price>{cartItemPrice.toLocaleString()}원</Price>
             {(data as CartStorageItem).stock < (data as CartStorageItem).quantity ? <p>재고반영됨</p> : null}
@@ -212,7 +135,9 @@ const CartItemLeft = styled.div`
   flex: 1 1 30%;
 `;
 
-const CheckedBox = styled.div`
+const CheckedBox = styled.button`
+  border: none;
+  background: none;
   margin: 0 4px;
   padding: 0 4px;
   cursor: pointer;
