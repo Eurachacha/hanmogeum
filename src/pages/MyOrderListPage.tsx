@@ -1,4 +1,4 @@
-import MyOrderListContainer from "@/containers/mypageContainer/MyOrderListContainer";
+import MyOrderListContainer from "@/containers/mypage/MyOrderListContainer";
 
 const MyOrderListPage = () => {
   return <MyOrderListContainer />;
