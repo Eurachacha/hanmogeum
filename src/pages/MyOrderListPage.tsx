@@ -1,5 +1,7 @@
+import MyOrderListContainer from "@/containers/mypage/MyOrderListContainer";
+
 const MyOrderListPage = () => {
-  return <div>주문 목록 페이지</div>;
+  return <MyOrderListContainer />;
 };
 
 export default MyOrderListPage;

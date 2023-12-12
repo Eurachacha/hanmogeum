@@ -1,5 +1,21 @@
+import styled from "styled-components";
+import CategoryList from "@/components/product/productlist/CategoryList";
+import ProductSortContainer from "@/containers/product/ProductSortContainer";
+
 const ProductListPage = () => {
-  return <div>상품목록페이지</div>;
+  return (
+    <ProductListLayer>
+      <CategoryList />
+      <ProductSortContainer />
+    </ProductListLayer>
+  );
 };
 
 export default ProductListPage;
+
+const ProductListLayer = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 35px;
+`;

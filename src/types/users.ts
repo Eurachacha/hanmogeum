@@ -1,22 +1,25 @@
-import UserType from "@/constants/user";
+type UserType = "user" | "seller" | "admin";
 
 export interface LoginData {
   email: string;
   password: string;
 }
 
-export interface SignUpData {
-  email: string;
-  password: string;
-  name: string;
-  phone: string;
-  address: string;
-}
-
 export interface UserExtra {
   like?: number[];
   birthday?: string;
   address?: UserAddress[];
+}
+
+export interface SignUpData {
+  email: string;
+  password: string;
+  name: string;
+  phone?: string;
+  address?: string;
+  detailAddress?: string;
+  type: string;
+  extra: UserExtra;
 }
 
 export interface UserAddress {
@@ -42,7 +45,6 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
-
 // POST /users/login 로그인
 export interface ResponseLogin {
   ok: number;
@@ -68,9 +70,15 @@ export interface RequestUpdateUser {
   phone?: string;
   password?: string;
   address?: string;
+  detailAddress?: string;
   extra?: UserExtra;
 }
 
 interface UpdatedUser extends RequestUpdateUser {
   updatedAt: string;
+}
+
+export interface ResponseEmailDuplicateCheck {
+  ok: number;
+  message: string;
 }

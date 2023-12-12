@@ -1,14 +1,15 @@
 import { PropsWithChildren } from "react";
 import styled from "styled-components";
-import CircleCheckIcon from "public/icons/circleCheck.svg?react";
+import CircleCheckIcon from "@/assets/icons/circleCheck.svg?react";
 
 interface ModalProps {
   isOpen: boolean;
   iconRequired?: boolean;
+  targetString?: string;
   message: string;
 }
 
-const Modal = ({ isOpen, iconRequired = false, message, children }: PropsWithChildren<ModalProps>) => {
+const Modal = ({ isOpen, iconRequired = false, targetString, message, children }: PropsWithChildren<ModalProps>) => {
   return (
     <WholeContainer $isOpen={isOpen}>
       <ModalContainer>
@@ -17,7 +18,30 @@ const Modal = ({ isOpen, iconRequired = false, message, children }: PropsWithChi
             <CircleCheckIcon />
           </IconWrapper>
         )}
-        <MessageWrapper>{message}</MessageWrapper>
+        {targetString && (
+          <BoldText>
+            {targetString.split("\n").map((str, idx) => {
+              const keyIndex = idx.toString() + str;
+              return (
+                <span key={keyIndex}>
+                  {str}
+                  <br />
+                </span>
+              );
+            })}
+          </BoldText>
+        )}
+        <MessageWrapper>
+          {message.split("\n").map((str, idx) => {
+            const keyIndex = idx.toString() + str;
+            return (
+              <span key={keyIndex}>
+                {str}
+                <br />
+              </span>
+            );
+          })}
+        </MessageWrapper>
         <ButtonArea>{children}</ButtonArea>
       </ModalContainer>
     </WholeContainer>
@@ -63,6 +87,10 @@ const IconWrapper = styled.div`
   margin-bottom: 1rem;
 `;
 
+const BoldText = styled.div`
+  font-weight: var(--weight-bold);
+`;
+
 const MessageWrapper = styled.p`
   margin-top: 1rem;
   margin-bottom: 2.4rem;
@@ -71,5 +99,5 @@ const MessageWrapper = styled.p`
 const ButtonArea = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 `;

@@ -4,10 +4,11 @@ import { ProductReview } from "./reviews";
 export interface Extra {
   isNew: boolean;
   isBest: boolean;
-  category: string[];
-  quantity: number;
-  buyQuantity: number;
-  order: number;
+  isDecaf: boolean;
+  pack: string[];
+  hashTag: string[];
+  taste: string[];
+  teaType: string[];
 }
 
 // Product
@@ -19,6 +20,8 @@ export interface Product {
   show: boolean;
   active: boolean;
   name: string;
+  buyQuantity: number;
+  quantity: number;
   mainImages: string[];
   createdAt: string;
   updatedAt: string;

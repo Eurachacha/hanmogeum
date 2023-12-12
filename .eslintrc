@@ -14,7 +14,7 @@
   "rules": {
     "react/react-in-jsx-scope": ["off"],
     "react/jsx-uses-react": ["off"],
-    "react/jsx-props-no-spreading": ["warn"],
+    "react/jsx-props-no-spreading": ["off"],
     "react/no-unescaped-entities": ["off"],
     "react/self-closing-comp": ["off"],
     "react/function-component-definition": [2, { "namedComponents": ["arrow-function"] }],
@@ -26,6 +26,18 @@
     "import/newline-after-import": ["warn"],
     "import/no-extraneous-dependencies": ["off"],
     "arrow-body-style": ["off", "never"],
-    "import/extensions": ["off"]
+    "import/extensions": ["off"],
+    "object-shorthand": ["off"],
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-underscore-dangle": ["off"],
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "format": ["camelCase", "UPPER_CASE", "PascalCase", "snake_case"],
+        "selector": "variable",
+        "leadingUnderscore": "allow",
+        "trailingUnderscore": "allow"
+      }
+    ]
   }
 }

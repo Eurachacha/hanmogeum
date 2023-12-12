@@ -1,45 +1,105 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate, useSearchParams, Link, useLocation } from "react-router-dom";
+import { useRecoilState, useRecoilValue } from "recoil";
 import IconShoppingCart from "@/assets/icons/shoppingCart_40.svg?react";
 import IconSearchCart from "@/assets/icons/search_24.svg?react";
+import { getUserTypeState } from "@/recoil/selectors/loggedInUserSelector";
+import loggedInUserState from "@/recoil/atoms/loggedInUserState";
+import { cartState } from "@/recoil/atoms/cartState";
+import getProductCategoryValueByCode from "@/recoil/selectors/codeSelector";
+
+// constants
 import { AUTH_TOKEN_KEY } from "@/constants/api";
+import { MANAGE_TYPE } from "@/constants/user";
+
+interface CategoryLinkProps {
+  $isActive?: boolean;
+  key: string;
+}
 
 const Header = () => {
   const [cartCount, setCartCount] = useState(0);
   const [isManager, setIsManager] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  const [searchParams] = useSearchParams();
+  const userType = useRecoilValue(getUserTypeState);
+  const [user, setUser] = useRecoilState(loggedInUserState);
+  const [cartStorage, setCartStorage] = useRecoilState(cartState);
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    // 로컬 스토리지의 토큰이 있는 경우, 로그인 된 사용자로 인식한다.
+    // const code = myCode("티백");
+
     const authToken = localStorage.getItem(AUTH_TOKEN_KEY);
     if (authToken) {
       setIsLogin(true);
-      // TODO: 로그인한 사용자의 로그인 정보를 조회하여, 일반사용자인지 관리자인지를 구분한다.
-      setIsManager(false);
       // TODO: 로그인한 사용자의 장바구니를 불러온다.
-      setCartCount(0);
+      setCartCount(cartStorage.length);
+      if (MANAGE_TYPE.some((manageType) => userType === manageType)) {
+        setIsManager(true);
+      }
     } else {
       setIsLogin(false);
     }
-  }, []);
+  }, [user]);
+
+  const logoutHandleClick = () => {
+    localStorage.removeItem("cartChecked");
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    setIsManager(false);
+    setCartCount(0);
+    setIsLogin(false);
+    setUser(null);
+    setCartStorage([]);
+  };
+
+  const categoryCode = {
+    티백: useRecoilValue(getProductCategoryValueByCode({ oneDepthValue: "pack", twoDepthValue: "티백" })),
+    잎차: useRecoilValue(getProductCategoryValueByCode({ oneDepthValue: "pack", twoDepthValue: "잎차" })),
+    분말: useRecoilValue(getProductCategoryValueByCode({ oneDepthValue: "pack", twoDepthValue: "분말" })),
+    "음료/원액": useRecoilValue(getProductCategoryValueByCode({ oneDepthValue: "pack", twoDepthValue: "음료-원액" })),
+  };
 
   const categoryList = {
     common: [
-      { name: "모든 상품", router: "/products" },
-      { name: "티백", router: "/products/teabags" },
-      { name: "잎차", router: "/products/tealeaves" },
-      { name: "분말", router: "/products/powders" },
-      { name: "음료/원액", router: "/products/liquids" },
+      { name: "모든 상품", router: "/products", location: "/products", categoryParams: null },
+      {
+        name: "티백",
+        router: `/products?pack=${categoryCode.티백}`,
+        location: "/products",
+        categoryParams: categoryCode.티백,
+      },
+      {
+        name: "잎차",
+        router: `/products?pack=${categoryCode.잎차}`,
+        location: "/products",
+        categoryParams: categoryCode.잎차,
+      },
+      {
+        name: "분말",
+        router: `/products?pack=${categoryCode.분말}`,
+        location: "/products",
+        categoryParams: categoryCode.분말,
+      },
+      {
+        name: "음료/원액",
+        router: `/products?pack=${categoryCode["음료/원액"]}`,
+        location: "/products",
+        categoryParams: categoryCode["음료/원액"],
+      },
     ],
     admin: [
-      { name: "관리자페이지", router: "/", isPublic: false }, // TODO: api 개발 완료 후 라우터 수정
+      { name: "관리자페이지", router: "/manage", isPublic: false, location: "/manage" }, // TODO: api 개발 완료 후 라우터 수정
     ],
   };
   const userControlList = {
     isLogin: [
-      { name: "마이페이지", router: "/mypage" },
-      { name: "로그아웃", router: "/" }, // TODO: 라우터 이동 전에 로그아웃 처리
+      { name: "마이페이지", router: "/mypage/orders", onClick: () => {} },
+      { name: "로그아웃", router: "/", onClick: logoutHandleClick },
     ],
     isLogout: [
       { name: "로그인", router: "/login" },
@@ -50,23 +110,35 @@ const Header = () => {
   return (
     <HeaderLayer>
       <HeaderWrapper>
-        <LogoWrapper>
+        <LogoWrapper onClick={() => navigate("/")}>
           <span>한모금</span>
         </LogoWrapper>
         <CategoryWrapper>
           <div>
             {categoryList.common.map((category) => (
-              <ActiveLink end key={category.name} to={category.router}>
-                {category.name}
-              </ActiveLink>
+              <ProductCategoryLink
+                key={`${category.name}Link`}
+                $isActive={
+                  location.pathname === category.location && searchParams.get("pack") === category.categoryParams
+                }
+              >
+                <Link key={`${category.name}Link`} to={category.router}>
+                  {category.name}
+                </Link>
+              </ProductCategoryLink>
             ))}
           </div>
           {isManager && (
             <AdminCategoryStyle>
               {categoryList.admin.map((category) => (
-                <ActiveLink end key={category.name} to={category.router}>
-                  {category.name}
-                </ActiveLink>
+                <AdminCategoryLink
+                  key={`${category.name}AdminCategoryLink`}
+                  $isActive={location.pathname === category.location}
+                >
+                  <Link key={`${category.name}Link`} to={category.router}>
+                    {category.name}
+                  </Link>
+                </AdminCategoryLink>
               ))}
             </AdminCategoryStyle>
           )}
@@ -78,7 +150,7 @@ const Header = () => {
         <UserControlWrapper>
           {isLogin
             ? userControlList.isLogin.map((userControl) => (
-                <NavLink key={userControl.name} to={userControl.router}>
+                <NavLink key={userControl.name} to={userControl.router} onClick={userControl.onClick}>
                   {userControl.name}
                 </NavLink>
               ))
@@ -101,10 +173,12 @@ const Header = () => {
   );
 };
 
-const ActiveLink = styled(NavLink)`
-  &.active {
-    color: var(--color-main);
-  }
+const ProductCategoryLink = styled.span<CategoryLinkProps>`
+  color: ${({ $isActive }) => ($isActive ? "var(--color-main)" : "inherit")};
+`;
+
+const AdminCategoryLink = styled.span<CategoryLinkProps>`
+  color: ${({ $isActive }) => ($isActive ? "var(--color-main)" : "inherit")};
 `;
 
 const HeaderLayer = styled.div`
@@ -122,9 +196,11 @@ const HeaderWrapper = styled.div`
   align-items: center;
   margin: 0 auto;
   max-width: 1280px;
+  /* overflow: hidden; */
 `;
 
 const LogoWrapper = styled.div`
+  min-width: 12rem;
   font: var(--weight-bold) 4rem "maruburi";
   color: var(--color-main);
   cursor: pointer;
@@ -132,8 +208,9 @@ const LogoWrapper = styled.div`
 const CategoryWrapper = styled.div`
   display: flex;
   align-items: center;
-  font: var(--weight-bold) 1.6rem "suit";
   padding: 0 2rem;
+  min-width: 46rem;
+  font: var(--weight-bold) 1.6rem "suit";
   a {
     padding: 0 1rem;
   }
