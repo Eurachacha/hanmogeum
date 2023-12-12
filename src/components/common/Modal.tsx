@@ -20,21 +20,27 @@ const Modal = ({ isOpen, iconRequired = false, targetString, message, children }
         )}
         {targetString && (
           <BoldText>
-            {targetString.split("\n").map((str) => (
-              <>
-                {str}
-                <br />
-              </>
-            ))}
+            {targetString.split("\n").map((str, idx) => {
+              const keyIndex = idx.toString() + str;
+              return (
+                <span key={keyIndex}>
+                  {str}
+                  <br />
+                </span>
+              );
+            })}
           </BoldText>
         )}
         <MessageWrapper>
-          {message.split("\n").map((str) => (
-            <>
-              {str}
-              <br />
-            </>
-          ))}
+          {message.split("\n").map((str, idx) => {
+            const keyIndex = idx.toString() + str;
+            return (
+              <span key={keyIndex}>
+                {str}
+                <br />
+              </span>
+            );
+          })}
         </MessageWrapper>
         <ButtonArea>{children}</ButtonArea>
       </ModalContainer>
@@ -81,7 +87,7 @@ const IconWrapper = styled.div`
   margin-bottom: 1rem;
 `;
 
-const BoldText = styled.p`
+const BoldText = styled.div`
   font-weight: var(--weight-bold);
 `;
 
