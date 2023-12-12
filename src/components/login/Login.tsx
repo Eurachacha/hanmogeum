@@ -1,14 +1,19 @@
 import { useState, PropsWithChildren } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import userApi from "@/apis/services/users";
+import cartApi from "@/apis/services/cart";
 // component
 import Input from "@/components/common/Input";
 import Modal from "@/components/common/Modal";
 // constant
 import { AUTH_TOKEN_KEY } from "@/constants/api";
+// recoil
+import { cartState, cartCheckedItemState } from "@/recoil/atoms/cartState";
+// type
+import { CartStorageItem } from "@/types/cart";
 
 interface LoginProps {
   children?: PropsWithChildren;
@@ -21,6 +26,37 @@ const Login = ({ children, redirectAfterLogin = "/" }: PropsWithChildren<LoginPr
   const setLoggedInUserState = useSetRecoilState(loggedInUserState);
   const [showLoginCheckAlert, setShowLoginCheckAlert] = useState(false);
   const loginFailMessage = "아이디와 패스워드를 확인해주세요.";
+  const [cartStorage, setCartStorage] = useRecoilState(cartState);
+  const setCartCheckedItem = useSetRecoilState(cartCheckedItemState);
+
+  const mergeCartAfterLogin = async () => {
+    // 상태 관리 중이던 장바구니 상품을 로그인 유저가 갖고 있던 장바구니와 합치기 요청
+    try {
+      if (cartStorage) {
+        const requestCartItemList = cartStorage.map((product) => {
+          return { _id: product.product._id, quantity: product.quantity };
+        });
+        const requestData = { products: requestCartItemList };
+        const responseData = await cartApi.combineCarts(requestData);
+        const updatedCartStorage: CartStorageItem[] = responseData?.data?.item.map((item) => {
+          return {
+            quantity: item.quantity,
+            stock: item.product.quantity - item.product.buyQuantity,
+            product: {
+              _id: item.product._id,
+              name: item.product.name,
+              image: item.product.image,
+              price: item.product.price,
+            },
+          };
+        });
+        setCartStorage(() => updatedCartStorage);
+        setCartCheckedItem(updatedCartStorage.map((item) => item.product._id));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const loginHandleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -32,6 +68,7 @@ const Login = ({ children, redirectAfterLogin = "/" }: PropsWithChildren<LoginPr
         navigate(redirectAfterLogin);
         localStorage.setItem(AUTH_TOKEN_KEY, data.item.token.accessToken);
         localStorage.setItem("refreshToken", data.item.token.refreshToken);
+        await mergeCartAfterLogin();
       }
     } catch (error) {
       setShowLoginCheckAlert(true);
