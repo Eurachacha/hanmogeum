@@ -53,7 +53,7 @@ const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
     <div>
       {user
         ? cartData.map((item, idx) => {
-            const keyIndex = idx.toString();
+            const keyIndex = idx.toString() + item.product._id;
             return (
               <CartItem
                 key={keyIndex}
@@ -65,7 +65,7 @@ const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
             );
           })
         : cartStorage.map((item, idx) => {
-            const keyIndex = idx.toString();
+            const keyIndex = idx.toString() + item.product._id;
             return (
               <CartItem
                 key={keyIndex}
