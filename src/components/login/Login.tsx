@@ -17,7 +17,7 @@ import { CartStorageItem } from "@/types/cart";
 
 interface LoginProps {
   children?: PropsWithChildren;
-  redirectAfterLogin: string;
+  redirectAfterLogin: string | number;
 }
 const Login = ({ children, redirectAfterLogin = "/" }: PropsWithChildren<LoginProps>) => {
   const navigate = useNavigate();
@@ -65,10 +65,15 @@ const Login = ({ children, redirectAfterLogin = "/" }: PropsWithChildren<LoginPr
       const { data } = await userApi.loginUser(credentials);
       if (data.ok === 1) {
         setLoggedInUserState(data.item);
-        navigate(redirectAfterLogin);
         localStorage.setItem(AUTH_TOKEN_KEY, data.item.token.accessToken);
         localStorage.setItem("refreshToken", data.item.token.refreshToken);
         await mergeCartAfterLogin();
+        // Type Guard
+        if (typeof redirectAfterLogin === "string") {
+          navigate(redirectAfterLogin);
+        } else if (typeof redirectAfterLogin === "number") {
+          navigate(redirectAfterLogin);
+        }
       }
     } catch (error) {
       setShowLoginCheckAlert(true);
