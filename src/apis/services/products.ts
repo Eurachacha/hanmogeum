@@ -47,6 +47,7 @@ const getFilterQueryString = (filterQueryObject: FilterQueryObject) => {
 const productsApi = {
   getAllProducts: () => publicInstance.get<ResponseProductsList>("/products"),
   getProductById: (_id: number) => publicInstance.get<ResponseProductInfo>(`/products/${_id}`),
+  getProductByIsBest: () => publicInstance.get<ResponseProductsList>(`/products?custom={"extra.isNew": true}`),
   searchProducts: ({ sort, filter }: RequestSearchProducts) => {
     const sortQueryString = sort ? getSortQueryString(sort) : "";
     const filterQueryString = filter ? getFilterQueryString(filter) : "";
