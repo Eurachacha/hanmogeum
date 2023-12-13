@@ -11,7 +11,7 @@ interface FilterQueryObject {
   taste?: string[];
   teaType?: string[];
   hashTag?: string[];
-  isDecaf?: boolean;
+  isDecaf: boolean;
 }
 
 interface RequestSearchProducts {
@@ -41,7 +41,7 @@ const getFilterQueryString = (filterQueryObject: FilterQueryObject) => {
       str.push(`"extra.${key}": "${value}"`);
     }
   });
-  return `custom={${str.join(", ")}}`;
+  return `extra={${str.join(", ")}}`;
 };
 
 const productsApi = {
