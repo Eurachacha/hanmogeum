@@ -57,7 +57,7 @@ const ProductSortContainer = () => {
 
   return (
     <div>
-      <ProductSortButtons products={products} />
+      <ProductSortButtons productLength={products.length} />
       <ProductItemList products={products} />
     </div>
   );
