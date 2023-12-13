@@ -4,6 +4,7 @@ import { CartItem as CartItemType } from "@/types/cart";
 import { cartState } from "@/recoil/atoms/cartState";
 import cartApi from "@/apis/services/cart";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
+import EmptyMessage from "@/components/common/EmptyMessage";
 
 interface CartItemProps {
   cartData: CartItemType[];
@@ -49,10 +50,11 @@ const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
     setCartStorage(newCartItems);
   };
 
-  return (
-    <div>
-      {user
-        ? cartData.map((item, idx) => {
+  if (user)
+    return (
+      <div>
+        {cartData.length > 0 ? (
+          cartData.map((item, idx) => {
             const keyIndex = idx.toString() + item.product._id;
             return (
               <CartItem
@@ -64,18 +66,29 @@ const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
               />
             );
           })
-        : cartStorage.map((item, idx) => {
-            const keyIndex = idx.toString() + item.product._id;
-            return (
-              <CartItem
-                key={keyIndex}
-                setCartData={setCartData}
-                handleDeleteItem={handleDeleteItem}
-                data={item}
-                idx={idx}
-              />
-            );
-          })}
+        ) : (
+          <EmptyMessage />
+        )}
+      </div>
+    );
+  return (
+    <div>
+      {cartStorage.length > 0 ? (
+        cartStorage.map((item, idx) => {
+          const keyIndex = idx.toString() + item.product._id;
+          return (
+            <CartItem
+              key={keyIndex}
+              setCartData={setCartData}
+              handleDeleteItem={handleDeleteItem}
+              data={item}
+              idx={idx}
+            />
+          );
+        })
+      ) : (
+        <EmptyMessage />
+      )}
     </div>
   );
 };

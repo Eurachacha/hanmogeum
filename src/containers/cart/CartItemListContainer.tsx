@@ -135,7 +135,7 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
         </CheckAllButton>
         <DeleteCheckedButton onClick={handleDeleteChecked}>선택삭제</DeleteCheckedButton>
       </ItemsHeader>
-      <CartItemContainer cartData={user ? cartData : []} setCartData={setCartData} />
+      <CartItemContainer cartData={cartData} setCartData={setCartData} />
     </CartItemListContainerLayer>
   );
 };
