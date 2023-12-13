@@ -15,10 +15,11 @@ const CategoryList = () => {
 
   const handleIsDecaf = () => {
     setIsDecaf(!isDecaf);
-    toggleFilter((!isDecaf).toString());
+    toggleDecafFilter(!isDecaf);
   };
 
-  const { toggleFilter } = useQueryParams("isDecaf");
+  const { toggleDecafFilter } = useQueryParams("isDecaf");
+
   return (
     <CategoryListLayer>
       <StyledTitle $fontSize="3.6rem" $fontWeight="var(--weight-bold)" $margin="0 0 60px 0">
@@ -29,7 +30,7 @@ const CategoryList = () => {
         (item, index) =>
           index > 0 &&
           (item.sub ? (
-            <CategoryListWrapper>
+            <CategoryListWrapper key={item.sort}>
               <StyledTitleDisplay>
                 <StyledTitle $fontSize="1.6rem" $fontWeight="var(--weight-semibold)">
                   {CATEGORY_TITLE[item.value]}
@@ -42,7 +43,7 @@ const CategoryList = () => {
               </StyledButtonList>
             </CategoryListWrapper>
           ) : (
-            <CategoryListWrapper>
+            <CategoryListWrapper key={item.sort}>
               <StyledDecafTitleDisplay>
                 <StyledTitle $fontSize="1.6rem" $fontWeight="var(--weight-semibold)">
                   디카페인
