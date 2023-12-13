@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useEffect, useState } from "react";
 import CancelIcon from "@/assets/icons/cancel.svg?react";
 import CheckedBoxIcon from "@/assets/icons/checkedBox.svg?react";
@@ -8,13 +8,11 @@ import { CartItem as CartItemType, CartStorageItem } from "@/types/cart";
 import CounterButton from "./CounterButton";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import cartApi from "@/apis/services/cart";
-import { cartState } from "@/recoil/atoms/cartState";
+import { cartCheckedItemState, cartState } from "@/recoil/atoms/cartState";
 import useQuantityCounter from "@/hooks/useQuantityCounter";
 
 interface CartItemProps {
   setCartData: React.Dispatch<React.SetStateAction<CartItemType[]>>;
-  checkedItems: number[];
-  toggleCheckBox: (product_id: number) => void;
   handleDeleteItem: (_id: number, product_id: number) => void;
   data: CartStorageItem | CartItemType; // 로컬스토리지 데이터 || DB데이터
   idx: number;
@@ -24,10 +22,11 @@ const isLocalData = (object: CartStorageItem | CartItemType) => {
   return typeof (object as CartItemType)._id === undefined;
 };
 
-const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem, data, idx }: CartItemProps) => {
+const CartItem = ({ setCartData, handleDeleteItem, data, idx }: CartItemProps) => {
   const user = useRecoilValue(loggedInUserState);
   const setCartStorage = useSetRecoilState(cartState);
-  const { handleQuantityInput, quantityInput, setQuantityInputAsStock } = useQuantityCounter(
+  const [checkedItems, setCheckedItems] = useRecoilState(cartCheckedItemState);
+  const { handleQuantityInput, quantityInput, setQuantityInputAsStock, updated } = useQuantityCounter(
     data.quantity,
     user
       ? (data as CartItemType).product.quantity - (data as CartItemType).product.buyQuantity
@@ -43,16 +42,35 @@ const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem,
     }
   };
 
+  // [단일상품 체크박스 토글]
+  const toggleCheckBox = (product_id: number) => {
+    if (checkedItems.includes(product_id)) setCheckedItems(checkedItems.filter((item) => item !== product_id));
+    else {
+      setCheckedItems((prev) => [...prev, product_id]);
+      if (data.quantity === 0) handleQuantityInput("plus");
+    }
+  };
+
   useEffect(() => {
     setCartItemPrice(data.product.price * quantityInput);
   }, [quantityInput, data]);
 
+  // 초기렌더링 시
   useEffect(() => {
     if (user) setQuantityInputAsStock((data as CartItemType).quantity);
     else setQuantityInputAsStock((data as CartStorageItem).quantity);
   }, []);
 
+  // [비로그인 유저] 재고가 부족한 경우 input에 재고 반영
   useEffect(() => {
+    if ((data as CartStorageItem).stock < (data as CartStorageItem).quantity) {
+      setQuantityInputAsStock((data as CartStorageItem).quantity);
+    }
+  }, [(data as CartStorageItem).stock]);
+
+  useEffect(() => {
+    if (quantityInput > 0 && !checkedItems.includes(data.product._id))
+      setCheckedItems((prev) => [...prev, data.product._id]);
     // 로그인 시 (data가 DB데이터인 경우)
     if (user && !isLocalData(data)) {
       const cartData = data as CartItemType;
@@ -73,13 +91,22 @@ const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem,
       newCartStorage.splice(idx, 1, newCartStorageItem);
       return newCartStorage;
     });
+    if (quantityInput === 0) {
+      setCheckedItems((prev) => prev.filter((product_id) => product_id !== cartStorage.product._id));
+    }
   }, [quantityInput]);
 
   if (data)
     return (
       <CartItemLayer>
         <CartItemLeft>
-          <CheckedBox onClick={() => toggleCheckBox(data.product._id)} disabled={quantityInput <= 0}>
+          <CheckedBox
+            onClick={() => toggleCheckBox(data.product._id)}
+            disabled={
+              (data as CartItemType).product.quantity - (data as CartItemType).product.buyQuantity === 0 ||
+              (data as CartStorageItem).stock === 0
+            }
+          >
             {quantityInput > 0 && checkedItems.includes(data.product._id) ? <CheckedBoxIcon /> : <UncheckedBoxIcon />}
           </CheckedBox>
           <ImageWrapper>
@@ -104,7 +131,7 @@ const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem,
               <CounterButton handleQuantity={() => handleQuantityInput("plus")}>+</CounterButton>
             </CounterLayer>
             <Price>{cartItemPrice.toLocaleString()}원</Price>
-            {(data as CartStorageItem).stock < (data as CartStorageItem).quantity ? <p>재고반영됨</p> : null}
+            {updated ? <p>재고반영됨</p> : null}
           </CountPrice>
           <CancelIconWrapper
             style={{ width: 20, height: 20 }}

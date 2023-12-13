@@ -18,7 +18,7 @@ const CartPage = () => {
     try {
       const response = await cartApi.getAllItems();
       const { item: items } = response.data;
-      setCheckedItems(items.map((item) => item.product_id));
+      setCheckedItems(items.filter((item) => item.quantity !== 0).map((item) => item.product_id));
       setCartData(items);
     } catch (error) {
       console.error(error);
@@ -28,7 +28,7 @@ const CartPage = () => {
   // 초기 렌더링 - 카트 데이터 GET 요청 + 체크박스 전체 선택으로 리셋
   useEffect(() => {
     if (user) fetchCartItems();
-    else setCheckedItems(cartStorage.map((item) => item.product._id));
+    else setCheckedItems(cartStorage.filter((item) => item.quantity !== 0).map((item) => item.product._id));
   }, []);
 
   return (

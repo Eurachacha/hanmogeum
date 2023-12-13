@@ -28,8 +28,8 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
       const response = await cartApi.checkStockStates(data);
       const { products } = response.data.item;
       products.forEach((item) => {
-        if (item.quantityInStock < item.quantity) {
-          const targetIndex = cartStorage.findIndex((e) => e.product._id === item._id);
+        const targetIndex = cartStorage.findIndex((e) => e.product._id === item._id);
+        if (item.quantityInStock !== cartStorage[targetIndex].stock) {
           const newCartStorageItem = { ...cartStorage[targetIndex], stock: item.quantityInStock };
           const newCartStorage = [...cartStorage];
           newCartStorage.splice(targetIndex, 1, newCartStorageItem);
@@ -57,8 +57,8 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
       setCheckedItems([]);
       return;
     }
-    if (user) setCheckedItems(cartData.map((item) => item.product_id));
-    else setCheckedItems(cartStorage.map((item) => item.product._id));
+    if (user) setCheckedItems(cartData.filter((item) => item.quantity !== 0).map((item) => item.product_id));
+    else setCheckedItems(cartStorage.filter((item) => item.quantity !== 0).map((item) => item.product._id));
   };
 
   // [선택삭제]
@@ -93,13 +93,23 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
   // 체크박스 상태가 바뀌면 모든 아이템이 체크되어있는지 확인
   useEffect(() => {
     // 로그인 시
-    if (user) setIsAllChecked(checkedItems.length > 0 && checkedItems.length === cartData.length);
+    if (user)
+      setIsAllChecked(
+        checkedItems.length > 0 &&
+          checkedItems.length ===
+            cartData.filter((item) => item.product.quantity - item.product.buyQuantity !== 0).length,
+      );
     // 비로그인 시
-    else setIsAllChecked(checkedItems.length > 0 && checkedItems.length === cartStorage.length);
+    else
+      setIsAllChecked(
+        checkedItems.length > 0 && checkedItems.length === cartStorage.filter((item) => item.stock !== 0).length,
+      );
   }, [checkedItems]);
 
   useEffect(() => {
-    setCheckedItems(cartData.map((item) => item.product_id));
+    setCheckedItems(
+      cartData.filter((item) => item.product.quantity - item.product.buyQuantity !== 0).map((item) => item.product_id),
+    );
   }, [cartData.length]);
 
   return (
