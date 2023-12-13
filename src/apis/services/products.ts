@@ -7,7 +7,7 @@ interface SortQueryObject {
 }
 
 interface FilterQueryObject {
-  pack?: string;
+  pack?: string[];
   taste?: string[];
   teaType?: string[];
   hashTag?: string[];
@@ -24,24 +24,30 @@ const getSortQueryString = (sortQueryObject: SortQueryObject) => {
 };
 
 const getFilterQueryString = (filterQueryObject: FilterQueryObject) => {
-  const str: string[] = [];
   const arr = Object.entries(filterQueryObject);
-  arr.forEach((e) => {
-    const [key, value] = e;
 
-    if (typeof value === "object") {
-      // 배열인 경우
-      const valueArr = value.map((el: string) => `"extra.${key}": "${el}"`);
-      str.push(...valueArr);
-    } else if (typeof value === "boolean") {
-      // 불리언인 경우
-      str.push(`"extra.${key}": ${value}`);
-    } else {
-      // 배열도 불리언도 아닌 경우
-      str.push(`"extra.${key}": "${value}"`);
+  const object: {
+    "extra.pack"?: string;
+    "extra.isDecaf"?: boolean;
+    "extra.teaType"?: { $in: string[] };
+    "extra.hashTag"?: { $in: string[] };
+    "extra.taste"?: { $in: string[] };
+  } = {};
+
+  arr.forEach((e: [string, string[] | boolean]) => {
+    const [key, value] = e;
+    if (key === "pack" && typeof value === "object") {
+      object[`extra.${key}`] = value[0] as string;
+    } else if (key === "isDecaf" && typeof value === "boolean") {
+      object[`extra.${key}`] = value;
+    } else if (key === "teaType" || key === "hashTag" || key === "taste") {
+      object[`extra.${key}`] = {
+        $in: value as string[],
+      };
     }
   });
-  return `custom={${str.join(", ")}}`;
+
+  return `custom=${JSON.stringify(object)}`;
 };
 
 const productsApi = {

@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { styled, keyframes } from "styled-components";
+import axios from "axios";
 import Firecracker from "@/components/common/Firecracker";
+import ProductItemList from "@/components/product/productlist/ProductItemList";
 
 const MainPage = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [searchParams] = useSearchParams();
   const isNewMember = searchParams.get("welcome");
+
+  const [recentData, setRecentData] = useState([]);
 
   const newUserWelcomeEffect = () => {
     if (isNewMember) {
@@ -16,7 +20,22 @@ const MainPage = () => {
 
   useEffect(() => {
     newUserWelcomeEffect();
+    recentProducts();
   }, []);
+
+  const recentProducts = async () => {
+    try {
+      const response = await axios.get(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/products?custom={"createdAt": {"$gte": "2023.11.01", "$lt": "2023.12.06"}}`,
+      );
+      const { item } = response.data;
+      setRecentData(item);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div>
@@ -26,7 +45,14 @@ const MainPage = () => {
           <Firecracker setStyle="bigCenter" />
         </FirecrackerWrapper>
       )}
-      메인페이지
+      <section>
+        <h2>새로 나왔어요</h2>
+        <p>이번주 새로 나온 제품을 가장 먼저 만나보세요.</p>
+
+        <div>
+          <ProductItemList products={recentData} />
+        </div>
+      </section>
     </div>
   );
 };
