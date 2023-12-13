@@ -10,6 +10,7 @@ import OrderItemContentsText from "@/components/mypage/OrderItemContentsText";
 import Button from "@/components/common/Button";
 import OrderDetailInfo from "@/components/mypage/OrderDetailInfo";
 import getPriceFormat from "@/utils/getPriceFormat";
+import ContainerHeader from "@/components/mypage/ContainerHeader.";
 
 const MyOrderDetailContainer = () => {
   const [orderDetail, setOrderDetail] = useState<MyOrderItem>();
@@ -38,26 +39,25 @@ const MyOrderDetailContainer = () => {
     requestGetMyOrderList();
   }, []);
   return (
-    <MypageLayoutContainer ContentsTitle="주문 상세 페이지">
-      <MyOrderDetailContainerLayer>
-        <div>
-          {orderDetail?.products.map((product, idx) => {
-            const orderItemKey = `MypageLayoutContainer_${product._id}${idx}`;
-            return (
-              <OrderItem key={orderItemKey} productImageURL={product.image}>
-                <OrderItemContentsText
-                  textList={[product.name, getPriceFormat({ price: product.price })]}
-                ></OrderItemContentsText>
-                <ReviewButtonWrapper onClick={reviewButtonHandleClick}>
-                  <Button value="리뷰 작성" size="md" variant="point" />
-                </ReviewButtonWrapper>
-              </OrderItem>
-            );
-          })}
-        </div>
-        <OrderDetailInfo orderData={orderDetail} />
-      </MyOrderDetailContainerLayer>
-    </MypageLayoutContainer>
+    <MyOrderDetailContainerLayer>
+      <ContainerHeader title="주문 상세 페이지" />
+      <div>
+        {orderDetail?.products.map((product, idx) => {
+          const orderItemKey = `MypageLayoutContainer_${product._id}${idx}`;
+          return (
+            <OrderItem key={orderItemKey} productImageURL={product.image}>
+              <OrderItemContentsText
+                textList={[product.name, getPriceFormat({ price: product.price })]}
+              ></OrderItemContentsText>
+              <ReviewButtonWrapper onClick={reviewButtonHandleClick}>
+                <Button value="리뷰 작성" size="md" variant="point" />
+              </ReviewButtonWrapper>
+            </OrderItem>
+          );
+        })}
+      </div>
+      <OrderDetailInfo orderData={orderDetail} />
+    </MyOrderDetailContainerLayer>
   );
 };
 

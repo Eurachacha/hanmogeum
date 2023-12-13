@@ -19,6 +19,7 @@ import userApi from "@/apis/services/users";
 /* constants */
 import PASSWORD_MIN_LENGTH from "@/constants/signUpValidation";
 import ContentsTitle from "@/components/contentsTitle/ContentsTitle";
+import ContainerHeader from "@/components/mypage/ContainerHeader.";
 
 interface InputDataType {
   title: string;
@@ -295,43 +296,41 @@ const MyProfileEditContainer = () => {
   ];
 
   return (
-    <MypageLayoutContainer ContentsTitle="내 정보 변경">
+    <SignUpContainerLayer>
+      <ContainerHeader title="내 정보 변경" />
       <ContentsTitle title="내 정보 변경"></ContentsTitle>
+      <div>
+        <Modal isOpen={showModal.isOpen} iconRequired={false} message={showModal.message}>
+          <CheckModalButton onClick={() => setShowModal({ isOpen: false, message: "" })}>확인</CheckModalButton>
+        </Modal>
+      </div>
+      <FromWrapper noValidate onSubmit={signUpFormHandleSubmit}>
+        <InputListStyle>
+          {itemInputData.map((itemInput) => {
+            return (
+              <ItemWrapper key={`${itemInput.inputProps.name}_ItemWrapper`}>
+                <ItemInput
+                  key={`${itemInput.inputProps.name}_ItemInput`}
+                  title={itemInput.title}
+                  isTitleImportant={itemInput.isTitleImportant}
+                  showValidationMessage={itemInput.showValidationMessage}
+                  validationMessage={itemInput.validationMessage}
+                  includeButton={itemInput.includeButton}
+                  inputProps={{ ...itemInput.inputProps }}
+                  buttonValue={itemInput?.buttonValue}
+                  buttonOnClick={itemInput?.buttonOnClick}
+                  buttonDisabled={itemInput?.buttonDisabled}
+                />
+              </ItemWrapper>
+            );
+          })}
+        </InputListStyle>
 
-      <SignUpContainerLayer>
-        <div>
-          <Modal isOpen={showModal.isOpen} iconRequired={false} message={showModal.message}>
-            <CheckModalButton onClick={() => setShowModal({ isOpen: false, message: "" })}>확인</CheckModalButton>
-          </Modal>
-        </div>
-        <FromWrapper noValidate onSubmit={signUpFormHandleSubmit}>
-          <InputListStyle>
-            {itemInputData.map((itemInput) => {
-              return (
-                <ItemWrapper key={`${itemInput.inputProps.name}_ItemWrapper`}>
-                  <ItemInput
-                    key={`${itemInput.inputProps.name}_ItemInput`}
-                    title={itemInput.title}
-                    isTitleImportant={itemInput.isTitleImportant}
-                    showValidationMessage={itemInput.showValidationMessage}
-                    validationMessage={itemInput.validationMessage}
-                    includeButton={itemInput.includeButton}
-                    inputProps={{ ...itemInput.inputProps }}
-                    buttonValue={itemInput?.buttonValue}
-                    buttonOnClick={itemInput?.buttonOnClick}
-                    buttonDisabled={itemInput?.buttonDisabled}
-                  />
-                </ItemWrapper>
-              );
-            })}
-          </InputListStyle>
-
-          <ButtonWrapper onClick={signUpSubmitClick}>
-            <Button disabled={!isActiveSignUpButton} value="수정완료" size="lg" variant="point"></Button>
-          </ButtonWrapper>
-        </FromWrapper>
-      </SignUpContainerLayer>
-    </MypageLayoutContainer>
+        <ButtonWrapper onClick={signUpSubmitClick}>
+          <Button disabled={!isActiveSignUpButton} value="수정완료" size="lg" variant="point"></Button>
+        </ButtonWrapper>
+      </FromWrapper>
+    </SignUpContainerLayer>
   );
 };
 
