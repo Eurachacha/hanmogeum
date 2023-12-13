@@ -1,14 +1,12 @@
 import styled from "styled-components";
 import { PropsWithChildren } from "react";
 import NavigationMenu from "@/components/mypage/NavigationMenu";
-import MyProfile from "@/components/mypage/MyProfile";
+import DashBoardContainer from "./DashBoardContainer";
 
 const MypageLayoutContainer = ({ children }: PropsWithChildren) => {
   return (
     <MypageLayoutContainerLayer>
-      <MyProfileWrapper>
-        <MyProfile />
-      </MyProfileWrapper>
+      <DashBoardContainer />
       <MyPageWrapper>
         <MyPageNavigationWrapper>
           <NavigationMenu />
@@ -24,12 +22,6 @@ const MypageLayoutContainerLayer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 6rem;
-`;
-const MyProfileWrapper = styled.div`
-  background-color: var(--color-gray-50);
-  display: flex;
-  width: 100%;
-  height: 26rem;
 `;
 
 const MyPageWrapper = styled.div`

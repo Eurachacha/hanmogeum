@@ -7,11 +7,11 @@ import { CodeWithSub } from "@/types/code";
  */
 
 type CodeByValue = Record<string, CodeWithSub>;
-const getProductCategoryCodeByValue = selectorFamily<
+export const getProductCategoryCodeByValue = selectorFamily<
   CodeByValue | {},
   { oneDepthValue: string; twoDepthValue?: string }
 >({
-  key: "getCodeByValue",
+  key: "getProductCodeByValue",
   get:
     ({ oneDepthValue, twoDepthValue }) =>
     ({ get }) => {
@@ -28,8 +28,22 @@ const getProductCategoryCodeByValue = selectorFamily<
         }
         return oneDepthFound?.code || "";
       }
-      return {};
+      return "";
     },
 });
 
-export default getProductCategoryCodeByValue;
+export const getShippingCodeByValue = selectorFamily<string, { oneDepthValue: string }>({
+  key: "getShippingCodeByValue",
+  get:
+    ({ oneDepthValue }) =>
+    ({ get }) => {
+      const codeInfo = get(nestedCodeState);
+      if (codeInfo) {
+        const oneDepthFound = codeInfo.orderState.codes.find((codeItem) => {
+          return codeItem.value === oneDepthValue;
+        });
+        return oneDepthFound?.code || "";
+      }
+      return "";
+    },
+});

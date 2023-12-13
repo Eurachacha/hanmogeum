@@ -7,7 +7,7 @@ import IconSearchCart from "@/assets/icons/search_24.svg?react";
 import { getUserTypeState } from "@/recoil/selectors/loggedInUserSelector";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import { cartState, cartCheckedItemState } from "@/recoil/atoms/cartState";
-import getProductCategoryValueByCode from "@/recoil/selectors/codeSelector";
+import { getProductCategoryCodeByValue } from "@/recoil/selectors/codeSelector";
 
 // constants
 import { AUTH_TOKEN_KEY } from "@/constants/api";
@@ -60,10 +60,10 @@ const Header = () => {
   };
 
   const categoryCode = {
-    티백: useRecoilValue(getProductCategoryValueByCode({ oneDepthValue: "pack", twoDepthValue: "티백" })),
-    잎차: useRecoilValue(getProductCategoryValueByCode({ oneDepthValue: "pack", twoDepthValue: "잎차" })),
-    분말: useRecoilValue(getProductCategoryValueByCode({ oneDepthValue: "pack", twoDepthValue: "분말" })),
-    "음료/원액": useRecoilValue(getProductCategoryValueByCode({ oneDepthValue: "pack", twoDepthValue: "음료-원액" })),
+    티백: useRecoilValue(getProductCategoryCodeByValue({ oneDepthValue: "pack", twoDepthValue: "티백" })),
+    잎차: useRecoilValue(getProductCategoryCodeByValue({ oneDepthValue: "pack", twoDepthValue: "잎차" })),
+    분말: useRecoilValue(getProductCategoryCodeByValue({ oneDepthValue: "pack", twoDepthValue: "분말" })),
+    "음료/원액": useRecoilValue(getProductCategoryCodeByValue({ oneDepthValue: "pack", twoDepthValue: "음료-원액" })),
   };
 
   const categoryList = {
