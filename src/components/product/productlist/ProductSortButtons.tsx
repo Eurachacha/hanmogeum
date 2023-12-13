@@ -1,21 +1,25 @@
 import styled from "styled-components";
-import { Product } from "@/types/products";
 
-interface ProductItemListProps {
-  products: Product[];
+interface ProductSortButtonsProps {
+  productLength: number;
 }
+const ProductSortButtons = ({ productLength }: ProductSortButtonsProps) => {
+  const changeQueryString = () => {
+    // 쿼리스트링 변경하는 코드
+  };
 
-const ProductSortButtons = ({ products }: ProductItemListProps) => {
   return (
     <CategorySortWrapper>
       <li>
-        <StyledProductCount>전체 {products.length}개</StyledProductCount>
+        <StyledProductCount>전체 {productLength}개</StyledProductCount>
       </li>
       <li>
-        <StyledCategorySortButton>인기순</StyledCategorySortButton>
-        <StyledCategorySortButton>최신순</StyledCategorySortButton>
-        <StyledCategorySortButton>높은가격순</StyledCategorySortButton>
-        <StyledCategorySortButton>낮은가격순</StyledCategorySortButton>
+        <StyledCategorySortButton onClick={changeQueryString} type="button">
+          인기순
+        </StyledCategorySortButton>
+        <StyledCategorySortButton type="button">최신순</StyledCategorySortButton>
+        <StyledCategorySortButton type="button">낮은가격순</StyledCategorySortButton>
+        <StyledCategorySortButton type="button">높은가격순</StyledCategorySortButton>
       </li>
     </CategorySortWrapper>
   );
