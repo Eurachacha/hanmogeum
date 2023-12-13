@@ -42,10 +42,9 @@ const Header = () => {
       setIsLogin(false);
     }
   }, [user]);
-
   useEffect(() => {
-    setCartCount(cartStorage.filter((item) => item.stock !== 0).length);
-  }, [cartStorage.length]);
+    setCartCount(cartStorage.length);
+  }, [cartStorage]);
 
   const logoutHandleClick = () => {
     localStorage.removeItem("cartChecked");
