@@ -110,6 +110,20 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
     setCheckedItems(
       cartData.filter((item) => item.product.quantity - item.product.buyQuantity !== 0).map((item) => item.product_id),
     );
+    // 장바구니 DB의 item 개수가 바뀌면 cartStorage에 DB상태 반영
+    const updatedCartStorage = cartData.map((item) => {
+      return {
+        quantity: item.quantity,
+        stock: item.product.quantity - item.product.buyQuantity,
+        product: {
+          _id: item.product._id,
+          name: item.product.name,
+          image: item.product.image,
+          price: item.product.price,
+        },
+      };
+    });
+    setCartStorage(updatedCartStorage);
   }, [cartData.length]);
 
   return (
