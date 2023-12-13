@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import OrderListContainer from "./OrderListContainer";
 import UserInfoContainer from "@/containers/orderCheckout/UserInfoContainer";
 import ShippingInfoContainer from "./ShippingInfoContainer";
@@ -14,15 +14,17 @@ interface OrderInfoContainerProps {
 
 const OrderInfoContainer = ({ cartData, setShippingInfo }: OrderInfoContainerProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
+    if (location.state) return;
     if (!cartData || cartData.length <= 0) navigate("/", { replace: true });
   }, []);
   return (
     <>
       <Section>
         <SectionTitle>주문 상품</SectionTitle>
-        {cartData ? <OrderListContainer cartData={cartData} /> : null}
+        <OrderListContainer cartData={cartData!} orderData={location.state} />
       </Section>
       <Section>
         <SectionTitle>주문자 정보</SectionTitle>

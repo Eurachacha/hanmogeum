@@ -69,6 +69,7 @@ const OrderCheckoutPage = () => {
 
   useEffect(() => {
     if (user) fetchAllCartItems();
+    else navigate("/", { replace: true });
   }, []);
 
   return (
