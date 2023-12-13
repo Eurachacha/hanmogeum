@@ -14,6 +14,7 @@ import truncateString from "@/utils/truncateString";
 import { flattenCodeState } from "@/recoil/atoms/codeState";
 import { FlattenData } from "@/types/code";
 import getPriceFormat from "@/utils/getPriceFormat";
+import ContainerHeader from "@/components/mypage/ContainerHeader.";
 
 const MyOrderListContainer = () => {
   const maxTitleLength = 15;
@@ -70,34 +71,33 @@ const MyOrderListContainer = () => {
 
   return (
     <MyOrderListContainerLayer>
-      <MypageLayoutContainer ContentsTitle="주문 내역">
-        <OrderItemListWrapper>
-          {orderList.map((order, idx) => {
-            const mapKey = `${idx}_${order._id}_${order.createdAt}`;
-            const orderThumbnail = orderItemToThumbnailData(order);
-            return (
-              <OrderWrapper key={mapKey} onClick={() => detailButtonClickHandle(`${order._id}`)}>
-                <OrderInfoWrapper>
-                  <span>{orderThumbnail.id}</span>
-                  <span>{orderThumbnail.date}</span>
-                </OrderInfoWrapper>
-                <OrderItem productImageURL={orderThumbnail.imgURL}>
-                  <OrderItemContentsText
-                    textList={[`${orderThumbnail.title}`, `${orderThumbnail.totalPrice}`]}
-                    subTextList={[`${orderThumbnail.date} 주문`]}
-                  />
-                  <ItemRightContentsStyle>
-                    <span>{`${orderThumbnail.shippingState}`}</span>
-                    <DetailButtonWrapper>
-                      <Button value="주문 상세보기" size="md" variant="point" />
-                    </DetailButtonWrapper>
-                  </ItemRightContentsStyle>
-                </OrderItem>
-              </OrderWrapper>
-            );
-          })}
-        </OrderItemListWrapper>
-      </MypageLayoutContainer>
+      <ContainerHeader title="주문 상세 페이지" />
+      <OrderItemListWrapper>
+        {orderList.map((order, idx) => {
+          const mapKey = `${idx}_${order._id}_${order.createdAt}`;
+          const orderThumbnail = orderItemToThumbnailData(order);
+          return (
+            <OrderWrapper key={mapKey} onClick={() => detailButtonClickHandle(`${order._id}`)}>
+              <OrderInfoWrapper>
+                <span>{orderThumbnail.id}</span>
+                <span>{orderThumbnail.date}</span>
+              </OrderInfoWrapper>
+              <OrderItem productImageURL={orderThumbnail.imgURL}>
+                <OrderItemContentsText
+                  textList={[`${orderThumbnail.title}`, `${orderThumbnail.totalPrice}`]}
+                  subTextList={[`${orderThumbnail.date} 주문`]}
+                />
+                <ItemRightContentsStyle>
+                  <span>{`${orderThumbnail.shippingState}`}</span>
+                  <DetailButtonWrapper>
+                    <Button value="주문 상세보기" size="md" variant="point" />
+                  </DetailButtonWrapper>
+                </ItemRightContentsStyle>
+              </OrderItem>
+            </OrderWrapper>
+          );
+        })}
+      </OrderItemListWrapper>
     </MyOrderListContainerLayer>
   );
 };

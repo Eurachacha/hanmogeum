@@ -9,13 +9,13 @@ import ProductDetailPage from "@/pages/ProductDetailPage";
 import CartPage from "@/pages/CartPage";
 import OrderCheckoutPage from "@/pages/OrderCheckoutPage";
 import OrderCompletePage from "@/pages/OrderCompletePage";
-import MyOrderListPage from "@/pages/MyOrderListPage";
-import MyOrderDetailPage from "@/pages/MyOrderDetailPage";
-import MyLikePage from "@/pages/MyLikePage";
-import MyReviewPage from "@/pages/MyReviewPage";
 import ManagePage from "@/pages/ManagePage";
-import MyProfileLoginPage from "@/pages/MyProfileLoginPage";
-import MyProfileModifyPage from "@/pages/MyProfileModifyPage";
+
+import MyPage from "./pages/Mypage";
+import MyOrderListContainer from "./containers/mypage/MyOrderListContainer";
+import MyOrderDetailContainer from "./containers/mypage/MyOrderDetailContainer";
+import MyProfileLoginContainer from "./containers/mypage/MyProfileLoginContainer";
+import MyProfileEditContainer from "./containers/mypage/MyProfileModifyContainer";
 
 const router = createBrowserRouter([
   {
@@ -36,35 +36,45 @@ const router = createBrowserRouter([
       },
       {
         path: "/mypage",
-        element: <MyOrderListPage />,
-      },
-      {
-        path: "/mypage/orders",
-        element: <MyOrderListPage />,
-      },
-      {
-        path: "/mypage/orders/:id",
-        element: <MyOrderDetailPage />,
-      },
-      {
-        path: "/mypage/profile",
-        element: <MyProfileLoginPage />,
-      },
-      {
-        path: "/mypage/profile/login",
-        element: <MyProfileLoginPage />,
-      },
-      {
-        path: "/mypage/profile/modify",
-        element: <MyProfileModifyPage />,
-      },
-      {
-        path: "mypage/reviews",
-        element: <MyReviewPage />,
-      },
-      {
-        path: "/mypage/likes",
-        element: <MyLikePage />,
+        element: <MyPage />,
+        children: [
+          {
+            index: true,
+            element: <MyOrderListContainer />,
+          },
+          {
+            path: "orders",
+            element: <MyOrderListContainer />,
+          },
+          {
+            path: "orders/:id",
+            element: <MyOrderDetailContainer />,
+          },
+          {
+            path: "profile",
+            element: <MyProfileLoginContainer />,
+          },
+          {
+            path: "profile/login",
+            element: <MyProfileLoginContainer />,
+          },
+          {
+            path: "profile/modify",
+            element: <MyProfileEditContainer />,
+          },
+          {
+            path: "reviews",
+            element: <>review</>,
+          },
+          {
+            path: "likes",
+            element: <>likes</>,
+          },
+          {
+            path: "*",
+            element: <>존재하지 않는 경로입니다.</>,
+          },
+        ],
       },
       {
         path: "/products",
