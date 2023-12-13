@@ -5,17 +5,17 @@ import ShippingInfoContainer from "./ShippingInfoContainer";
 import { CartItem } from "@/types/cart";
 import { ShippingInfoType } from "@/types/orders";
 
-interface OrderInfoProps {
+interface OrderInfoContainerProps {
   cartData: CartItem[] | undefined;
   setShippingInfo: React.Dispatch<React.SetStateAction<ShippingInfoType | undefined>>;
 }
 
-const OrderInfo = ({ cartData, setShippingInfo }: OrderInfoProps) => {
+const OrderInfoContainer = ({ cartData, setShippingInfo }: OrderInfoContainerProps) => {
   return (
     <>
       <Section>
         <SectionTitle>주문 상품</SectionTitle>
-        {cartData ? <OrderListContainer cartData={cartData} /> : <p>상품이 없습니다.</p>}
+        {cartData ? <OrderListContainer cartData={cartData} /> : null}
       </Section>
       <Section>
         <SectionTitle>주문자 정보</SectionTitle>
@@ -29,7 +29,7 @@ const OrderInfo = ({ cartData, setShippingInfo }: OrderInfoProps) => {
   );
 };
 
-export default OrderInfo;
+export default OrderInfoContainer;
 
 const Section = styled.section`
   margin: 40px 0;
