@@ -103,10 +103,14 @@ const ProductDetailPage = () => {
     setIsStockModalOpen(false);
   };
 
-  const { handleQuantityInput, quantityInput } = useQuantityCounter(
+  const { handleQuantityInput, quantityInput, setQuantityInputAsStock } = useQuantityCounter(
     1,
     itemData ? itemData.quantity - itemData.buyQuantity : 0,
   );
+
+  useEffect(() => {
+    if (itemData && itemData.quantity - itemData.buyQuantity === 0) setQuantityInputAsStock(0);
+  }, [itemData]);
 
   return (
     <ProductDetailPageLayer>
