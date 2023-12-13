@@ -29,7 +29,6 @@ const useQuantityCounter = (initQuantity: number, stock: number) => {
   };
 
   const setQuantityInputAsStock = (quantity: number) => {
-    // if (quantity === 0) setQuantityInput(0);
     if (stock < quantity) {
       setQuantityInput(stock);
       setUpdated(true);
