@@ -1,7 +1,7 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import CartItem from "@/components/cart/CartItem";
 import { CartItem as CartItemType } from "@/types/cart";
-import { cartState, cartCheckedItemState } from "@/recoil/atoms/cartState";
+import { cartState } from "@/recoil/atoms/cartState";
 import cartApi from "@/apis/services/cart";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 
@@ -13,13 +13,6 @@ interface CartItemProps {
 const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
   const user = useRecoilValue(loggedInUserState);
   const [cartStorage, setCartStorage] = useRecoilState(cartState);
-  const [checkedItems, setCheckedItems] = useRecoilState(cartCheckedItemState);
-
-  // [단일상품 체크박스 토글]
-  const toggleCheckBox = (product_id: number) => {
-    if (checkedItems.includes(product_id)) setCheckedItems(checkedItems.filter((item) => item !== product_id));
-    else setCheckedItems((prev) => [...prev, product_id]);
-  };
 
   const fetchCartItems = async () => {
     try {
@@ -65,8 +58,6 @@ const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
               <CartItem
                 key={keyIndex}
                 setCartData={setCartData}
-                checkedItems={checkedItems}
-                toggleCheckBox={toggleCheckBox}
                 handleDeleteItem={handleDeleteItem}
                 data={item}
                 idx={idx}
@@ -79,8 +70,6 @@ const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
               <CartItem
                 key={keyIndex}
                 setCartData={setCartData}
-                checkedItems={checkedItems}
-                toggleCheckBox={toggleCheckBox}
                 handleDeleteItem={handleDeleteItem}
                 data={item}
                 idx={idx}

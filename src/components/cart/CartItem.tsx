@@ -8,13 +8,11 @@ import { CartItem as CartItemType, CartStorageItem } from "@/types/cart";
 import CounterButton from "./CounterButton";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import cartApi from "@/apis/services/cart";
-import { cartState } from "@/recoil/atoms/cartState";
+import { cartCheckedItemState, cartState } from "@/recoil/atoms/cartState";
 import useQuantityCounter from "@/hooks/useQuantityCounter";
 
 interface CartItemProps {
   setCartData: React.Dispatch<React.SetStateAction<CartItemType[]>>;
-  checkedItems: number[];
-  toggleCheckBox: (product_id: number) => void;
   handleDeleteItem: (_id: number, product_id: number) => void;
   data: CartStorageItem | CartItemType; // 로컬스토리지 데이터 || DB데이터
   idx: number;
@@ -24,10 +22,10 @@ const isLocalData = (object: CartStorageItem | CartItemType) => {
   return typeof (object as CartItemType)._id === undefined;
 };
 
-const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem, data, idx }: CartItemProps) => {
+const CartItem = ({ setCartData, handleDeleteItem, data, idx }: CartItemProps) => {
   const user = useRecoilValue(loggedInUserState);
   const setCartStorage = useSetRecoilState(cartState);
-  const { handleQuantityInput, quantityInput, setQuantityInputAsStock } = useQuantityCounter(
+  const [checkedItems, setCheckedItems] = useRecoilState(cartCheckedItemState);
     data.quantity,
     user
       ? (data as CartItemType).product.quantity - (data as CartItemType).product.buyQuantity
@@ -43,6 +41,7 @@ const CartItem = ({ setCartData, checkedItems, toggleCheckBox, handleDeleteItem,
     }
   };
 
+      setCheckedItems((prev) => [...prev, product_id]);
   useEffect(() => {
     setCartItemPrice(data.product.price * quantityInput);
   }, [quantityInput, data]);
