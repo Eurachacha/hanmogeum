@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
-import MypageLayoutContainer from "./MypageLayoutContainer";
 import OrderItem from "@/components/mypage/OrderItem";
 import OrderItemContentsText from "@/components/mypage/OrderItemContentsText";
 import Button from "@/components/common/Button";

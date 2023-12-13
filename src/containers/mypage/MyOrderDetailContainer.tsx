@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useParams, useNavigate } from "react-router-dom";
 
-import MypageLayoutContainer from "@/containers/mypage/MypageLayoutContainer";
 import { MyOrderItem } from "@/types/myPage";
 import myPageApi from "@/apis/services/mypage";
 import OrderItem from "@/components/mypage/OrderItem";

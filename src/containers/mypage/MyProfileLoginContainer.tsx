@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import Button from "@/components/common/Button";
-import MypageLayoutContainer from "./MypageLayoutContainer";
 import Login from "@/components/login/Login";
 import ContentsTitle from "@/components/contentsTitle/ContentsTitle";
 import ContainerHeader from "@/components/mypage/ContainerHeader.";
