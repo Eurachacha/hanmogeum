@@ -4,6 +4,7 @@ interface ButtonProps {
   variant: "active" | "default";
   children: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
 }
 
 const VARIANTS = {
@@ -19,11 +20,11 @@ const VARIANTS = {
   `,
 };
 
-const CategoryButton = ({ variant, children, onClick }: ButtonProps) => {
+const CategoryButton = ({ variant, children, onClick, disabled }: ButtonProps) => {
   const variantStyle = VARIANTS[variant];
 
   return (
-    <StyledButton $variantStyle={variantStyle} onClick={onClick}>
+    <StyledButton $variantStyle={variantStyle} onClick={onClick} disabled={disabled}>
       {children}
     </StyledButton>
   );
@@ -37,6 +38,10 @@ const StyledButton = styled.button<{ $variantStyle: RuleSet<object> }>`
   border: 0;
   padding: 6px 10px;
   cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+  }
 `;
 
 export default CategoryButton;
