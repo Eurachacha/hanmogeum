@@ -5,8 +5,8 @@ const NavigationMenu = () => {
   const title = "마이페이지";
   const navigationData = [
     { name: "주문내역", router: "/mypage/orders" },
-    { name: "내가 쓴 리뷰", router: "/mypage/reviews" },
-    { name: "내가 찜한 상품", router: "/mypage/likes" },
+    // { name: "내가 쓴 리뷰", router: "/mypage/reviews" },
+    // { name: "내가 찜한 상품", router: "/mypage/likes" },
     { name: "내 정보 변경", router: "/mypage/profile" },
   ];
   return (

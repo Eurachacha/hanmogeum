@@ -70,10 +70,6 @@ const router = createBrowserRouter([
             path: "likes",
             element: <>likes</>,
           },
-          {
-            path: "*",
-            element: <>존재하지 않는 경로입니다.</>,
-          },
         ],
       },
       {
