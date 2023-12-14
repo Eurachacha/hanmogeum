@@ -11,7 +11,7 @@ const WidgetMyInfo = () => {
 
   const myProfileHandleClick = () => {
     // TODO: 내 정보 확인 페이지로 이동하도록 함 (수정페이지X)
-    navigate("/mypage/login");
+    navigate("/mypage/profile");
   };
 
   return (
