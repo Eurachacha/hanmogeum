@@ -1,13 +1,14 @@
 import styled from "styled-components";
 import ProductItem from "./ProductItem";
 import { Product } from "@/types/products";
+import EmptyMessage from "@/components/common/EmptyMessage";
 
 interface ProductItemListProps {
   products: Product[];
 }
 
 const ProductItemList = ({ products }: ProductItemListProps) => {
-  return (
+  return products.length ? (
     <ProductItemListLayer>
       {products &&
         products.map((product, idx) => {
@@ -15,6 +16,8 @@ const ProductItemList = ({ products }: ProductItemListProps) => {
           return <ProductItem product={product} key={key} />;
         })}
     </ProductItemListLayer>
+  ) : (
+    <EmptyMessage />
   );
 };
 
