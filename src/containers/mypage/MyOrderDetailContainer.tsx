@@ -2,16 +2,12 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { useRecoilState } from "recoil";
 import { MyOrderItem, Product } from "@/types/myPage";
 import myPageApi from "@/apis/services/mypage";
-import OrderItem from "@/components/mypage/OrderItem";
-import OrderItemContentsText from "@/components/mypage/OrderItemContentsText";
 import Button from "@/components/common/Button";
 import OrderDetailInfo from "@/components/mypage/OrderDetailInfo";
 import getPriceFormat from "@/utils/getPriceFormat";
 import ContainerHeader from "@/components/mypage/ContainerHeader.";
-// import OrderDetailItem from "@/components/mypage/OrderDetailItem";
 import cartApi from "@/apis/services/cart";
 
 const MyOrderDetailContainer = () => {
@@ -21,7 +17,7 @@ const MyOrderDetailContainer = () => {
 
   const requestGetMyOrderList = async () => {
     try {
-      const { data } = await myPageApi.getMyPageOrderList();
+      const { data } = await myPageApi.getMyPageOrderList({});
       if (data.ok === 1) {
         const orderItemList = data.item;
         const orderItem = orderItemList.find((item) => `${item._id}` === `${id}`);
@@ -52,7 +48,7 @@ const MyOrderDetailContainer = () => {
   return (
     <MyOrderDetailContainerLayer>
       <div>
-        <ContainerHeader title={`주문 번호 : ${orderDetail?._id}`} />
+        <ContainerHeader title={`주문 번호 : ${id}`} />
         {orderDetail?.products.map((product, idx) => {
           const orderItemKey = `MypageLayoutContainer_${product._id}${idx}`;
           return (

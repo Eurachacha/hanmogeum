@@ -1,10 +1,14 @@
 import { privateInstance } from "../instance";
-import { ResponseDataMyOrderList } from "@/types/myPage";
+import { ResponseDataMyOrderList, getMyPageOrderListProps } from "@/types/myPage";
 
 const myPageApi = {
-  getMyPageOrderList: () => privateInstance.get<ResponseDataMyOrderList>(`/orders`),
-  getMyPageOrderByShippingCode: (state: string) =>
-    privateInstance.get<ResponseDataMyOrderList>(`/orders?custom={"state":"${state}"}`),
+  getMyPageOrderList: ({ state, createdAt }: getMyPageOrderListProps) => {
+    const baseURL = "/orders?";
+    const shippingCodeFilter = state ? `"state":"${state}"` : ``;
+    const periodFilter = createdAt ? `"createdAt":{"$gte":"${createdAt.startDate}","$lt":"${createdAt.endDate}"}` : "";
+    const resultURL =
+      baseURL + (shippingCodeFilter || periodFilter ? `custom={${[shippingCodeFilter, periodFilter].join("")}}` : "");
+    return privateInstance.get<ResponseDataMyOrderList>(resultURL);
+  },
 };
-
 export default myPageApi;
