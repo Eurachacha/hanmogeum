@@ -1,10 +1,11 @@
+import { useLocation } from "react-router-dom";
 import styled, { RuleSet, css } from "styled-components";
 
 interface ButtonProps {
-  variant: "active" | "default";
   children: string;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
+  code: string;
+  toggleFilter: (id: string) => void;
 }
 
 const VARIANTS = {
@@ -20,11 +21,16 @@ const VARIANTS = {
   `,
 };
 
-const CategoryButton = ({ variant, children, onClick, disabled }: ButtonProps) => {
-  const variantStyle = VARIANTS[variant];
+const CategoryButton = ({ children, toggleFilter, code, disabled }: ButtonProps) => {
+  const location = useLocation();
+  const queryString = location.search;
 
   return (
-    <StyledButton $variantStyle={variantStyle} onClick={onClick} disabled={disabled}>
+    <StyledButton
+      $variantStyle={queryString.includes(code) ? VARIANTS.active : VARIANTS.default}
+      onClick={() => toggleFilter(code)}
+      disabled={disabled}
+    >
       {children}
     </StyledButton>
   );
