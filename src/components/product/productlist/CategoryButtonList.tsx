@@ -13,7 +13,7 @@ const CategoryButtonList = ({ value, subCategory }: CategoryButtonListProps) => 
   return (
     <CategoryButtonListLayer>
       {subCategory.map((category) => (
-        <CategoryButton key={category.sort} variant="default" onClick={() => toggleFilter(`${category.code}`)}>
+        <CategoryButton key={category.sort + category.code} toggleFilter={toggleFilter} code={category.code}>
           {category.value}
         </CategoryButton>
       ))}
