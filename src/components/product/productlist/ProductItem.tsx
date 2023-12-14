@@ -55,7 +55,6 @@ const ProductItem = ({ product }: ProductItemProps) => {
 export default ProductItem;
 
 const ProductItemLayer = styled.div`
-  width: 100%;
   background-color: var(--color-white);
 
   border-radius: 5px;
