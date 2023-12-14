@@ -15,9 +15,9 @@ const WidgetShipping = () => {
   ]);
   const getShippingData = async () => {
     try {
-      const response1 = await myPageApi.getMyPageOrderByShippingCode(shippingInfo[0].code);
-      const response2 = await myPageApi.getMyPageOrderByShippingCode(shippingInfo[1].code);
-      const response3 = await myPageApi.getMyPageOrderByShippingCode(shippingInfo[2].code);
+      const response1 = await myPageApi.getMyPageOrderList({ state: shippingInfo[0].code });
+      const response2 = await myPageApi.getMyPageOrderList({ state: shippingInfo[1].code });
+      const response3 = await myPageApi.getMyPageOrderList({ state: shippingInfo[2].code });
       const updatedState = { ...shippingInfo };
       updatedState[0].value = response1.data.item.length;
       updatedState[1].value = response2.data.item.length;

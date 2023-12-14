@@ -1,3 +1,4 @@
+import { PropsWithChildren } from "react";
 import styled, { RuleSet, css } from "styled-components";
 
 interface ContainerHeaderProps {
@@ -18,19 +19,28 @@ const VARIANTS = {
   `,
 };
 
-const ContainerHeader = ({ title, variant = "main" }: ContainerHeaderProps) => {
+const ContainerHeader = ({ title, variant = "main", children }: PropsWithChildren<ContainerHeaderProps>) => {
   const variantStyle = VARIANTS[variant];
-  return <ContainerHeaderLayer $variantStyle={variantStyle}>{title}</ContainerHeaderLayer>;
+  return (
+    <ContainerHeaderLayer $variantStyle={variantStyle}>
+      <TitleWrapper>{title}</TitleWrapper>
+      {children}
+    </ContainerHeaderLayer>
+  );
 };
+
+export default ContainerHeader;
 
 const ContainerHeaderLayer = styled.div<CustomProperties>`
   ${(props) => props.$variantStyle}
+  display: flex;
   width: 100%;
   height: 5rem;
-  font-weight: var(--weight-bold);
-  font-size: 2.4rem;
   border-bottom: 1px solid var(--color-black);
   border-bottom: 1px solid var(--color-gray-200);
 `;
 
-export default ContainerHeader;
+const TitleWrapper = styled.div`
+  font-weight: var(--weight-bold);
+  font-size: 2.4rem;
+`;

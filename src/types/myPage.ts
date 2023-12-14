@@ -88,3 +88,13 @@ export interface SignUpDataType {
   address: string;
   addressDetail: string;
 }
+
+// API Props
+
+export interface getMyPageOrderListProps {
+  state?: string;
+  createdAt?: {
+    startDate: string;
+    endDate: string;
+  };
+}
