@@ -9,9 +9,11 @@ import OrderDetailInfo from "@/components/mypage/OrderDetailInfo";
 import getPriceFormat from "@/utils/getPriceFormat";
 import ContainerHeader from "@/components/mypage/ContainerHeader.";
 import cartApi from "@/apis/services/cart";
+import Modal from "@/components/common/Modal";
 
 const MyOrderDetailContainer = () => {
   const [orderDetail, setOrderDetail] = useState<MyOrderItem>();
+  const [openModal, setOenModal] = useState({ isOpen: false, message: "" });
   const navigator = useNavigate();
   const { id } = useParams();
 
@@ -22,6 +24,9 @@ const MyOrderDetailContainer = () => {
         const orderItemList = data.item;
         const orderItem = orderItemList.find((item) => `${item._id}` === `${id}`);
         setOrderDetail(orderItem);
+        if (!orderItem) {
+          setOenModal({ isOpen: true, message: "존재하지 않는 주문번호입니다." });
+        }
       }
     } catch (error) {
       console.error(error);
@@ -42,11 +47,25 @@ const MyOrderDetailContainer = () => {
     }
   };
 
+  const errorPageHandleClick = () => {
+    setOenModal(() => {
+      return { isOpen: false, message: "" };
+    });
+    navigator("/mypage/orders");
+  };
+
   useEffect(() => {
     requestGetMyOrderList();
   }, []);
   return (
     <MyOrderDetailContainerLayer>
+      <ModalWrapper>
+        <Modal isOpen={openModal.isOpen} message={openModal.message}>
+          <ModalButtonWrapper onClick={errorPageHandleClick}>
+            <Button value="확인" size="md" variant="sub" />
+          </ModalButtonWrapper>
+        </Modal>
+      </ModalWrapper>
       <div>
         <ContainerHeader title={`주문 번호 : ${id}`} />
         {orderDetail?.products.map((product, idx) => {
@@ -64,14 +83,14 @@ const MyOrderDetailContainer = () => {
                   <ProductQuantity>{product.quantity}개</ProductQuantity>
                 </ProductInfoDetailWrapper>
               </ProductInfoWrapper>
-              <ButttonsWrapper>
+              <ButtonsWrapper>
                 <ReviewButtonStyle onClick={reviewButtonHandleClick}>
                   <Button value="리뷰 작성" size="sm" variant="point" />
                 </ReviewButtonStyle>
                 <CartButtonStyle onClick={() => cartButtonHandleClick(product)}>
                   <Button value="장바구니 담기" size="sm" variant="sub" />
                 </CartButtonStyle>
-              </ButttonsWrapper>
+              </ButtonsWrapper>
             </OrderDetailItemWrapper>
           );
         })}
@@ -88,7 +107,7 @@ const MyOrderDetailContainerLayer = styled.div`
   flex-direction: column;
   gap: 6rem;
 `;
-const ButttonsWrapper = styled.div`
+const ButtonsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -141,3 +160,10 @@ const ProductQuantity = styled.span`
 
 const ReviewButtonStyle = styled.div``;
 const CartButtonStyle = styled.div``;
+
+const ModalWrapper = styled.div`
+  font-weight: var(--weight-bold);
+`;
+const ModalButtonWrapper = styled.div`
+  width: 100%;
+`;
