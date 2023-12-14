@@ -1,3 +1,5 @@
+import { ProductDetailWithReplies } from "./products";
+
 interface OrderProduct {
   _id: number;
   quantity: number;
@@ -41,6 +43,10 @@ export interface ShippingInfoType {
   name: string;
   phone: string;
   address: OrderAddress;
+}
+
+export interface OrderFromDetailPage extends ProductDetailWithReplies {
+  quantityInput: number;
 }
 
 // Request Types

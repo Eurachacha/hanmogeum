@@ -70,7 +70,7 @@ const MyOrderListContainer = () => {
 
   return (
     <MyOrderListContainerLayer>
-      <ContainerHeader title="주문 상세 페이지" />
+      <ContainerHeader title="주문 내역" />
       <OrderItemListWrapper>
         {orderList.map((order, idx) => {
           const mapKey = `${idx}_${order._id}_${order.createdAt}`;

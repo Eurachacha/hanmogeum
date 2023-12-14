@@ -2,7 +2,7 @@ import { styled } from "styled-components";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
-import OrderInfo from "@/containers/orderCheckout/OrderInfo";
+import OrderInfoContainer from "@/containers/orderCheckout/OrderInfoContainer";
 import OrderPriceContainer from "@/containers/orderCheckout/OrderPriceContainer";
 import { CartItem } from "@/types/cart";
 import cartApi from "@/apis/services/cart";
@@ -69,6 +69,7 @@ const OrderCheckoutPage = () => {
 
   useEffect(() => {
     if (user) fetchAllCartItems();
+    else navigate("/", { replace: true });
   }, []);
 
   return (
@@ -84,7 +85,7 @@ const OrderCheckoutPage = () => {
         </ButtonWrapper>
       </Modal>
       <PageLeft>
-        <OrderInfo cartData={cartData} setShippingInfo={setShippingInfo} />
+        <OrderInfoContainer cartData={cartData} setShippingInfo={setShippingInfo} />
       </PageLeft>
       <PageRight>
         <OrderPriceContainer cartData={cartData} />

@@ -1,5 +1,6 @@
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import Price from "@/components/common/Price";
 import { CartItem } from "@/types/cart";
 import { SHIPPING_FEES, FREE_SHIPPING_FEES } from "@/constants/order";
@@ -10,8 +11,13 @@ interface OrderPriceContainerProps {
 
 const OrderPriceContainer = ({ cartData }: OrderPriceContainerProps) => {
   const [priceSum, setPriceSum] = useState(0);
+  const location = useLocation();
 
   useEffect(() => {
+    if (location.state) {
+      setPriceSum(location.state.price * location.state.quantityInput);
+      return;
+    }
     if (cartData) {
       setPriceSum(cartData.map((item) => item.quantity * item.product.price).reduce((a, b) => a + b, 0));
     }
