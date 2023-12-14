@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import ProductItemLabel from "./ProductItemLabel";
 import { Product } from "@/types/products";
 
@@ -7,8 +8,10 @@ interface ProductItemProps {
 }
 
 const ProductItem = ({ product }: ProductItemProps) => {
+  const navigate = useNavigate();
+
   return (
-    <ProductItemLayer>
+    <ProductItemLayer onClick={() => navigate(`/products/${product._id}`)}>
       <ProductItemImageWrapper $imageUrl={product.mainImages}>
         <StyledLabel>
           <li>
@@ -60,6 +63,7 @@ const ProductItemLayer = styled.div`
   border-radius: 5px;
   overflow: hidden;
   box-shadow: 0 6px 6px -3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 `;
 
 const ProductItemImageWrapper = styled.div<{ $imageUrl: string[] }>`
