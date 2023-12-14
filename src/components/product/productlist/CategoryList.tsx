@@ -59,9 +59,8 @@ const CategoryList = () => {
 };
 
 export default CategoryList;
-
 const CategoryListLayer = styled.div`
-  max-width: 360px;
+  width: 360px;
   margin-right: 40px;
 `;
 

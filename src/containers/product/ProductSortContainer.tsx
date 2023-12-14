@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
+import styled from "styled-components";
 import productsApi from "@/apis/services/products";
 import ProductItemList from "@/components/product/productlist/ProductItemList";
 import ProductSortButtons from "@/components/product/productlist/ProductSortButtons";
@@ -56,11 +57,15 @@ const ProductSortContainer = () => {
   }, [queryString]);
 
   return (
-    <div>
+    <ProductSortContainerLayer>
       <ProductSortButtons productLength={products.length} />
       <ProductItemList products={products} />
-    </div>
+    </ProductSortContainerLayer>
   );
 };
 
 export default ProductSortContainer;
+
+const ProductSortContainerLayer = styled.div`
+  width: 750px;
+`;

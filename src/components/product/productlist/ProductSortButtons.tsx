@@ -9,7 +9,7 @@ const ProductSortButtons = ({ productLength }: ProductSortButtonsProps) => {
   };
 
   return (
-    <CategorySortWrapper>
+    <CategorySortLayer>
       <li>
         <StyledProductCount>전체 {productLength}개</StyledProductCount>
       </li>
@@ -21,13 +21,13 @@ const ProductSortButtons = ({ productLength }: ProductSortButtonsProps) => {
         <StyledCategorySortButton type="button">낮은가격순</StyledCategorySortButton>
         <StyledCategorySortButton type="button">높은가격순</StyledCategorySortButton>
       </li>
-    </CategorySortWrapper>
+    </CategorySortLayer>
   );
 };
 
 export default ProductSortButtons;
 
-const CategorySortWrapper = styled.ul`
+const CategorySortLayer = styled.ul`
   display: flex;
   justify-content: space-between;
   align-items: baseline;

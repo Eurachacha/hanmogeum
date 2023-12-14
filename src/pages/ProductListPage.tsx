@@ -14,8 +14,8 @@ const ProductListPage = () => {
 export default ProductListPage;
 
 const ProductListLayer = styled.div`
+  width: 100%;
   display: flex;
-  justify-content: space-between;
-
-  margin-top: 35px;
+  margin-top: 40px;
+  margin-bottom: 40px;
 `;
