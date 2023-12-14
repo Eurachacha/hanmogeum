@@ -92,11 +92,8 @@ const ProductDetailPage = () => {
   };
 
   const handleCheckoutOrder = () => {
-    if (!user) {
-      setIsLoginModalOpen(true);
-      return;
-    }
-    setIsCheckoutConfirmModalOpen(true);
+    setIsCheckoutConfirmModalOpen(false);
+    navigate("/orders/checkout", { state: { ...itemData, quantityInput } });
   };
 
   const handleStockUpdate = () => {
@@ -143,7 +140,7 @@ const ProductDetailPage = () => {
         <ButtonWrapper onClick={() => setIsCheckoutConfirmModalOpen(false)}>
           <Button value="취소" size="sm" variant="sub" />
         </ButtonWrapper>
-        <ButtonWrapper onClick={() => navigate("/orders/checkout")}>
+        <ButtonWrapper onClick={handleCheckoutOrder}>
           <Button value="구매하기" size="sm" variant="point" />
         </ButtonWrapper>
       </Modal>
@@ -189,7 +186,7 @@ const ProductDetailPage = () => {
           <MainButtonWrapper onClick={handleAddToCart}>
             <Button value="장바구니" size="lg" variant="sub" disabled={!quantityInput} />
           </MainButtonWrapper>
-          <MainButtonWrapper onClick={handleCheckoutOrder}>
+          <MainButtonWrapper onClick={() => (user ? setIsCheckoutConfirmModalOpen(true) : setIsLoginModalOpen(true))}>
             <Button value="바로구매" size="lg" variant="point" disabled={!quantityInput} />
           </MainButtonWrapper>
         </ButtonArea>
