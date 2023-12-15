@@ -2,8 +2,9 @@ import { publicInstance } from "../instance";
 import { ResponseProductsList, ResponseProductInfo } from "@/types/products";
 
 interface SortQueryObject {
-  sortBy: "price" | "createdAt" | "buyQuantity"; // 어떤 기준으로 정렬할지
-  sortOrder: 1 | -1; // 어떤 순서로 정렬할지
+  price?: number;
+  createdAt?: number;
+  buyQuantity?: number;
 }
 
 interface FilterQueryObject {
@@ -20,7 +21,7 @@ interface RequestSearchProducts {
 }
 
 const getSortQueryString = (sortQueryObject: SortQueryObject) => {
-  return `sort={"${sortQueryObject.sortBy}": ${sortQueryObject.sortOrder}}`;
+  return `sort=${JSON.stringify(sortQueryObject)}`;
 };
 
 const getFilterQueryString = (filterQueryObject: FilterQueryObject) => {

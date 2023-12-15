@@ -42,11 +42,25 @@ const useQueryParams = (queryKey: string) => {
     }
   };
 
+  const toggleSortFilter = (string: string) => {
+    // queryKey: sortType, string: 1
+    const isExist = searchParams.toString().includes(queryKey);
+
+    if (!isExist) {
+      searchParams.append(queryKey, string);
+      setSearchParams(searchParams);
+    } else {
+      searchParams.delete(queryKey);
+      searchParams.append(queryKey, string);
+      setSearchParams(searchParams);
+    }
+  };
+
   const resetFilter = () => {
     setSearchParams("");
   };
 
-  return { curQueryData, toggleFilter, toggleDecafFilter, resetFilter };
+  return { curQueryData, toggleFilter, toggleDecafFilter, toggleSortFilter, resetFilter };
 };
 
 export default useQueryParams;
