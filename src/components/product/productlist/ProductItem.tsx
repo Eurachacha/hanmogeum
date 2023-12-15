@@ -43,11 +43,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
           </StyledPrice>
 
           <StyledHashTag>
-            <p>
-              {product.extra.hashTag.map((hashtag) => {
-                return `#${hashtag} `;
-              })}
-            </p>
+            <p>{product.extra.hashTag}</p>
           </StyledHashTag>
         </ul>
       </ProductItemContentWrapper>
