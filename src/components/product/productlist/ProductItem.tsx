@@ -15,17 +15,29 @@ const ProductItem = ({ product }: ProductItemProps) => {
       <ProductItemImageWrapper $imageUrl={product.mainImages}>
         <StyledLabel>
           <li>
-            <ProductItemLabel padding="4px 8px" margin="0 8px 0 0" variant="new">
-              new
-            </ProductItemLabel>
-            <ProductItemLabel padding="4px 8px" margin="0 8px 0 0" variant="best">
-              best
-            </ProductItemLabel>
+            {product.extra.isNew ? (
+              <ProductItemLabel padding="4px 8px" margin="0 8px 0 0" variant="new">
+                new
+              </ProductItemLabel>
+            ) : (
+              <span></span>
+            )}
+            {product.extra.isBest ? (
+              <ProductItemLabel padding="4px 8px" margin="0 8px 0 0" variant="best">
+                best
+              </ProductItemLabel>
+            ) : (
+              <span></span>
+            )}
           </li>
           <li>
-            <ProductItemLabel padding="4px 8px" margin="0 0 8px 0" variant="decaf">
-              디카페인
-            </ProductItemLabel>
+            {product.extra.isDecaf ? (
+              <ProductItemLabel padding="4px 8px" margin="0 0 8px 0" variant="decaf">
+                디카페인
+              </ProductItemLabel>
+            ) : (
+              <span></span>
+            )}
           </li>
         </StyledLabel>
       </ProductItemImageWrapper>
