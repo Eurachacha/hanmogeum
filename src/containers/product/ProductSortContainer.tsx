@@ -19,8 +19,13 @@ const ProductSortContainer = () => {
   const hashTagQuery = searchParams.get("hashTag")?.split(",");
   const isDecafQuery = searchParams.get("isDecaf")?.split(",");
 
+  const sortQuery = searchParams.get("sortType");
+
   type filterObjectType = Partial<Extra>;
   const filterObject: filterObjectType = {};
+
+  type sortObjectType = Partial<Product>;
+  const sortObject: sortObjectType = {};
 
   if (packQuery) {
     filterObject.pack = packQuery;
@@ -38,8 +43,17 @@ const ProductSortContainer = () => {
     filterObject.isDecaf = Boolean(isDecafQuery[0]);
   }
 
-  // const sortOrder = { sortBy: "price", sortOrder: -1 };
-  const getFilteredData = async (filterDataObject?: filterObjectType, sortDataObject?: any) => {
+  if (sortQuery === "0") {
+    sortObject.buyQuantity = 1;
+  } else if (sortQuery === "1") {
+    sortObject.createdAt = "1";
+  } else if (sortQuery === "2") {
+    sortObject.price = 1;
+  } else {
+    sortObject.price = -1;
+  }
+
+  const getFilteredData = async (sortDataObject?: sortObjectType, filterDataObject?: filterObjectType) => {
     try {
       const response = await productsApi.searchProducts({
         sort: sortDataObject,
@@ -53,7 +67,7 @@ const ProductSortContainer = () => {
   };
 
   useEffect(() => {
-    getFilteredData(filterObject);
+    getFilteredData(sortObject, filterObject);
   }, [queryString]);
 
   return (

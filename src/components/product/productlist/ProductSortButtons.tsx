@@ -1,12 +1,17 @@
 import styled from "styled-components";
+import useQueryParams from "@/hooks/useQueryParams";
 
 interface ProductSortButtonsProps {
   productLength: number;
 }
 const ProductSortButtons = ({ productLength }: ProductSortButtonsProps) => {
-  const changeQueryString = () => {
-    // 쿼리스트링 변경하는 코드
-  };
+  const categoryArray = [
+    { name: "인기순", sortNumber: 0 },
+    { name: "최신순", sortNumber: 1 },
+    { name: "가격낮은순", sortNumber: 2 },
+    { name: "가격높은순", sortNumber: 3 },
+  ];
+  const { toggleSortFilter } = useQueryParams("sortType");
 
   return (
     <CategorySortLayer>
@@ -14,12 +19,11 @@ const ProductSortButtons = ({ productLength }: ProductSortButtonsProps) => {
         <StyledProductCount>전체 {productLength}개</StyledProductCount>
       </li>
       <li>
-        <StyledCategorySortButton onClick={changeQueryString} type="button">
-          인기순
-        </StyledCategorySortButton>
-        <StyledCategorySortButton type="button">최신순</StyledCategorySortButton>
-        <StyledCategorySortButton type="button">낮은가격순</StyledCategorySortButton>
-        <StyledCategorySortButton type="button">높은가격순</StyledCategorySortButton>
+        {categoryArray.map((cate) => (
+          <StyledCategorySortButton key={cate.name} onClick={() => toggleSortFilter(`${cate.sortNumber}`)}>
+            {cate.name}
+          </StyledCategorySortButton>
+        ))}
       </li>
     </CategorySortLayer>
   );
