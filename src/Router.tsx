@@ -92,16 +92,12 @@ const router = createBrowserRouter([
         path: "/orders/complete",
         element: <OrderCompletePage />,
       },
-      {
-        path: "/manage",
-        element: <ManagePage />,
-      },
-      {
-        path: "/error",
-        element: <ManagePage />,
-      },
     ],
     errorElement: <ErrorPage />,
+  },
+  {
+    path: "manage/*",
+    element: <ManagePage />,
   },
 ]);
 
