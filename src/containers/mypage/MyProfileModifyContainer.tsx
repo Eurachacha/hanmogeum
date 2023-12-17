@@ -2,6 +2,7 @@ import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useDaumPostcodePopup } from "react-daum-postcode";
+import { useNavigate } from "react-router-dom";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 /* types */
 import { InputType, InputProps } from "@/types/input";
@@ -19,6 +20,7 @@ import userApi from "@/apis/services/users";
 import PASSWORD_MIN_LENGTH from "@/constants/signUpValidation";
 import ContentsTitle from "@/components/contentsTitle/ContentsTitle";
 import ContainerHeader from "@/components/mypage/ContainerHeader.";
+import additionalAuthState from "@/recoil/atoms/additionalAuthState";
 
 interface InputDataType {
   title: string;
@@ -71,9 +73,11 @@ const MyProfileEditContainer = () => {
     passwordAgain: "",
     phoneNumber: "",
   });
-  const [showModal, setShowModal] = useState({ isOpen: false, message: "" });
+  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState({ isOpen: false, message: "", goToPrevPage: false });
   const [isActiveSignUpButton, setIsActiveSignUpButton] = useState(false);
   const [isActiveEmailButton, setIsActiveEmailButton] = useState(true);
+  const isAdditionalLogined = useRecoilValue(additionalAuthState);
 
   // 수정하기 버튼을 눌렀을 때 발생하는 이벤트 함수입니다.
   const signUpSubmitClick = async () => {
@@ -86,12 +90,13 @@ const MyProfileEditContainer = () => {
       updateData.address = `${signUpData.address} ${signUpData.addressDetail}`;
     try {
       await userApi.updateUserProfile(loggedInUser?._id || -1, updateData);
-      setShowModal({ isOpen: true, message: "수정이 완료되었습니다." });
+      setShowModal((prevState) => ({ ...prevState, isOpen: true, message: "수정이 완료되었습니다." }));
     } catch (error) {
       console.error(error);
       const signupError = error as SignUpErrorType;
       const errorMessage = signupError.message || "회원가입 중 문제가 발생했습니다.";
-      setShowModal({ isOpen: true, message: errorMessage });
+      setShowModal((prevState) => ({ ...prevState, isOpen: true, message: errorMessage }));
+
       setIsActiveEmailButton(true);
     }
   };
@@ -125,6 +130,12 @@ const MyProfileEditContainer = () => {
   // 가입하기 버튼을 눌렀을때 발생하는 이벤트 함수입니다.
   const signUpFormHandleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+  };
+  const modalClickHandle = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    if (showModal.goToPrevPage) {
+      navigate(-1);
+    }
   };
 
   // TODO: 다음 useEffect들 커스텀 훅으로 변경
@@ -173,6 +184,12 @@ const MyProfileEditContainer = () => {
       setValidationMessage((prevState) => ({ ...prevState, phoneNumber: "" }));
     }
   }, [signUpData.phoneNumber]);
+
+  useEffect(() => {
+    if (!isAdditionalLogined) {
+      setShowModal({ isOpen: true, goToPrevPage: true, message: "추가 로그인이 필요합니다." });
+    }
+  }, []);
 
   // Input 데이터
   const itemInputData: InputDataType[] = [
@@ -300,7 +317,9 @@ const MyProfileEditContainer = () => {
       <ContentsTitle title="내 정보 변경"></ContentsTitle>
       <div>
         <Modal isOpen={showModal.isOpen} iconRequired={false} message={showModal.message}>
-          <CheckModalButton onClick={() => setShowModal({ isOpen: false, message: "" })}>확인</CheckModalButton>
+          <CheckModalButton type="submit" onClick={modalClickHandle}>
+            확인
+          </CheckModalButton>
         </Modal>
       </div>
       <FromWrapper noValidate onSubmit={signUpFormHandleSubmit}>
@@ -363,10 +382,12 @@ const InputListStyle = styled.div`
   gap: 1rem;
 `;
 
-const CheckModalButton = styled.div`
+const CheckModalButton = styled.button`
   display: flex;
   justify-content: center;
   padding: 1.8rem 0 0.2rem 0;
+  background-color: inherit;
+  border: none;
   width: 100%;
   border-top: 1px solid var(--color-gray-100);
   color: var(--color-sub-500);
