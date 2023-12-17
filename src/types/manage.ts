@@ -1,4 +1,4 @@
-import { Extra, ProductDetail } from "@/types/products";
+import { Extra, MainImageType, ProductDetail } from "@/types/products";
 
 // [[ PRODUCT MANAGE ]]
 
@@ -10,21 +10,18 @@ export interface RequestProductCreate {
   show: boolean;
   active: boolean;
   name: string;
-  mainImages: string[];
+  mainImages: MainImageType[];
   content: string;
-  createdAt?: string;
-  updatedAt?: string;
   extra: Extra;
 }
 
 // PATCH /seller/products/{_id}
 export interface RequestProductUpdate {
   price: number;
-  shippingFees: number;
   show: boolean;
   active: boolean;
   name: string;
-  mainImages: string[];
+  mainImages: MainImageType[];
   content: string;
   "extra.isNew": boolean;
 }
