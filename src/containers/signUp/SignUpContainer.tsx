@@ -131,6 +131,7 @@ const SignUpContainer = () => {
         setIsActiveEmailButton(true);
       }
     } catch (error: unknown) {
+      console.error(error);
       const signupError = error as SignUpErrorType;
       let errorMessage = "";
       if (signupError.response?.status === 409) {

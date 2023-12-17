@@ -105,7 +105,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/",
-        element: <ProtectedRoute location="/" modalMessage="잘못된 접근입니다." allowedRoles={["guest"]} />,
+        element: <ProtectedRoute location={-1} modalMessage="이미 로그인된 사용자입니다." allowedRoles={["guest"]} />,
         children: [
           {
             path: "/login",

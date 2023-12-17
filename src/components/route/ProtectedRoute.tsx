@@ -6,9 +6,14 @@ import Modal from "../common/Modal";
 import Button from "../common/Button";
 import { PrivateRouteProps } from "@/types/routeAuthorization";
 
-const ProtectedRoute = ({ allowedRoles, modalMessage, location }: PrivateRouteProps) => {
+const ProtectedRoute = ({
+  allowedRoles,
+  modalMessage,
+  isAdditionalAuthRequired = false,
+  location,
+}: PrivateRouteProps) => {
   const navigate = useNavigate();
-  const isAuthenticatedUser = useAuthorization({ allowedRoles });
+  const isAuthenticatedUser = useAuthorization({ allowedRoles, isAdditionalAuthRequired });
   const [modalOpen, setModalOpen] = useState({ isOpen: false, message: "" });
 
   useEffect(() => {

@@ -9,7 +9,7 @@ const MyProfileLoginContainer = () => {
     <>
       <ContainerHeader title="내 정보 변경" />
       <ContentsTitle title="내 정보 변경"></ContentsTitle>
-      <Login redirectAfterLogin="/mypage/profile/modify">
+      <Login isAdditionalAuth redirectAfterLogin="/mypage/profile/modify">
         <ButtonWrapper>
           <Button value="로그인" size="sm" variant="point" />
         </ButtonWrapper>
