@@ -24,7 +24,8 @@ const ProtectedRoute = ({
     }
   }, []);
 
-  const navigateLocation = () => {
+  const navigateLocation = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (typeof location === "number") {
       navigate(location);
     } else {
