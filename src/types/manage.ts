@@ -7,7 +7,6 @@ import { Extra, ProductDetail } from "@/types/products";
 // POST /seller/products
 export interface RequestProductCreate {
   price: number;
-  shippingFees: number;
   show: boolean;
   active: boolean;
   name: string;

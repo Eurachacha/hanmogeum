@@ -117,18 +117,19 @@ const router = createBrowserRouter([
           },
         ],
       },
-      {
-        path: "",
-        element: <ProtectedRoute location="/" modalMessage="." allowedRoles={["seller", "admin"]} />,
-        children: [
-          {
-            path: "/manage/*",
-            element: <ManagePage />,
-          },
-        ],
-      },
+      
     ],
     errorElement: <ErrorPage />,
+  },
+  {
+    path: "",
+    element: <ProtectedRoute location="/" modalMessage="." allowedRoles={["seller", "admin"]} />,
+    children: [
+      {
+        path: "manage/*",
+        element: <ManagePage />,
+      },
+    ],
   },
 ]);
 

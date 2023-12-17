@@ -8,6 +8,7 @@ interface OrderProduct {
 interface OrderAddress {
   name?: string;
   value: string;
+  detailValue?: string;
 }
 
 export interface OrderProductDetail extends OrderProduct {
@@ -28,19 +29,19 @@ export interface OrderCost {
   total: number;
 }
 
-interface OrderDetail {
+export interface OrderDetail {
   products: OrderProductDetail[];
-  address: OrderAddress;
   state: string;
   user_id: number;
   _id: number;
   createdAt: string;
   updatedAt: string;
+  shippingInfo: ShippingInfoType;
   cost: OrderCost;
 }
 
 export interface ShippingInfoType {
-  name: string;
+  name?: string;
   phone: string;
   address: OrderAddress;
 }
