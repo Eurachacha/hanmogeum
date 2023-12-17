@@ -93,7 +93,8 @@ const Login = ({ children, isAdditionalAuth = false, redirectAfterLogin = "/" }:
           <LoginCheckModalWrapper>
             <Modal isOpen={showLoginCheckAlert} iconRequired={false} message={loginFailMessage}>
               <LoginCheckModalButton
-                onClick={() => {
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                  event.preventDefault();
                   setShowLoginCheckAlert(false);
                 }}
               >

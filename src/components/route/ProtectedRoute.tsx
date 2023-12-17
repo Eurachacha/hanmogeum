@@ -24,8 +24,7 @@ const ProtectedRoute = ({
     }
   }, []);
 
-  const navigateLocation = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const navigateLocation = () => {
     if (typeof location === "number") {
       navigate(location);
     } else {
@@ -33,11 +32,16 @@ const ProtectedRoute = ({
     }
   };
 
+  const modalSubmitHandle = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    navigateLocation();
+  };
+
   if (!isAuthenticatedUser) {
     return (
       <ModalWrapper>
         <Modal isOpen={modalOpen.isOpen} message={modalOpen.message}>
-          <ButtonWrapper onSubmit={navigateLocation}>
+          <ButtonWrapper onSubmit={modalSubmitHandle}>
             <Button value="확인" size="sm" variant="point" />
           </ButtonWrapper>
         </Modal>
