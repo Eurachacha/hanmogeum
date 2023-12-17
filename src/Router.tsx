@@ -25,7 +25,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <ProtectedRoute location="/" modalMessage="." allowedRoles={["all"]} />,
+        element: <ProtectedRoute location="/" allowedRoles={["all"]} />,
         children: [
           {
             path: "/",
@@ -104,7 +104,7 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "/",
+        path: "",
         element: <ProtectedRoute location={-1} modalMessage="이미 로그인된 사용자입니다." allowedRoles={["guest"]} />,
         children: [
           {
@@ -117,13 +117,14 @@ const router = createBrowserRouter([
           },
         ],
       },
-      
     ],
     errorElement: <ErrorPage />,
   },
   {
     path: "",
-    element: <ProtectedRoute location="/" modalMessage="." allowedRoles={["seller", "admin"]} />,
+    element: (
+      <ProtectedRoute location="/" modalMessage="관리자만 접근 가능합니다." allowedRoles={["seller", "admin"]} />
+    ),
     children: [
       {
         path: "manage/*",
