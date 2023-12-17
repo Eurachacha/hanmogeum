@@ -3,6 +3,7 @@ import { useSetRecoilState } from "recoil";
 import { useEffect } from "react";
 import dataProvider from "@/apis/services/admin/dataProvider";
 import OrderList from "@/components/admin/OrderList";
+import ProductList from "@/components/admin/ProductList";
 import { flattenCodeState, nestedCodeState } from "@/recoil/atoms/codeState";
 import codeApi from "@/apis/services/code";
 
@@ -27,6 +28,7 @@ export const ManagePage = () => {
   return (
     <Admin basename="/manage" dataProvider={dataProvider}>
       <Resource name="orders" list={OrderList} />
+      <Resource name="products" list={ProductList} />
     </Admin>
   );
 };
