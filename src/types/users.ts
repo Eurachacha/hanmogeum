@@ -1,4 +1,4 @@
-type UserType = "user" | "seller" | "admin";
+export type UserType = "user" | "seller" | "admin";
 
 export interface LoginData {
   email: string;
