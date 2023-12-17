@@ -14,12 +14,14 @@ import { AUTH_TOKEN_KEY } from "@/constants/api";
 import { cartState, cartCheckedItemState } from "@/recoil/atoms/cartState";
 // type
 import { CartStorageItem } from "@/types/cart";
+import additionalAuthState from "@/recoil/atoms/additionalAuthState";
 
 interface LoginProps {
   children?: PropsWithChildren;
+  isAdditionalAuth?: boolean;
   redirectAfterLogin: string | number;
 }
-const Login = ({ children, redirectAfterLogin = "/" }: PropsWithChildren<LoginProps>) => {
+const Login = ({ children, isAdditionalAuth = false, redirectAfterLogin = "/" }: PropsWithChildren<LoginProps>) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,6 +30,7 @@ const Login = ({ children, redirectAfterLogin = "/" }: PropsWithChildren<LoginPr
   const loginFailMessage = "아이디와 패스워드를 확인해주세요.";
   const [cartStorage, setCartStorage] = useRecoilState(cartState);
   const setCartCheckedItem = useSetRecoilState(cartCheckedItemState);
+  const setAdditionalAuthState = useSetRecoilState(additionalAuthState);
 
   const mergeCartAfterLogin = async () => {
     // 상태 관리 중이던 장바구니 상품을 로그인 유저가 갖고 있던 장바구니와 합치기 요청
@@ -68,6 +71,9 @@ const Login = ({ children, redirectAfterLogin = "/" }: PropsWithChildren<LoginPr
         localStorage.setItem(AUTH_TOKEN_KEY, data.item.token.accessToken);
         localStorage.setItem("refreshToken", data.item.token.refreshToken);
         await mergeCartAfterLogin();
+        if (isAdditionalAuth) {
+          setAdditionalAuthState(true);
+        }
         // Type Guard
         if (typeof redirectAfterLogin === "string") {
           navigate(redirectAfterLogin);
