@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import myPageApi from "@/apis/services/mypage";
 import ORDER_STATE from "@/constants/code";
+import GetDateNow from "@/utils/getDateNow";
 
 const WidgetShipping = () => {
   // TODO: 리액트 쿼리로 수정
@@ -16,9 +17,33 @@ const WidgetShipping = () => {
   ]);
   const getShippingData = async () => {
     try {
-      const response1 = await myPageApi.getMyPageOrderList({ state: shippingInfo[0].code });
-      const response2 = await myPageApi.getMyPageOrderList({ state: shippingInfo[1].code });
-      const response3 = await myPageApi.getMyPageOrderList({ state: shippingInfo[2].code });
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const getDateNow = new GetDateNow(new Date());
+      const endDate = GetDateNow.formatDate(tomorrow) || "";
+      const startDate = getDateNow.getDateYear(-3);
+
+      const response1 = await myPageApi.getMyPageOrderList({
+        createdAt: {
+          startDate,
+          endDate,
+        },
+        state: shippingInfo[0].code,
+      });
+      const response2 = await myPageApi.getMyPageOrderList({
+        createdAt: {
+          startDate,
+          endDate,
+        },
+        state: shippingInfo[1].code,
+      });
+      const response3 = await myPageApi.getMyPageOrderList({
+        createdAt: {
+          startDate,
+          endDate,
+        },
+        state: shippingInfo[2].code,
+      });
       const updatedState = { ...shippingInfo };
       updatedState[0].value = response1.data.item.length;
       updatedState[1].value = response2.data.item.length;
