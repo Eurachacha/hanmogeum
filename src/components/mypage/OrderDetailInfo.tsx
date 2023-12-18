@@ -1,19 +1,41 @@
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
+import React, { useState } from "react";
 import ContainerHeader from "./ContainerHeader.";
 import { MyOrderItem } from "@/types/myPage";
 import getPriceFormat from "@/utils/getPriceFormat";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import autoHyphenPhoneNumber from "../../utils/autoHyphenPhoneNumber";
 import { flattenCodeState } from "@/recoil/atoms/codeState";
+import Button from "@/components/common/Button";
+import Modal from "@/components/common/Modal";
+import myPageApi from "@/apis/services/mypage";
+import ORDER_STATE from "@/constants/code";
 
 interface OrderDetailInfoProps {
   orderData?: MyOrderItem;
+  shippingState?: string;
 }
 
-const OrderDetailInfo = ({ orderData }: OrderDetailInfoProps) => {
+const OrderDetailInfo = ({ orderData, shippingState }: OrderDetailInfoProps) => {
   const codeData = useRecoilValue(flattenCodeState);
   const currentUserInfo = useRecoilValue(loggedInUserState);
+  const [isOpenModalData, setIsOpenModalData] = useState({ isOpen: false, message: "" });
+  const patchShippingState = async () => {
+    await myPageApi.patchMyPageOrderShippingCancel(orderData?._id || "");
+  };
+  const shippingCancel = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    patchShippingState();
+    setIsOpenModalData({ isOpen: true, message: "주문 취소되었습니다." });
+  };
+
+  const modalHandleButton = () => {
+    setIsOpenModalData((prevState) => {
+      return { ...prevState, isOpen: false };
+    });
+  };
+
   const orderInfoList = [
     { title: "주문번호", value: currentUserInfo?._id || "" },
     { title: "보내는 분", value: currentUserInfo?.name || "" },
@@ -23,7 +45,12 @@ const OrderDetailInfo = ({ orderData }: OrderDetailInfoProps) => {
   ];
 
   const shippingInfoList = [
-    { title: "배송상태", value: codeData[orderData?.state || ""]?.value },
+    {
+      title: "배송상태",
+      value: codeData[orderData?.state || ""]?.value,
+      showButton: shippingState === ORDER_STATE.SHIPPING_PREPARING.CODE,
+      buttonHandle: shippingCancel,
+    },
     { title: "받는분", value: orderData?.shippingInfo?.name || "" },
     { title: "연락처", value: autoHyphenPhoneNumber(orderData?.shippingInfo?.phone || "") },
     {
@@ -40,6 +67,11 @@ const OrderDetailInfo = ({ orderData }: OrderDetailInfoProps) => {
 
   return (
     <OrderDetailInfoLayer>
+      <ModalWrapper onSubmit={modalHandleButton}>
+        <Modal isOpen={isOpenModalData.isOpen} message={isOpenModalData.message}>
+          <Button value="확인" size="sm" variant="sub"></Button>
+        </Modal>
+      </ModalWrapper>
       <UserInfoWrapper>
         <div>
           <ContainerHeader title="결제 정보" variant="sub" />
@@ -61,10 +93,13 @@ const OrderDetailInfo = ({ orderData }: OrderDetailInfoProps) => {
             {shippingInfoList.map((infoData, idx) => {
               const infoWrapperKey = `OrderDetailInfo_InfoWrapper_${idx}`;
               return (
-                <InfoDataStyle key={infoWrapperKey}>
-                  <InfoTitleStyle>{infoData.title}</InfoTitleStyle>
-                  <InfoValueStyle>{infoData.value}</InfoValueStyle>
-                </InfoDataStyle>
+                <InfoDataWrapper key={`${infoWrapperKey}Data`} onSubmit={infoData.buttonHandle}>
+                  <InfoDataStyle key={infoWrapperKey}>
+                    <InfoTitleStyle>{infoData.title}</InfoTitleStyle>
+                    <InfoValueStyle>{infoData.value}</InfoValueStyle>
+                  </InfoDataStyle>
+                  {infoData?.showButton && <Button value="주문 취소" size="sm" variant="sub"></Button>}
+                </InfoDataWrapper>
               );
             })}
           </InfoListWrapper>
@@ -94,6 +129,8 @@ const OrderDetailInfo = ({ orderData }: OrderDetailInfoProps) => {
 
 export default OrderDetailInfo;
 
+const ModalWrapper = styled.form``;
+
 const UserInfoWrapper = styled.div`
   display: flex;
   gap: 2rem;
@@ -112,14 +149,25 @@ const InfoListWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 1.6rem;
-  gap: 1.4rem;
+`;
+
+const InfoDataWrapper = styled.form`
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  button {
+    width: 8rem;
+    padding: 0.3rem;
+    margin: 0rem;
+  }
 `;
 const InfoDataStyle = styled.div`
   display: flex;
-  justify-content: space-between;
+  height: 2.6rem;
 `;
 const InfoTitleStyle = styled.span`
   font-weight: var(--weight-bold);
+  min-width: 14rem;
 `;
 const InfoValueStyle = styled.span`
   font-weight: var(--weight-regular);
