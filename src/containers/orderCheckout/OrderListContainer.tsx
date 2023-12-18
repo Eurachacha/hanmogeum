@@ -11,7 +11,7 @@ const OrderListContainer = ({ cartData, orderData }: OrderListContainerProps) =>
   if (orderData) {
     return (
       <OrderItem
-        imgUrl={orderData.mainImages[0]}
+        imgUrl={`${import.meta.env.VITE_API_BASE_URL}${orderData.mainImages[0].url}`}
         name={orderData.name}
         quantity={orderData.quantityInput}
         priceSum={orderData.price * orderData.quantityInput}
@@ -25,7 +25,7 @@ const OrderListContainer = ({ cartData, orderData }: OrderListContainerProps) =>
         return (
           <OrderItem
             key={key}
-            imgUrl={item.product.image}
+            imgUrl={`${import.meta.env.VITE_API_BASE_URL}${item.product.image.url}`}
             name={item.product.name}
             quantity={item.quantity}
             priceSum={item.product.price * item.quantity}
