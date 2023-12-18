@@ -1,15 +1,16 @@
 import { DataProvider } from "react-admin";
 import { privateInstance } from "@/apis/instance";
 
-const dataProvider: DataProvider = {
+const sellerDataProvider: DataProvider = {
   getList: async (resource: string) => {
     const response = await privateInstance.get(`/seller/${resource}`);
     const { item } = response.data;
     return { data: item, total: item.length };
   },
   getOne: async (resource, params) => {
-    const { data } = await privateInstance.get(`/${resource}/${params.id}`);
-    return { data };
+    const response = await privateInstance.get(`/seller/${resource}/${params.id}`);
+    const { item } = response.data;
+    return { data: item };
   },
   getMany: async (resource, params) => {
     const { data } = await privateInstance.get(`/${resource}?ids=${params.ids.join(",")}`);
@@ -24,8 +25,11 @@ const dataProvider: DataProvider = {
     return { data };
   },
   update: async (resource, params) => {
-    const { data } = await privateInstance.put(`/${resource}/${params.id}`, params.data);
-    return { data };
+    const response = await privateInstance.patch(`/seller/${resource}/${params.id}`, {
+      state: params.data.state,
+    });
+    const { item } = response.data;
+    return { data: item };
   },
   updateMany: async (resource, params) => {
     const promises = params.ids.map((id: string | number) => privateInstance.put(`/${resource}/${id}`, params.data));
@@ -43,4 +47,4 @@ const dataProvider: DataProvider = {
   },
 };
 
-export default dataProvider;
+export default sellerDataProvider;
