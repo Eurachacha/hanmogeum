@@ -1,11 +1,11 @@
 import { Admin, Resource } from "react-admin";
 import { useSetRecoilState } from "recoil";
 import { useEffect } from "react";
-import dataProvider from "@/apis/services/admin/dataProvider";
 import OrderList from "@/components/admin/OrderList";
 import ProductList from "@/components/admin/ProductList";
 import { flattenCodeState, nestedCodeState } from "@/recoil/atoms/codeState";
 import codeApi from "@/apis/services/code";
+import OrderEdit from "@/components/admin/OrderEdit";
 import sellerDataProvider from "@/apis/services/admin/sellerDataProvider";
 
 export const ManagePage = () => {
@@ -28,7 +28,7 @@ export const ManagePage = () => {
 
   return (
     <Admin basename="/seller" dataProvider={sellerDataProvider}>
-      <Resource name="orders" list={OrderList} />
+      <Resource name="orders" list={OrderList} edit={OrderEdit} />
       <Resource name="products" list={ProductList} />
     </Admin>
   );
