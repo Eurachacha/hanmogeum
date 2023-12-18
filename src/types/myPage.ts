@@ -6,6 +6,11 @@ export interface ResponseDataMyOrderList {
   item: MyOrderItem[] | [];
 }
 
+export interface ResponseDataMyOrderDetail {
+  ok: number;
+  item: MyOrderItem;
+}
+
 export interface MyOrderItem {
   _id: number;
   user_id: number;

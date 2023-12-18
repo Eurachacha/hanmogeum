@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import myPageApi from "@/apis/services/mypage";
+import ORDER_STATE from "@/constants/code";
 
 const WidgetShipping = () => {
   // TODO: 리액트 쿼리로 수정
   const [shippingInfo, setShippingInfo] = useState([
     {
-      name: "배송준비중",
+      name: ORDER_STATE.SHIPPING_PREPARING.NAME,
       value: 0,
-      code: "OS030",
+      code: ORDER_STATE.SHIPPING_PREPARING.CODE,
     },
-    { name: "배송중", value: 0, code: "OS035" },
-    { name: "배송완료", value: 0, code: "OS040" },
+    { name: ORDER_STATE.SHIPPING_PROGRESS.NAME, value: 0, code: ORDER_STATE.SHIPPING_PROGRESS.CODE },
+    { name: ORDER_STATE.SHIPPING_FINISH.NAME, value: 0, code: ORDER_STATE.SHIPPING_FINISH.CODE },
   ]);
   const getShippingData = async () => {
     try {

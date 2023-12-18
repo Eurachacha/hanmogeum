@@ -10,25 +10,25 @@ import getPriceFormat from "@/utils/getPriceFormat";
 import ContainerHeader from "@/components/mypage/ContainerHeader.";
 import cartApi from "@/apis/services/cart";
 import Modal from "@/components/common/Modal";
+import ORDER_STATE from "@/constants/code";
 
 const MyOrderDetailContainer = () => {
   const [orderDetail, setOrderDetail] = useState<MyOrderItem>();
   const [openModal, setOenModal] = useState({ isOpen: false, message: "" });
+  const [shippingState, setShippingState] = useState("");
+  const [buttonDisable, setButtonDisable] = useState(false);
+
   const navigator = useNavigate();
   const { id } = useParams();
 
   const requestGetMyOrderList = async () => {
     try {
-      const { data } = await myPageApi.getMyPageOrderList({});
+      const { data } = await myPageApi.getMyPageOrderDetail(id || "");
       if (data.ok === 1) {
-        const orderItemList = data.item;
-        const orderItem = orderItemList.find((item) => `${item._id}` === `${id}`);
-        setOrderDetail(orderItem);
-        if (!orderItem) {
-          setOenModal({ isOpen: true, message: "존재하지 않는 주문번호입니다." });
-        }
+        setOrderDetail(data.item);
       }
     } catch (error) {
+      setOenModal({ isOpen: true, message: "존재하지 않는 주문번호입니다." });
       console.error(error);
     }
   };
@@ -53,6 +53,17 @@ const MyOrderDetailContainer = () => {
     });
     navigator("/mypage/orders");
   };
+
+  useEffect(() => {
+    setShippingState(orderDetail?.state || "");
+
+    // 주문 취소
+    if (shippingState === ORDER_STATE.SHIPPING_CANCEL.CODE) {
+      setButtonDisable(true);
+    } else {
+      setButtonDisable(false);
+    }
+  }, [orderDetail]);
 
   useEffect(() => {
     requestGetMyOrderList();
@@ -83,19 +94,20 @@ const MyOrderDetailContainer = () => {
                   <ProductQuantity>{product.quantity}개</ProductQuantity>
                 </ProductInfoDetailWrapper>
               </ProductInfoWrapper>
+
               <ButtonsWrapper>
                 <ReviewButtonStyle onClick={reviewButtonHandleClick}>
-                  <Button value="리뷰 작성" size="sm" variant="point" />
+                  <Button disabled={buttonDisable} value="리뷰 작성" size="sm" variant="point" />
                 </ReviewButtonStyle>
                 <CartButtonStyle onClick={() => cartButtonHandleClick(product)}>
-                  <Button value="장바구니 담기" size="sm" variant="sub" />
+                  <Button disabled={buttonDisable} value="장바구니 담기" size="sm" variant="sub" />
                 </CartButtonStyle>
               </ButtonsWrapper>
             </OrderDetailItemWrapper>
           );
         })}
       </div>
-      <OrderDetailInfo orderData={orderDetail} />
+      <OrderDetailInfo shippingState={shippingState} orderData={orderDetail} />
     </MyOrderDetailContainerLayer>
   );
 };

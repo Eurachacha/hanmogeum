@@ -1,5 +1,6 @@
+import ORDER_STATE from "@/constants/code";
 import { privateInstance } from "../instance";
-import { ResponseDataMyOrderList, getMyPageOrderListProps } from "@/types/myPage";
+import { ResponseDataMyOrderDetail, ResponseDataMyOrderList, getMyPageOrderListProps } from "@/types/myPage";
 
 const myPageApi = {
   getMyPageOrderList: ({ state, createdAt }: getMyPageOrderListProps) => {
@@ -10,5 +11,8 @@ const myPageApi = {
       baseURL + (shippingCodeFilter || periodFilter ? `custom={${[shippingCodeFilter, periodFilter].join("")}}` : "");
     return privateInstance.get<ResponseDataMyOrderList>(resultURL);
   },
+  getMyPageOrderDetail: (id: number | string) => privateInstance.get<ResponseDataMyOrderDetail>(`/orders/${id}`),
+  patchMyPageOrderShippingCancel: (id: number | string) =>
+    privateInstance.patch<ResponseDataMyOrderDetail>(`/orders/${id}`, { state: ORDER_STATE.SHIPPING_CANCEL.CODE }),
 };
 export default myPageApi;
