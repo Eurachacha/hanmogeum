@@ -34,8 +34,11 @@ const MyOrderListContainer = () => {
   const flattenCodeDataState: FlattenData = useRecoilValue(flattenCodeState);
 
   const getFilterStartAndEndDate = () => {
-    const getDateNow = new GetDateNow();
-    const endDate = getDateNow.getDateYearMonthDay() || "";
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const getDateNow = new GetDateNow(new Date());
+
+    const endDate = GetDateNow.formatDate(tomorrow) || "";
     let startDate = "";
     if (dropDownData[dropDownIdx].type === "month") {
       startDate = getDateNow.getDateMonth(dropDownData[dropDownIdx].typeValue);

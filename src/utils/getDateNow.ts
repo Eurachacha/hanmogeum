@@ -9,8 +9,8 @@ class GetDateNow {
 
   date = { year: "", month: "", day: "", hours: "", minutes: "", seconds: "" };
 
-  constructor() {
-    this.dateTime = new Date();
+  constructor(date: Date) {
+    this.dateTime = date;
     this.#setDate();
   }
 
