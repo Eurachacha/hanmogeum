@@ -18,11 +18,16 @@ const ProtectedRoute = ({
 
   useEffect(() => {
     if (modalMessage && modalMessage !== "") {
-      setModalOpen({ isOpen: true, message: modalMessage });
-    } else {
-      navigateLocation();
+      setModalOpen((prevState) => {
+        return { ...prevState, message: modalMessage };
+      });
     }
-  }, []);
+    if (!isAuthenticatedUser) {
+      setModalOpen((prevState) => {
+        return { ...prevState, isOpen: true };
+      });
+    }
+  }, [isAuthenticatedUser]);
 
   const navigateLocation = () => {
     if (typeof location === "number") {
