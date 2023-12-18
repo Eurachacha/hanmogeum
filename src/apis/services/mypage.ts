@@ -1,3 +1,4 @@
+import ORDER_STATE from "@/constants/code";
 import { privateInstance } from "../instance";
 import { ResponseDataMyOrderDetail, ResponseDataMyOrderList, getMyPageOrderListProps } from "@/types/myPage";
 
@@ -12,6 +13,6 @@ const myPageApi = {
   },
   getMyPageOrderDetail: (id: number | string) => privateInstance.get<ResponseDataMyOrderDetail>(`/orders/${id}`),
   patchMyPageOrderShippingCancel: (id: number | string) =>
-    privateInstance.patch<ResponseDataMyOrderDetail>(`/orders/${id}`, { state: "OS100" }),
+    privateInstance.patch<ResponseDataMyOrderDetail>(`/orders/${id}`, { state: ORDER_STATE.SHIPPING_CANCEL.CODE }),
 };
 export default myPageApi;
