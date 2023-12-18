@@ -16,10 +16,11 @@ import ordersApi from "@/apis/services/orders";
 const OrderCheckoutPage = () => {
   const user = useRecoilValue(loggedInUserState);
   const checkedItems = useRecoilValue(cartCheckedItemState);
-  const [cartData, setCartData] = useState<CartItem[]>([]);
+  const [cartData, setCartData] = useState<CartItem[]>();
   const [shippingInfo, setShippingInfo] = useState<ShippingInfoType>();
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
   const [isShippingModalOpen, setIsShippingModalOpen] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const fetchAllCartItems = async () => {
@@ -57,7 +58,7 @@ const OrderCheckoutPage = () => {
       setIsShippingModalOpen(true);
       return;
     }
-    const productsData = cartData.map((item) => {
+    const productsData = cartData!.map((item) => {
       return { _id: item.product._id, quantity: item.quantity };
     });
     const data = {
@@ -67,33 +68,49 @@ const OrderCheckoutPage = () => {
     createOrder(data);
   };
 
+  const handleErrorModalClose = () => {
+    navigate(-1);
+    setIsErrorModalOpen(false);
+  };
+
   useEffect(() => {
+    if (!cartData || cartData.length <= 0) {
+      setIsErrorModalOpen(true);
+    }
     if (user) fetchAllCartItems();
-    else navigate("/", { replace: true });
   }, []);
 
+  if (user && cartData && cartData.length > 0) {
+    return (
+      <OrderCheckoutPageLayer>
+        <Modal isOpen={isStockModalOpen} message="재고가 부족한 상품이 있습니다.">
+          <ButtonWrapper onClick={handleStockModalClose}>
+            <Button value="확인" size="sm" variant="sub" />
+          </ButtonWrapper>
+        </Modal>
+        <Modal isOpen={isShippingModalOpen} message="배송정보를 올바르게 입력해주세요.">
+          <ButtonWrapper onClick={handleShippingModalClose}>
+            <Button value="확인" size="sm" variant="sub" />
+          </ButtonWrapper>
+        </Modal>
+        <PageLeft>
+          <OrderInfoContainer cartData={cartData} setShippingInfo={setShippingInfo} />
+        </PageLeft>
+        <PageRight>
+          <OrderPriceContainer cartData={cartData} />
+          <OrderButtonWrapper onClick={handlePostOrder}>
+            <Button value="결제하기" size="lg" variant="point" />
+          </OrderButtonWrapper>
+        </PageRight>
+      </OrderCheckoutPageLayer>
+    );
+  }
   return (
-    <OrderCheckoutPageLayer>
-      <Modal isOpen={isStockModalOpen} message="재고가 부족한 상품이 있습니다.">
-        <ButtonWrapper onClick={handleStockModalClose}>
-          <Button value="확인" size="sm" variant="sub" />
-        </ButtonWrapper>
-      </Modal>
-      <Modal isOpen={isShippingModalOpen} message="배송정보를 올바르게 입력해주세요.">
-        <ButtonWrapper onClick={handleShippingModalClose}>
-          <Button value="확인" size="sm" variant="sub" />
-        </ButtonWrapper>
-      </Modal>
-      <PageLeft>
-        <OrderInfoContainer cartData={cartData} setShippingInfo={setShippingInfo} />
-      </PageLeft>
-      <PageRight>
-        <OrderPriceContainer cartData={cartData} />
-        <OrderButtonWrapper onClick={handlePostOrder}>
-          <Button value="결제하기" size="lg" variant="point" />
-        </OrderButtonWrapper>
-      </PageRight>
-    </OrderCheckoutPageLayer>
+    <Modal isOpen={isErrorModalOpen} message="잘못된 접근입니다.">
+      <ButtonWrapper onClick={handleErrorModalClose}>
+        <Button value="확인" size="sm" variant="point"></Button>
+      </ButtonWrapper>
+    </Modal>
   );
 };
 
