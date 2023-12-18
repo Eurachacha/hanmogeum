@@ -73,7 +73,7 @@ const MyOrderDetailContainer = () => {
           return (
             <OrderDetailItemWrapper key={orderItemKey}>
               <ProductImgWrapper>
-                <img src={product.image} alt={product.name} />
+                <img src={`${import.meta.env.VITE_API_BASE_URL}/${product.image.url}`} alt={product.name} />
               </ProductImgWrapper>
               <ProductInfoWrapper>
                 <ProductName>{product.name}</ProductName>
