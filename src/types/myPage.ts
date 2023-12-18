@@ -1,4 +1,5 @@
 import { InputType, InputProps } from "./input";
+import { MainImageType } from "./products";
 
 // 마이페이지 > 주문 내역
 export interface ResponseDataMyOrderList {
@@ -39,7 +40,7 @@ export interface Product {
   seller_id: number;
   state: string;
   name: string;
-  image: string;
+  image: MainImageType;
   quantity: number;
   price: number;
   reply_id: number;

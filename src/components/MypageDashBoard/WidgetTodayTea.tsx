@@ -8,7 +8,7 @@ import { flattenCodeState } from "@/recoil/atoms/codeState";
 
 interface TodayTeaItem {
   name: string;
-  imgURL: string[];
+  imgURL: string;
   hashTag: string[];
 }
 
@@ -35,13 +35,13 @@ const WidgetTodayTea = () => {
 
     const newTea: TodayTeaItem = {
       name: "",
-      imgURL: [],
+      imgURL: "",
       hashTag: [],
     };
 
     if (bestProducts) {
       newTea.name = bestProducts[randomId]?.name;
-      newTea.imgURL = bestProducts[randomId]?.mainImages;
+      newTea.imgURL = `${import.meta.env.VITE_API_BASE_URL}/${bestProducts[randomId]?.mainImages[0].url}`;
       newTea.hashTag = bestProducts[randomId]?.extra.hashTag;
     }
     newTea.hashTag = newTea.hashTag.map((code) => `#${codeData[code]?.value}`);
@@ -53,7 +53,7 @@ const WidgetTodayTea = () => {
       <TitleWrapper>오늘의 추천 차</TitleWrapper>
       <ContentsWrapper>
         <ProductImgStyle>
-          <img src={todayTea?.imgURL[0] || ""} alt={todayTea?.name} />
+          <img src={todayTea?.imgURL || ""} alt={todayTea?.name} />
         </ProductImgStyle>
         <ProductInfoStyle>
           <ProductNameStyle>{todayTea?.name}</ProductNameStyle>

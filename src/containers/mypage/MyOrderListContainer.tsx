@@ -83,7 +83,8 @@ const MyOrderListContainer = () => {
       title: title,
       date: getData.getDateYearMonthDay(),
       totalPrice: getPriceFormat({ price: orderItem.cost.total }),
-      imgURL: orderItem?.products[0]?.image,
+      imgURL: `${import.meta.env.VITE_API_BASE_URL}/${orderItem?.products[0].image.url}`,
+
       shippingState: shippingState,
     };
   };
