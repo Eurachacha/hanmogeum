@@ -14,6 +14,7 @@ import { flattenCodeState } from "@/recoil/atoms/codeState";
 import getPriceFormat from "@/utils/getPriceFormat";
 import CategoryButton from "@/components/product/productlist/CategoryButton";
 import useQuantityCounter from "@/hooks/useQuantityCounter";
+import { CartStorageItem } from "@/types/cart";
 
 const ProductDetailPage = () => {
   const [itemData, setItemData] = useState<ProductDetailWithReplies>();
@@ -40,7 +41,25 @@ const ProductDetailPage = () => {
   };
 
   const addToCartData = async (product_id: number, quantity: number) => {
-    cartApi.addItem({ product_id: product_id, quantity: quantity });
+    try {
+      const response = await cartApi.addItem({ product_id: product_id, quantity: quantity });
+      const { item: items } = response.data;
+      const updatedCartStorage: CartStorageItem[] = items.map((item) => {
+        return {
+          quantity: item.quantity,
+          stock: item.product.quantity - item.product.buyQuantity,
+          product: {
+            _id: item.product._id,
+            name: item.product.name,
+            image: item.product.image,
+            price: item.product.price,
+          },
+        };
+      });
+      setCartStorage(() => updatedCartStorage);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
