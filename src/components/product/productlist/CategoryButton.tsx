@@ -1,11 +1,12 @@
 import { useLocation } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import styled, { RuleSet, css } from "styled-components";
+import { flattenCodeState } from "@/recoil/atoms/codeState";
 
 interface ButtonProps {
-  children: string;
-  disabled?: boolean;
   code: string;
-  toggleFilter: (id: string) => void;
+  handleClick?: React.MouseEventHandler<HTMLButtonElement>;
+  disabled?: boolean;
 }
 
 const VARIANTS = {
@@ -21,17 +22,18 @@ const VARIANTS = {
   `,
 };
 
-const CategoryButton = ({ children, toggleFilter, code, disabled }: ButtonProps) => {
+const CategoryButton = ({ code, handleClick, disabled = false }: ButtonProps) => {
   const location = useLocation();
   const queryString = location.search;
+  const flattenCodes = useRecoilValue(flattenCodeState);
 
   return (
     <StyledButton
       $variantStyle={queryString.includes(code) ? VARIANTS.active : VARIANTS.default}
-      onClick={() => toggleFilter(code)}
+      onClick={handleClick}
       disabled={disabled}
     >
-      {children}
+      {flattenCodes[code].value}
     </StyledButton>
   );
 };

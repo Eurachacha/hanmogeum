@@ -173,12 +173,7 @@ const ProductDetailPage = () => {
           <HashTagWrapper>
             {itemData?.extra.hashTag.map((tagCode, idx) => {
               const keyIndex = idx.toString();
-              const value = `#${categoryCodes[tagCode].value}`;
-              return (
-                <CategoryButton key={keyIndex} variant="default">
-                  {value}
-                </CategoryButton>
-              );
+              return <CategoryButton key={keyIndex} code={tagCode} disabled />;
             })}
           </HashTagWrapper>
         </HashTagArea>
