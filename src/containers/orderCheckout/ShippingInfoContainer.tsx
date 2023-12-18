@@ -37,7 +37,7 @@ const ShippingInfoContainer = ({ setShippingInfo }: ShippingInfoContainerProps) 
     setShippingInfo({
       name,
       phone,
-      address: { value: address + detailAddress },
+      address: { value: address, detailValue: detailAddress },
     });
   }, [name, phone, address, detailAddress]);
 
