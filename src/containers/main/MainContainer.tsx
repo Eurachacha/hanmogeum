@@ -3,7 +3,7 @@ import productsApi from "@/apis/services/products";
 import GatherTeaType from "@/components/main/GatherTeaType";
 import Slider from "@/components/main/Slider";
 import { Product } from "@/types/products";
-import BestProducts from "@/components/main/MainProductsList";
+import MainProductsList from "@/components/main/MainProductsList";
 import Banner from "@/components/main/Banner";
 
 const MainContainer = () => {
@@ -36,11 +36,11 @@ const MainContainer = () => {
     <>
       <Slider />
       {newProducts && (
-        <BestProducts products={newProducts} title="NEW ARRIVALS" content="한모금 상품을 가장 먼저 만나보세요!" />
+        <MainProductsList products={newProducts} title="NEW ARRIVALS" content="한모금 상품을 가장 먼저 만나보세요!" />
       )}
       <Banner />
       {bestProducts && (
-        <BestProducts products={bestProducts} title="BEST PRODUCTS" content="가장 많이 찾으신 상품입니다." />
+        <MainProductsList products={bestProducts} title="BEST PRODUCTS" content="가장 많이 찾으신 상품입니다." />
       )}
       <GatherTeaType />
     </>
