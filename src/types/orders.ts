@@ -1,4 +1,4 @@
-import { ProductDetailWithReplies } from "./products";
+import { MainImageType, ProductDetailWithReplies } from "./products";
 
 interface OrderProduct {
   _id: number;
@@ -13,7 +13,7 @@ interface OrderAddress {
 
 export interface OrderProductDetail extends OrderProduct {
   name: string;
-  image: string;
+  image: MainImageType;
   price: number;
 }
 
