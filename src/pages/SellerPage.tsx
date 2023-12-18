@@ -8,7 +8,7 @@ import codeApi from "@/apis/services/code";
 import OrderEdit from "@/components/admin/OrderEdit";
 import sellerDataProvider from "@/apis/services/admin/sellerDataProvider";
 
-export const ManagePage = () => {
+export const SellerPage = () => {
   const setFlattenCodeState = useSetRecoilState(flattenCodeState);
   const setNestedCodeState = useSetRecoilState(nestedCodeState);
 
@@ -33,4 +33,4 @@ export const ManagePage = () => {
     </Admin>
   );
 };
-export default ManagePage;
+export default SellerPage;
