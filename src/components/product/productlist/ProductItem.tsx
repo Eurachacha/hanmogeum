@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import ProductItemLabel from "./ProductItemLabel";
 import { Product } from "@/types/products";
 
@@ -12,7 +13,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
 
   return (
     <ProductItemLayer onClick={() => navigate(`/products/${product._id}`)}>
-      <ProductItemImageWrapper $imageUrl={product.mainImages}>
+      <ProductItemImageWrapper $imageUrl={`${import.meta.env.VITE_API_BASE_URL}/${product.mainImages[0].url}`}>
         <StyledLabel>
           <li>
             {product.extra.isNew ? (
@@ -74,12 +75,12 @@ const ProductItemLayer = styled.div`
   cursor: pointer;
 `;
 
-const ProductItemImageWrapper = styled.div<{ $imageUrl: string[] }>`
+const ProductItemImageWrapper = styled.div<{ $imageUrl: string }>`
   width: 100%;
   aspect-ratio: 1/0.7;
   overflow: hidden;
-
   background: url(${(props) => props.$imageUrl}) no-repeat;
+
   background-size: cover;
 `;
 const StyledLabel = styled.ul`
