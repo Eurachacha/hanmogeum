@@ -67,6 +67,10 @@ privateInstance.interceptors.response.use(
           });
           response.data.item = items;
         } else response.data.item = { ...data, id: data._id };
+      } else {
+        response.data.item = { ...response.data.updated, id: response.data.updated._id } || {
+          ...response.data.message,
+        };
       }
     }
     return response;
