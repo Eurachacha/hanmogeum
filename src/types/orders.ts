@@ -59,6 +59,7 @@ export interface RequestCheckStocks {
 
 // POST /orders 구매 목록 조회
 export interface RequestCreateOrder {
+  type?: string;
   products: OrderProduct[];
   shippingInfo: ShippingInfoType;
 }

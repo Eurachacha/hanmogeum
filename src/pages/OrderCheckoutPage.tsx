@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import OrderInfoContainer from "@/containers/orderCheckout/OrderInfoContainer";
 import OrderPriceContainer from "@/containers/orderCheckout/OrderPriceContainer";
@@ -24,6 +24,7 @@ const OrderCheckoutPage = () => {
   const [isOrderErrorModalOpen, setIsOrderErrorModalOpen] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const fetchAllCartItems = async () => {
     try {
@@ -39,7 +40,9 @@ const OrderCheckoutPage = () => {
 
   const createOrder = async (data: RequestCreateOrder) => {
     try {
-      const response = await ordersApi.createOrder(data);
+      const response = location.state
+        ? await ordersApi.createOrder(data)
+        : await ordersApi.createOrder({ ...data, type: "cart" });
       if (response.data.ok) navigate("/orders/complete");
       else throw new Error();
     } catch (error) {
