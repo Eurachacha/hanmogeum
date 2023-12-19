@@ -110,7 +110,12 @@ const CartItem = ({ setCartData, handleDeleteItem, data, idx }: CartItemProps) =
             {quantityInput > 0 && checkedItems.includes(data.product._id) ? <CheckedBoxIcon /> : <UncheckedBoxIcon />}
           </CheckedBox>
           <ImageWrapper>
-            <img src={data.product.image} alt={data.product.name} width="100%" height="100%" />
+            <img
+              src={`${import.meta.env.VITE_API_BASE_URL}${data.product.image.url}`}
+              alt={data.product.name}
+              width="100%"
+              height="100%"
+            />
           </ImageWrapper>
           <ProductTitle>{data.product.name}</ProductTitle>
         </CartItemLeft>
