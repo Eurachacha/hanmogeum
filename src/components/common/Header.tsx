@@ -42,6 +42,7 @@ const Header = () => {
       setIsLogin(false);
     }
   }, [user]);
+
   useEffect(() => {
     setCartCount(cartStorage.length);
   }, [cartStorage]);

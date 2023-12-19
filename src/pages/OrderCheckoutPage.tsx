@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import OrderInfoContainer from "@/containers/orderCheckout/OrderInfoContainer";
@@ -8,7 +8,7 @@ import OrderPriceContainer from "@/containers/orderCheckout/OrderPriceContainer"
 import { CartItem } from "@/types/cart";
 import cartApi from "@/apis/services/cart";
 import Button from "@/components/common/Button";
-import { cartCheckedItemState } from "@/recoil/atoms/cartState";
+import { cartCheckedItemState, cartState } from "@/recoil/atoms/cartState";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import Modal from "@/components/common/Modal";
 import { RequestCreateOrder, ShippingInfoType } from "@/types/orders";
@@ -17,6 +17,7 @@ import ordersApi from "@/apis/services/orders";
 const OrderCheckoutPage = () => {
   const user = useRecoilValue(loggedInUserState);
   const checkedItems = useRecoilValue(cartCheckedItemState);
+  const [cartStorage, setCartStorage] = useRecoilState(cartState);
   const [cartData, setCartData] = useState<CartItem[]>();
   const [shippingInfo, setShippingInfo] = useState<ShippingInfoType>();
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
@@ -43,6 +44,24 @@ const OrderCheckoutPage = () => {
       const response = location.state
         ? await ordersApi.createOrder(data)
         : await ordersApi.createOrder({ ...data, type: "cart" });
+      if (!location.state) {
+        const getAllCartResponse = await cartApi.getAllItems();
+        const { item } = getAllCartResponse.data;
+        setCartStorage(
+          item.map((e) => {
+            return {
+              quantity: e.quantity,
+              product: {
+                _id: e.product._id,
+                name: e.product.name,
+                image: e.product.image,
+                price: e.product.price,
+              },
+              stock: e.product.quantity - e.product.buyQuantity,
+            };
+          }),
+        );
+      }
       if (response.data.ok) navigate("/orders/complete");
       else throw new Error();
     } catch (error) {
