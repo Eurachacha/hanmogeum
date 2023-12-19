@@ -2,25 +2,32 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
+import Pagination from "@mui/material/Pagination";
+import myPageApi from "@/apis/services/mypage";
+
+// COMPONENT
 import OrderItem from "@/components/mypage/OrderItem";
 import OrderItemContentsText from "@/components/mypage/OrderItemContentsText";
 import Button from "@/components/common/Button";
-import myPageApi from "@/apis/services/mypage";
-import { MyOrderItem } from "../../types/myPage";
-import GetDate from "@/utils/getDate";
-import truncateString from "@/utils/truncateString";
-
-import { flattenCodeState } from "@/recoil/atoms/codeState";
-import { FlattenData } from "@/types/code";
-import getPriceFormat from "@/utils/getPriceFormat";
 import ContainerHeader from "@/components/mypage/ContainerHeader.";
 import Dropdown from "@/components/common/Dropdown";
-import GetDateNow from "../../utils/getDateNow";
+// ATOM
+import { flattenCodeState } from "@/recoil/atoms/codeState";
+// TYPE
+import { MyOrderItem, ResponseDataMyOrderList } from "@/types/myPage";
+import { FlattenData } from "@/types/code";
+// UTILITY
+import GetDate from "@/utils/getDate";
+import GetDateNow from "@/utils/getDateNow";
+import truncateString from "@/utils/truncateString";
+import getPriceFormat from "@/utils/getPriceFormat";
 
 const MyOrderListContainer = () => {
   const maxTitleLength = 15;
-  const [orderList, setOrderList] = useState<MyOrderItem[]>([]);
+  const [responseOrderList, setResponseOrderList] = useState<ResponseDataMyOrderList>();
   const [dropDownIdx, setDropDownIdx] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_LIMIT = 4;
 
   const dropDownList = ["3개월", "6개월", "1년", "3년"];
   const dropDownData = [
@@ -52,10 +59,12 @@ const MyOrderListContainer = () => {
   const requestGetMyOrderList = async () => {
     const { startDate, endDate } = getFilterStartAndEndDate();
     try {
-      const { data } = await myPageApi.getMyPageOrderList({ createdAt: { startDate, endDate } });
+      const { data } = await myPageApi.getMyPageOrderList({
+        pagination: { limit: PAGE_LIMIT, page: currentPage },
+        createdAt: { startDate, endDate },
+      });
       if (data.ok === 1) {
-        const orderItemList = data.item;
-        setOrderList(() => [...orderItemList]);
+        setResponseOrderList(data);
       }
     } catch (error) {
       console.error(error);
@@ -95,8 +104,12 @@ const MyOrderListContainer = () => {
 
   useEffect(() => {
     requestGetMyOrderList();
-  }, [dropDownIdx]);
+  }, [dropDownIdx, currentPage]);
 
+  const paginationHandleChange = (event: React.ChangeEvent<unknown>, page: number) => {
+    event.preventDefault();
+    setCurrentPage(page);
+  };
   return (
     <MyOrderListContainerLayer>
       <OrderItemListWrapper>
@@ -115,7 +128,7 @@ const MyOrderListContainer = () => {
         </ContainerHeader>
 
         <OrderListWrapper>
-          {orderList.map((order, idx) => {
+          {responseOrderList?.item?.map((order, idx) => {
             const mapKey = `${idx}_${order._id}_${order.createdAt}`;
             const orderThumbnail = orderItemToThumbnailData(order);
             return (
@@ -141,6 +154,18 @@ const MyOrderListContainer = () => {
           })}
         </OrderListWrapper>
       </OrderItemListWrapper>
+      <PaginationWrapper>
+        <Pagination
+          defaultPage={0}
+          page={currentPage}
+          onChange={paginationHandleChange}
+          count={responseOrderList?.pagination?.totalPages}
+          shape="rounded"
+          showFirstButton
+          showLastButton
+          size="large"
+        />
+      </PaginationWrapper>
     </MyOrderListContainerLayer>
   );
 };
@@ -207,4 +232,9 @@ const DropDownWrapper = styled.div`
   & > div {
     height: 4rem;
   }
+`;
+
+const PaginationWrapper = styled.div`
+  display: flex;
+  justify-content: center;
 `;

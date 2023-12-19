@@ -1,10 +1,17 @@
 import { InputType, InputProps } from "./input";
 import { MainImageType } from "./products";
 
+export interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
 // 마이페이지 > 주문 내역
 export interface ResponseDataMyOrderList {
   ok: number;
   item: MyOrderItem[] | [];
+  pagination: Pagination;
 }
 
 export interface ResponseDataMyOrderDetail {
@@ -102,5 +109,9 @@ export interface getMyPageOrderListProps {
   createdAt?: {
     startDate: string;
     endDate: string;
+  };
+  pagination?: {
+    page: number;
+    limit: number;
   };
 }
