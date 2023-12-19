@@ -130,6 +130,13 @@ const CartItem = ({ setCartData, handleDeleteItem, data, idx }: CartItemProps) =
         </CartItemLeft>
         <CartItemRight>
           <CountPrice>
+            <StockInfo>
+              재고:{" "}
+              {user
+                ? (data as CartItemType).product.quantity - (data as CartItemType).product.buyQuantity
+                : (data as CartStorageItem).stock}
+              개
+            </StockInfo>
             <CounterLayer>
               <CounterButton handleQuantity={() => handleQuantityInput("minus")}>-</CounterButton>
               <QuantityWrapper
@@ -238,6 +245,16 @@ const CounterLayer = styled.div`
   & input[type="number"] {
     -moz-appearance: textfield;
   }
+`;
+
+const StockInfo = styled.p`
+  color: var(--color-gray-300);
+  min-width: 100px;
+  font-size: 1.2rem;
+  text-align: center;
+  position: absolute;
+  top: -15px;
+  right: calc(-208-(100vw)) px;
 `;
 
 const QuantityWrapper = styled.input`
