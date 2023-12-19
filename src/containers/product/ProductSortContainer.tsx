@@ -44,9 +44,9 @@ const ProductSortContainer = () => {
   }
 
   if (sortQuery === "0") {
-    sortObject.buyQuantity = 1;
+    sortObject.buyQuantity = -1;
   } else if (sortQuery === "1") {
-    sortObject.createdAt = "1";
+    sortObject.createdAt = "-1";
   } else if (sortQuery === "2") {
     sortObject.price = 1;
   } else {
