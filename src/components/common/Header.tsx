@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { NavLink, useNavigate, useSearchParams, Link, useLocation } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import IconShoppingCart from "@/assets/icons/shoppingCart_40.svg?react";
-import IconSearchCart from "@/assets/icons/search_24.svg?react";
+// import IconSearchCart from "@/assets/icons/search_24.svg?react"; // 검색 기능
 import { getUserTypeState } from "@/recoil/selectors/loggedInUserSelector";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import { cartState, cartCheckedItemState } from "@/recoil/atoms/cartState";
@@ -144,10 +144,10 @@ const Header = () => {
             </AdminCategoryStyle>
           )}
         </CategoryWrapper>
-        <SearchWrapper>
+        {/* <SearchWrapper>
           <IconSearchCart />
           <input placeholder="원하는 상품을 검색하세요" type="text" />
-        </SearchWrapper>
+        </SearchWrapper> */}
         <UserControlWrapper>
           {isLogin
             ? userControlList.isLogin.map((userControl) => (
@@ -229,22 +229,23 @@ const AdminCategoryStyle = styled.div`
   border-left: 2px solid var(--color-gray-500);
 `;
 
-const SearchWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid var(--color-sub-500);
-  border-radius: 5px;
-  height: 4rem;
-  svg {
-    padding: 0 0.5rem;
-  }
-  input {
-    min-width: 20rem;
-    outline: none;
-    border: none;
-  }
-`;
+// 검색 기능
+// const SearchWrapper = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   border: 1px solid var(--color-sub-500);
+//   border-radius: 5px;
+//   height: 4rem;
+//   svg {
+//     padding: 0 0.5rem;
+//   }
+//   input {
+//     min-width: 20rem;
+//     outline: none;
+//     border: none;
+//   }
+// `;
 
 const UserControlWrapper = styled.div`
   display: flex;
