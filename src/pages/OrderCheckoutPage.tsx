@@ -2,6 +2,7 @@ import { styled } from "styled-components";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
 import OrderInfoContainer from "@/containers/orderCheckout/OrderInfoContainer";
 import OrderPriceContainer from "@/containers/orderCheckout/OrderPriceContainer";
 import { CartItem } from "@/types/cart";
@@ -20,6 +21,7 @@ const OrderCheckoutPage = () => {
   const [shippingInfo, setShippingInfo] = useState<ShippingInfoType>();
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
   const [isShippingModalOpen, setIsShippingModalOpen] = useState(false);
+  const [isOrderErrorModalOpen, setIsOrderErrorModalOpen] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -37,9 +39,13 @@ const OrderCheckoutPage = () => {
 
   const createOrder = async (data: RequestCreateOrder) => {
     try {
-      ordersApi.createOrder(data);
-      navigate("/orders/complete");
+      const response = await ordersApi.createOrder(data);
+      if (response.data.ok) navigate("/orders/complete");
+      else throw new Error();
     } catch (error) {
+      if ((error as AxiosError).response?.status === 422) {
+        setIsOrderErrorModalOpen(true);
+      }
       console.error(error);
     }
   };
@@ -51,6 +57,11 @@ const OrderCheckoutPage = () => {
 
   const handleShippingModalClose = () => {
     setIsShippingModalOpen(false);
+  };
+
+  const handleOrderErrorModalClose = () => {
+    navigate(-1);
+    setIsOrderErrorModalOpen(false);
   };
 
   const handlePostOrder = () => {
@@ -83,6 +94,11 @@ const OrderCheckoutPage = () => {
   if (user && cartData && cartData.length > 0) {
     return (
       <OrderCheckoutPageLayer>
+        <Modal isOpen={isOrderErrorModalOpen} message="주문에 실패했습니다.\n장바구니페이지로 돌아갑니다.">
+          <ButtonWrapper onClick={handleOrderErrorModalClose}>
+            <Button value="확인" size="sm" variant="sub" />
+          </ButtonWrapper>
+        </Modal>
         <Modal isOpen={isStockModalOpen} message="재고가 부족한 상품이 있습니다.">
           <ButtonWrapper onClick={handleStockModalClose}>
             <Button value="확인" size="sm" variant="sub" />
