@@ -61,6 +61,15 @@ const CartItem = ({ setCartData, handleDeleteItem, data, idx }: CartItemProps) =
     else setQuantityInputAsStock((data as CartStorageItem).quantity);
   }, []);
 
+  // [로그인 유저] 자동반영된 재고가 0인 경우 체크박스 해제
+  useEffect(() => {
+    if (user) {
+      if ((data as CartItemType).quantity === 0) {
+        setCheckedItems((prev) => prev.filter((product_id) => product_id !== (data as CartItemType).product._id));
+      }
+    }
+  }, [(data as CartItemType).quantity]);
+
   // [비로그인 유저] 재고가 부족한 경우 input에 재고 반영
   useEffect(() => {
     if ((data as CartStorageItem).stock < (data as CartStorageItem).quantity) {
@@ -103,8 +112,8 @@ const CartItem = ({ setCartData, handleDeleteItem, data, idx }: CartItemProps) =
           <CheckedBox
             onClick={() => toggleCheckBox(data.product._id)}
             disabled={
-              (data as CartItemType).product.quantity - (data as CartItemType).product.buyQuantity === 0 ||
-              (data as CartStorageItem).stock === 0
+              (user && (data as CartItemType).product.quantity - (data as CartItemType).product.buyQuantity === 0) ||
+              (!user && (data as CartStorageItem).stock === 0)
             }
           >
             {quantityInput > 0 && checkedItems.includes(data.product._id) ? <CheckedBoxIcon /> : <UncheckedBoxIcon />}
