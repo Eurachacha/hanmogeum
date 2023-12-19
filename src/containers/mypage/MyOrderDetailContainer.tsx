@@ -12,11 +12,15 @@ import cartApi from "@/apis/services/cart";
 import Modal from "@/components/common/Modal";
 import ORDER_STATE from "@/constants/code";
 
+interface ProductImgWrapperProps {
+  $orderCancelState: boolean;
+}
+
 const MyOrderDetailContainer = () => {
   const [orderDetail, setOrderDetail] = useState<MyOrderItem>();
   const [openModal, setOenModal] = useState({ isOpen: false, message: "" });
   const [shippingState, setShippingState] = useState("");
-  const [buttonDisable, setButtonDisable] = useState(false);
+  const [orderCancelState, setOrderCancelState] = useState(false);
 
   const navigator = useNavigate();
   const { id } = useParams();
@@ -33,10 +37,10 @@ const MyOrderDetailContainer = () => {
     }
   };
 
-  const reviewButtonHandleClick = () => {
-    // TODO: 리뷰 작성 페이지 구현
-    navigator(`/mypage/reviews`);
-  };
+  // const reviewButtonHandleClick = () => {
+  //   // TODO: 리뷰 작성 페이지 구현
+  //   navigator(`/mypage/reviews`);
+  // };
 
   const cartButtonHandleClick = async ({ _id, quantity }: Product) => {
     try {
@@ -59,9 +63,9 @@ const MyOrderDetailContainer = () => {
 
     // 주문 취소
     if (shippingState === ORDER_STATE.SHIPPING_CANCEL.CODE) {
-      setButtonDisable(true);
+      setOrderCancelState(true);
     } else {
-      setButtonDisable(false);
+      setOrderCancelState(false);
     }
   }, [orderDetail]);
 
@@ -83,7 +87,7 @@ const MyOrderDetailContainer = () => {
           const orderItemKey = `MypageLayoutContainer_${product._id}${idx}`;
           return (
             <OrderDetailItemWrapper key={orderItemKey}>
-              <ProductImgWrapper>
+              <ProductImgWrapper $orderCancelState={orderCancelState}>
                 <img src={`${import.meta.env.VITE_API_BASE_URL}/${product.image.url}`} alt={product.name} />
               </ProductImgWrapper>
               <ProductInfoWrapper>
@@ -96,11 +100,13 @@ const MyOrderDetailContainer = () => {
               </ProductInfoWrapper>
 
               <ButtonsWrapper>
+                {/* 
+                // 주문 취소 버튼
                 <ReviewButtonStyle onClick={reviewButtonHandleClick}>
-                  <Button disabled={buttonDisable} value="리뷰 작성" size="sm" variant="point" />
-                </ReviewButtonStyle>
+                  <Button disabled={orderCancelState} value="리뷰 작성" size="sm" variant="point" />
+                </ReviewButtonStyle> */}
                 <CartButtonStyle onClick={() => cartButtonHandleClick(product)}>
-                  <Button disabled={buttonDisable} value="장바구니 담기" size="sm" variant="sub" />
+                  <Button value="장바구니 담기" size="sm" variant="point" />
                 </CartButtonStyle>
               </ButtonsWrapper>
             </OrderDetailItemWrapper>
@@ -118,34 +124,38 @@ const MyOrderDetailContainerLayer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 6rem;
+  overflow: hidden;
 `;
 const ButtonsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  width: 10rem;
+  min-width: 10rem;
 `;
 
 // 상품 스타일
 const OrderDetailItemWrapper = styled.div`
   display: flex;
   align-items: center;
+  min-width: 30rem;
   gap: 2rem;
   border-bottom: 1px solid var(--color-gray-100);
   padding: 1.6rem;
 `;
 
-const ProductImgWrapper = styled.div`
+const ProductImgWrapper = styled.div<ProductImgWrapperProps>`
   border-radius: 5px;
-  overflow: hidden;
+  opacity: ${(props) => (props.$orderCancelState ? "0.6" : "1")};
   img {
     width: 9rem;
+    height: 9rem;
   }
 `;
 
 const ProductInfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  min-width: 14rem;
   gap: 1rem;
   margin-right: auto;
 `;

@@ -83,6 +83,7 @@ const WidgetTodayTeaLayer = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   gap: 1rem;
+  min-width: 26rem;
   cursor: pointer;
 `;
 
