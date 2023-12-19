@@ -19,6 +19,15 @@ export const privateInstance = axios.create({
   withCredentials: true,
 });
 
+export const fileUploadInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  timeout: INSTANCE_TIMEOUT,
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+  withCredentials: true,
+});
+
 // privateInstance 요청 인터셉터(헤더에 토큰 전달)
 privateInstance.interceptors.request.use(
   (config) => {
