@@ -37,7 +37,7 @@ const OrderDetailInfo = ({ orderData, shippingState }: OrderDetailInfoProps) => 
   };
 
   const orderInfoList = [
-    { title: "주문번호", value: currentUserInfo?._id || "" },
+    { title: "주문번호", value: orderData?._id || "" },
     { title: "보내는 분", value: currentUserInfo?.name || "" },
     { title: "이메일", value: currentUserInfo?.email || "" },
     { title: "휴대폰 번호", value: autoHyphenPhoneNumber(currentUserInfo?.phone || "") },
