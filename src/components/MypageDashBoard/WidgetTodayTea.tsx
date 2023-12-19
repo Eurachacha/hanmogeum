@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
+import { useNavigate } from "react-router-dom";
 import productsApi from "@/apis/services/products";
 import { Product } from "@/types/products";
 import getRandomRange from "@/utils/getRandomRange";
@@ -10,12 +11,15 @@ interface TodayTeaItem {
   name: string;
   imgURL: string;
   hashTag: string[];
+  id: number;
 }
 
 const WidgetTodayTea = () => {
   const [bestProducts, setBestProducts] = useState<Product[]>();
   const [todayTea, setTodayTea] = useState<TodayTeaItem>();
+
   const codeData = useRecoilValue(flattenCodeState);
+  const navigate = useNavigate();
   const fetchAndSetBestProducts = async () => {
     try {
       const { data } = await productsApi.getProductByIsBest();
@@ -37,19 +41,27 @@ const WidgetTodayTea = () => {
       name: "",
       imgURL: "",
       hashTag: [],
+      id: 0,
     };
 
     if (bestProducts) {
       newTea.name = bestProducts[randomId]?.name;
       newTea.imgURL = `${import.meta.env.VITE_API_BASE_URL}/${bestProducts[randomId]?.mainImages[0].url}`;
       newTea.hashTag = bestProducts[randomId]?.extra.hashTag;
+      newTea.id = bestProducts[randomId]?._id;
     }
     newTea.hashTag = newTea.hashTag.map((code) => `#${codeData[code]?.value}`);
     setTodayTea(newTea);
   }, [bestProducts]);
 
+  const wigetHandleClick = () => {
+    if (todayTea?.id) {
+      navigate(`/products/${todayTea?.id}`);
+    }
+  };
+
   return (
-    <WidgetTodayTeaLayer>
+    <WidgetTodayTeaLayer onClick={wigetHandleClick}>
       <TitleWrapper>오늘의 추천 차</TitleWrapper>
       <ContentsWrapper>
         <ProductImgStyle>
@@ -71,6 +83,8 @@ const WidgetTodayTeaLayer = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   gap: 1rem;
+  min-width: 26rem;
+  cursor: pointer;
 `;
 
 const TitleWrapper = styled.div`

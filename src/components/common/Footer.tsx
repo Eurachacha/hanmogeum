@@ -33,6 +33,7 @@ const FooterLayer = styled.div`
   font-weight: var(--weight-thin);
   /* overflow: hidden; */
   border-top: 1px solid var(--color-gray-100);
+  margin-top: 10rem;
 `;
 
 const FooterWrapper = styled.span`

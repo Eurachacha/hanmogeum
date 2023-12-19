@@ -37,7 +37,7 @@ const OrderDetailInfo = ({ orderData, shippingState }: OrderDetailInfoProps) => 
   };
 
   const orderInfoList = [
-    { title: "주문번호", value: currentUserInfo?._id || "" },
+    { title: "주문번호", value: orderData?._id || "" },
     { title: "보내는 분", value: currentUserInfo?.name || "" },
     { title: "이메일", value: currentUserInfo?.email || "" },
     { title: "휴대폰 번호", value: autoHyphenPhoneNumber(currentUserInfo?.phone || "") },
@@ -74,7 +74,7 @@ const OrderDetailInfo = ({ orderData, shippingState }: OrderDetailInfoProps) => 
       </ModalWrapper>
       <UserInfoWrapper>
         <div>
-          <ContainerHeader title="결제 정보" variant="sub" />
+          <ContainerHeader title="주문 정보" variant="sub" />
           <InfoListWrapper>
             {orderInfoList.map((infoData, idx) => {
               const infoWrapperKey = `OrderDetailInfo_InfoWrapper_${idx}`;
@@ -88,7 +88,7 @@ const OrderDetailInfo = ({ orderData, shippingState }: OrderDetailInfoProps) => 
           </InfoListWrapper>
         </div>
         <div>
-          <ContainerHeader title="결제 정보" variant="sub" />
+          <ContainerHeader title="배송 정보" variant="sub" />
           <InfoListWrapper>
             {shippingInfoList.map((infoData, idx) => {
               const infoWrapperKey = `OrderDetailInfo_InfoWrapper_${idx}`;
@@ -105,7 +105,7 @@ const OrderDetailInfo = ({ orderData, shippingState }: OrderDetailInfoProps) => 
           </InfoListWrapper>
         </div>
       </UserInfoWrapper>
-      <div>
+      <PaymentInfoWrapper>
         <ContainerHeader title="결제 정보" variant="sub" />
         <InfoListWrapper>
           {paymentInfoList.map((infoData, idx) => {
@@ -118,7 +118,7 @@ const OrderDetailInfo = ({ orderData, shippingState }: OrderDetailInfoProps) => 
             );
           })}
         </InfoListWrapper>
-      </div>
+      </PaymentInfoWrapper>
       <TotalCostWrapper>
         <span>총 결제 금액</span>
         <span>{getPriceFormat({ price: orderData?.cost?.total })}</span>
@@ -136,6 +136,7 @@ const UserInfoWrapper = styled.div`
   gap: 2rem;
   & > div {
     width: 100%;
+    min-width: 30rem;
   }
 `;
 
@@ -186,5 +187,11 @@ const TotalCostWrapper = styled.div`
   span {
     font-weight: var(--weight-bold);
     font-size: 2.4rem;
+  }
+`;
+
+const PaymentInfoWrapper = styled.div`
+  span:last-child {
+    margin-left: auto;
   }
 `;

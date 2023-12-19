@@ -34,6 +34,7 @@ const WidgetMyInfo = () => {
 const DashBardMyInfoLayout = styled.div`
   align-items: center;
   display: flex;
+  min-width: 24rem;
   gap: 2rem;
 `;
 const ContentsWrapper = styled.div`

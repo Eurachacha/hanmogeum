@@ -23,7 +23,7 @@ import truncateString from "@/utils/truncateString";
 import getPriceFormat from "@/utils/getPriceFormat";
 
 const MyOrderListContainer = () => {
-  const maxTitleLength = 15;
+  const maxTitleLength = 26;
   const [responseOrderList, setResponseOrderList] = useState<ResponseDataMyOrderList>();
   const [dropDownIdx, setDropDownIdx] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -74,14 +74,12 @@ const MyOrderListContainer = () => {
   const orderItemToThumbnailData = (orderItem: MyOrderItem) => {
     const getData = new GetDate(orderItem.createdAt);
     let title = orderItem?.products[0]?.name;
-    if (title?.length > maxTitleLength) {
-      if (orderItem.products.length === 1) {
-        title = truncateString({ fullString: orderItem.products[0].name, maxLength: maxTitleLength });
-      } else {
-        title = `${truncateString({ fullString: orderItem.products[0].name, maxLength: maxTitleLength })} 외 ${
-          orderItem.products.length - 1
-        } 개`;
-      }
+    if (orderItem?.products[0]?.name?.length > maxTitleLength) {
+      title = truncateString({ fullString: orderItem.products[0].name, maxLength: maxTitleLength });
+    }
+
+    if (orderItem.products.length !== 1) {
+      title += ` 외 ${orderItem.products.length - 1} 건`;
     }
 
     const ShippingCode = orderItem.state || orderItem?.products[0]?.state;
