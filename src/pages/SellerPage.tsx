@@ -7,6 +7,7 @@ import { flattenCodeState, nestedCodeState } from "@/recoil/atoms/codeState";
 import codeApi from "@/apis/services/code";
 import OrderEdit from "@/components/admin/OrderEdit";
 import sellerDataProvider from "@/apis/services/admin/sellerDataProvider";
+import ProductCreate from "@/components/admin/ProductCreate";
 
 export const SellerPage = () => {
   const setFlattenCodeState = useSetRecoilState(flattenCodeState);
@@ -29,7 +30,7 @@ export const SellerPage = () => {
   return (
     <Admin basename="/seller" dataProvider={sellerDataProvider}>
       <Resource name="orders" list={OrderList} edit={OrderEdit} />
-      <Resource name="products" list={ProductList} />
+      <Resource name="products" list={ProductList} create={ProductCreate} />
     </Admin>
   );
 };
