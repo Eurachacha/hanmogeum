@@ -130,6 +130,13 @@ const CartItem = ({ setCartData, handleDeleteItem, data, idx }: CartItemProps) =
         </CartItemLeft>
         <CartItemRight>
           <CountPrice>
+            <StockInfo>
+              재고:{" "}
+              {user
+                ? (data as CartItemType).product.quantity - (data as CartItemType).product.buyQuantity
+                : (data as CartStorageItem).stock}
+              개
+            </StockInfo>
             <CounterLayer>
               <CounterButton handleQuantity={() => handleQuantityInput("minus")}>-</CounterButton>
               <QuantityWrapper
@@ -145,8 +152,8 @@ const CartItem = ({ setCartData, handleDeleteItem, data, idx }: CartItemProps) =
               <CounterButton handleQuantity={() => handleQuantityInput("plus")}>+</CounterButton>
             </CounterLayer>
             <Price>{cartItemPrice.toLocaleString()}원</Price>
-            {updated ? <p>재고반영됨</p> : null}
           </CountPrice>
+          {updated ? <InfoMessage>재고 부족으로 최대 구매 가능 수량이 반영되었습니다.</InfoMessage> : null}
           <CancelIconWrapper
             style={{ width: 20, height: 20 }}
             onClick={() => handleDeleteItem((data as CartItemType)._id, data.product._id)}
@@ -209,6 +216,8 @@ const CartItemRight = styled.div`
   justify-content: space-between;
   align-items: center;
   flex: 1 0 0;
+
+  position: relative;
 `;
 
 const CountPrice = styled.div`
@@ -238,6 +247,16 @@ const CounterLayer = styled.div`
   }
 `;
 
+const StockInfo = styled.p`
+  color: var(--color-gray-300);
+  min-width: 100px;
+  font-size: 1.2rem;
+  text-align: center;
+  position: absolute;
+  top: -15px;
+  right: calc(-208-(100vw)) px;
+`;
+
 const QuantityWrapper = styled.input`
   font-size: var(--size-16);
   padding: 0;
@@ -258,6 +277,15 @@ const Price = styled.p`
   text-align: right;
   margin: 0 1rem;
   min-width: 10rem;
+`;
+
+const InfoMessage = styled.p`
+  width: max-content;
+  font-size: 1.2rem;
+  color: var(--color-red);
+  position: absolute;
+  top: 44px;
+  right: 130px;
 `;
 
 const CancelIconWrapper = styled.div`
