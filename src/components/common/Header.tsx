@@ -11,16 +11,13 @@ import { getProductCategoryCodeByValue } from "@/recoil/selectors/codeSelector";
 
 // constants
 import { AUTH_TOKEN_KEY } from "@/constants/api";
-import { MANAGE_TYPE } from "@/constants/user";
 
 interface CategoryLinkProps {
   $isActive?: boolean;
-  key: string;
 }
 
 const Header = () => {
   const [cartCount, setCartCount] = useState(0);
-  const [isManager, setIsManager] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [searchParams] = useSearchParams();
   const userType = useRecoilValue(getUserTypeState);
@@ -35,9 +32,6 @@ const Header = () => {
     const authToken = localStorage.getItem(AUTH_TOKEN_KEY);
     if (authToken) {
       setIsLogin(true);
-      if (MANAGE_TYPE.some((manageType) => userType === manageType)) {
-        setIsManager(true);
-      }
     } else {
       setIsLogin(false);
     }
@@ -51,7 +45,6 @@ const Header = () => {
     localStorage.removeItem("cartChecked");
     localStorage.removeItem("token");
     localStorage.removeItem("refreshToken");
-    setIsManager(false);
     setCartCount(0);
     setIsLogin(false);
     setUser(null);
@@ -94,9 +87,6 @@ const Header = () => {
         categoryParams: categoryCode["음료/원액"],
       },
     ],
-    admin: [
-      { name: "관리자페이지", router: "/manage", isPublic: false, location: "/manage" }, // TODO: api 개발 완료 후 라우터 수정
-    ],
   };
   const userControlList = {
     isLogin: [
@@ -130,20 +120,12 @@ const Header = () => {
               </ProductCategoryLink>
             ))}
           </div>
-          {isManager && (
-            <AdminCategoryStyle>
-              {categoryList.admin.map((category) => (
-                <AdminCategoryLink
-                  key={`${category.name}AdminCategoryLink`}
-                  $isActive={location.pathname === category.location}
-                >
-                  <Link key={`${category.name}Link`} to={category.router}>
-                    {category.name}
-                  </Link>
-                </AdminCategoryLink>
-              ))}
-            </AdminCategoryStyle>
-          )}
+          {userType === "admin" || userType === "seller" ? (
+            <>
+              <span style={{ color: "var(--color-gray-200)" }}>|</span>
+              <Link to={`/${userType}`}>{userType === "admin" ? "서비스관리" : "판매관리"}</Link>
+            </>
+          ) : null}
         </CategoryWrapper>
         {/* <SearchWrapper>
           <IconSearchCart />
@@ -176,10 +158,6 @@ const Header = () => {
 };
 
 const ProductCategoryLink = styled.span<CategoryLinkProps>`
-  color: ${({ $isActive }) => ($isActive ? "var(--color-main)" : "inherit")};
-`;
-
-const AdminCategoryLink = styled.span<CategoryLinkProps>`
   color: ${({ $isActive }) => ($isActive ? "var(--color-main)" : "inherit")};
 `;
 
@@ -221,13 +199,6 @@ const CategoryWrapper = styled.div`
     cursor: pointer;
     color: var(--color-main);
   }
-`;
-
-const AdminCategoryStyle = styled.div`
-  display: flex;
-  align-items: center;
-  height: 1.5rem;
-  border-left: 2px solid var(--color-gray-500);
 `;
 
 // 검색 기능
