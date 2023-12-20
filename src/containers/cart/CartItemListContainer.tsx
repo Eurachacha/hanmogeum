@@ -70,9 +70,12 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
       replaceCarts({ products: newCartSummary });
       return;
     }
-    // 비로그인 시
-    const newCartData = cartStorage.filter((item) => !checkedItems.includes(item.product._id));
-    setCartStorage(newCartData);
+    if (!user) {
+      // 비로그인 시
+      const newCartData = cartStorage.filter((item) => !checkedItems.includes(item.product._id));
+      setCartStorage(newCartData);
+      setCheckedItems(newCartData.filter((item) => item.stock !== 0).map((item) => item.product._id));
+    }
   };
 
   // 첫 렌더링 시 재고체크
