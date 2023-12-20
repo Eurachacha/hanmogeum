@@ -59,13 +59,13 @@ const MyProfileEditContainer = () => {
   const loggedInUser = useRecoilValue(loggedInUserState);
 
   const [signUpData, setSignUpData] = useState<SignUpDataType>({
-    email: "",
+    email: loggedInUser?.email || "",
     password: "",
     passwordAgain: "",
-    name: "",
-    phoneNumber: "",
-    address: "",
-    addressDetail: "",
+    name: loggedInUser?.name || "",
+    phoneNumber: loggedInUser?.phone || "",
+    address: loggedInUser?.address || "",
+    addressDetail: loggedInUser?.detailAddress || "",
   });
   const [validationMessage, setValidationMessage] = useState({
     email: "",
@@ -80,7 +80,8 @@ const MyProfileEditContainer = () => {
   const isAdditionalLogined = useRecoilValue(additionalAuthState);
 
   // 수정하기 버튼을 눌렀을 때 발생하는 이벤트 함수입니다.
-  const signUpSubmitClick = async () => {
+  const signUpSubmitClick = async (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
     const onlyNumberPhone = signUpData.phoneNumber.replace(/[^0-9]/g, "");
     const updateData: RequestUpdateUser = {}; // 빈 객체로 초기화
     if (signUpData?.password) updateData.password = signUpData.password;
@@ -112,7 +113,8 @@ const MyProfileEditContainer = () => {
 
   // TODO: 커스텀 훅 사용하도록 수정
   const openPostcode = useDaumPostcodePopup();
-  const addressSearchHandleClick = () => {
+  const addressSearchHandleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     openPostcode({
       onComplete: (data) => {
         // 주소 검색 결과 처리
@@ -127,15 +129,14 @@ const MyProfileEditContainer = () => {
     });
   };
 
-  // 가입하기 버튼을 눌렀을때 발생하는 이벤트 함수입니다.
-  const signUpFormHandleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
   const modalClickHandle = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (showModal.goToPrevPage) {
       navigate(-1);
     }
+    setShowModal((prevState) => {
+      return { ...prevState, isOpen: false };
+    });
   };
 
   // TODO: 다음 useEffect들 커스텀 훅으로 변경
@@ -219,7 +220,7 @@ const MyProfileEditContainer = () => {
         type: "password",
         name: "password",
         required: true,
-        placeholder: "비밀번호를 입력해주세요.",
+        placeholder: "변경할 비밀번호를 입력해주세요.",
         onChange: inputHandleChange,
         value: signUpData.password,
         customStyle: inputCustomStyle,
@@ -322,7 +323,7 @@ const MyProfileEditContainer = () => {
           </CheckModalButton>
         </Modal>
       </div>
-      <FromWrapper noValidate onSubmit={signUpFormHandleSubmit}>
+      <FromWrapper noValidate>
         <InputListStyle>
           {itemInputData.map((itemInput) => {
             return (
