@@ -1,7 +1,7 @@
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import CartItem from "@/components/cart/CartItem";
 import { CartItem as CartItemType } from "@/types/cart";
-import { cartState } from "@/recoil/atoms/cartState";
+import { cartCheckedItemState, cartState } from "@/recoil/atoms/cartState";
 import cartApi from "@/apis/services/cart";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import EmptyMessage from "@/components/common/EmptyMessage";
@@ -14,7 +14,7 @@ interface CartItemProps {
 const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
   const user = useRecoilValue(loggedInUserState);
   const [cartStorage, setCartStorage] = useRecoilState(cartState);
-
+  const setCheckedItems = useSetRecoilState(cartCheckedItemState);
   const fetchCartItems = async () => {
     try {
       const response = await cartApi.getAllItems();
@@ -48,6 +48,7 @@ const CartItemContainer = ({ cartData, setCartData }: CartItemProps) => {
     // 비로그인 시
     const newCartItems = cartStorage.filter((item) => item.product._id !== product_id);
     setCartStorage(newCartItems);
+    setCheckedItems(newCartItems.filter((item) => item.stock !== 0).map((item) => item.product._id));
   };
 
   if (user)
