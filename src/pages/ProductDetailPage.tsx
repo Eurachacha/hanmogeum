@@ -163,7 +163,14 @@ const ProductDetailPage = () => {
           <Button value="구매하기" size="sm" variant="point" />
         </ButtonWrapper>
       </Modal>
-      <ProductDetailLeft>[상품 정보]상품id : {id}</ProductDetailLeft>
+      <ProductDetailLeft>
+        <img
+          src={`${import.meta.env.VITE_API_BASE_URL}${itemData?.mainImages[0].url}`}
+          alt={itemData?.name}
+          width={600}
+        />
+        <DetailArea dangerouslySetInnerHTML={{ __html: itemData?.content as TrustedHTML }}></DetailArea>
+      </ProductDetailLeft>
       <ProductDetailRight>
         <TeaType>{itemData?.extra.teaType[0] ? categoryCodes[itemData?.extra.teaType[0]].value : ""}</TeaType>
         <Title>{itemData?.name}</Title>
@@ -227,15 +234,24 @@ const ButtonWrapper = styled.div`
 `;
 
 const ProductDetailLeft = styled.section`
-  flex: 1;
-  border: 1px solid var(--color-gray-100);
+  min-width: 650px;
+  text-align: center;
+`;
+
+const DetailArea = styled.div`
+  max-width: 650px;
+  text-align: center;
+
+  & img {
+    width: 600px;
+    border: 1px solid var(--color-gray-100);
+  }
 `;
 
 const ProductDetailRight = styled.section`
-  min-width: 500px;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 20px;
 `;
 
 const TeaType = styled.p`
