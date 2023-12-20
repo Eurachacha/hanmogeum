@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import OrderInfoContainer from "@/containers/orderCheckout/OrderInfoContainer";
@@ -17,7 +17,7 @@ import ordersApi from "@/apis/services/orders";
 const OrderCheckoutPage = () => {
   const user = useRecoilValue(loggedInUserState);
   const checkedItems = useRecoilValue(cartCheckedItemState);
-  const [cartStorage, setCartStorage] = useRecoilState(cartState);
+  const setCartStorage = useSetRecoilState(cartState);
   const [cartData, setCartData] = useState<CartItem[]>();
   const [shippingInfo, setShippingInfo] = useState<ShippingInfoType>();
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
@@ -95,7 +95,7 @@ const OrderCheckoutPage = () => {
       return { _id: item.product._id, quantity: item.quantity };
     });
     const data = {
-      products: productsData,
+      products: location.state ? [{ _id: location.state._id, quantity: location.state.quantityInput }] : productsData,
       shippingInfo: shippingInfo,
     };
     createOrder(data);
