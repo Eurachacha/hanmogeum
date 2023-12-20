@@ -10,14 +10,14 @@ import CartPage from "@/pages/CartPage";
 import OrderCheckoutPage from "@/pages/OrderCheckoutPage";
 import OrderCompletePage from "@/pages/OrderCompletePage";
 import SellerPage from "@/pages/SellerPage";
+import MyPage from "@/pages/Mypage";
+import AdminPage from "@/pages/AdminPage";
 
-import MyPage from "./pages/Mypage";
 import MyOrderListContainer from "./containers/mypage/MyOrderListContainer";
 import MyOrderDetailContainer from "./containers/mypage/MyOrderDetailContainer";
 import MyProfileLoginContainer from "./containers/mypage/MyProfileLoginContainer";
 import MyProfileEditContainer from "./containers/mypage/MyProfileModifyContainer";
 import ProtectedRoute from "./components/route/ProtectedRoute";
-import AdminPage from "./pages/AdminPage";
 
 const router = createBrowserRouter([
   {
