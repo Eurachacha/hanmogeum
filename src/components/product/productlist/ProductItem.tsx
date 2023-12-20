@@ -18,7 +18,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
 
   return (
     <ProductItemLayer onClick={() => navigate(`/products/${product._id}`)}>
-      <ProductItemImageWrapper $imageUrl={`${import.meta.env.VITE_API_BASE_URL}/${product.mainImages[0].url}`}>
+      <ProductItemImageWrapper>
         <StyledLabel>
           <li>
             {product.extra.isNew ? (
@@ -46,6 +46,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
             )}
           </li>
         </StyledLabel>
+        <img src={`${import.meta.env.VITE_API_BASE_URL}/${product.mainImages[0].url}`} alt="" />
       </ProductItemImageWrapper>
 
       <ProductItemContentWrapper>
@@ -82,18 +83,26 @@ const ProductItemLayer = styled.div`
   cursor: pointer;
 `;
 
-const ProductItemImageWrapper = styled.div<{ $imageUrl: string }>`
-  width: 100%;
-  aspect-ratio: 1/0.7;
-  overflow: hidden;
-  background: url(${(props) => props.$imageUrl}) no-repeat;
+const ProductItemImageWrapper = styled.div`
+  position: relative;
 
-  background-size: cover;
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
 `;
 const StyledLabel = styled.ul`
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+
   display: flex;
   justify-content: space-between;
-  padding: 12px 14px;
 `;
 const ProductItemContentWrapper = styled.div`
   padding: 18px 14px;
