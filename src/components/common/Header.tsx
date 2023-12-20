@@ -123,7 +123,9 @@ const Header = () => {
           {userType === "admin" || userType === "seller" ? (
             <>
               <span style={{ color: "var(--color-gray-200)" }}>|</span>
-              <Link to={`/${userType}`}>{userType === "admin" ? "서비스관리" : "판매관리"}</Link>
+              <Link to={`/${userType}`} target="_blank">
+                {userType === "admin" ? "서비스관리" : "판매관리"}
+              </Link>
             </>
           ) : null}
         </CategoryWrapper>
