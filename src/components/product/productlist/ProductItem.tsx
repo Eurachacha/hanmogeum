@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { useEffect } from "react";
 import ProductItemLabel from "./ProductItemLabel";
 import { Product } from "@/types/products";
 import { flattenCodeState } from "@/recoil/atoms/codeState";
@@ -13,12 +12,9 @@ interface ProductItemProps {
 const ProductItem = ({ product }: ProductItemProps) => {
   const navigate = useNavigate();
   const flattenCodes = useRecoilValue(flattenCodeState);
-  const teaTypeCode = product.extra.teaType.toString();
+  const teaTypeCode = product.extra.teaType[0];
 
   const hashTagCode = product.extra.hashTag.map((item) => `#${flattenCodes[item].value}`);
-  useEffect(() => {
-    console.log(hashTagCode);
-  }, []);
 
   return (
     <ProductItemLayer onClick={() => navigate(`/products/${product._id}`)}>
@@ -54,15 +50,17 @@ const ProductItem = ({ product }: ProductItemProps) => {
 
       <ProductItemContentWrapper>
         <ul>
-          <StyledTeaType>
-            <p>{flattenCodes[teaTypeCode].value}</p>
-          </StyledTeaType>
-          <StyledName>
-            <h3>{product.name}</h3>
-          </StyledName>
-          <StyledPrice>
-            <h2>{product.price}</h2>
-          </StyledPrice>
+          <StyledItemText>
+            <StyledTeaType>
+              <p>{flattenCodes[teaTypeCode].value}</p>
+            </StyledTeaType>
+            <StyledName>
+              <h3>{product.name}</h3>
+            </StyledName>
+            <StyledPrice>
+              <h2>{product.price}</h2>
+            </StyledPrice>
+          </StyledItemText>
 
           <StyledHashTag>
             <p>{hashTagCode}</p>
@@ -99,6 +97,10 @@ const StyledLabel = styled.ul`
 `;
 const ProductItemContentWrapper = styled.div`
   padding: 18px 14px;
+`;
+
+const StyledItemText = styled.div`
+  height: 100px;
 `;
 
 const StyledTeaType = styled.li`
