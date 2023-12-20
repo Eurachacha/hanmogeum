@@ -5,6 +5,8 @@ import ProductItemLabel from "./ProductItemLabel";
 import { Product } from "@/types/products";
 import { flattenCodeState } from "@/recoil/atoms/codeState";
 
+import getPriceFormat from "@/utils/getPriceFormat";
+
 interface ProductItemProps {
   product: Product;
 }
@@ -15,6 +17,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
   const teaTypeCode = product.extra.teaType[0];
 
   const hashTagCode = product.extra.hashTag.map((item) => `#${flattenCodes[item].value}`);
+  const priceKor = getPriceFormat({ price: product.price });
 
   return (
     <ProductItemLayer onClick={() => navigate(`/products/${product._id}`)}>
@@ -59,7 +62,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
               <h3>{product.name}</h3>
             </StyledName>
             <StyledPrice>
-              <h2>{product.price}</h2>
+              <h2>{priceKor}</h2>
             </StyledPrice>
           </StyledItemText>
 
