@@ -44,7 +44,7 @@ const Header = () => {
   }, [user]);
 
   useEffect(() => {
-    setCartCount(cartStorage.length);
+    setCartCount(cartStorage.filter((item) => item.stock !== 0).length);
   }, [cartStorage]);
 
   const logoutHandleClick = () => {
