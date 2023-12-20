@@ -10,8 +10,9 @@ import CartPage from "@/pages/CartPage";
 import OrderCheckoutPage from "@/pages/OrderCheckoutPage";
 import OrderCompletePage from "@/pages/OrderCompletePage";
 import SellerPage from "@/pages/SellerPage";
+import MyPage from "@/pages/Mypage";
+import AdminPage from "@/pages/AdminPage";
 
-import MyPage from "./pages/Mypage";
 import MyOrderListContainer from "./containers/mypage/MyOrderListContainer";
 import MyOrderDetailContainer from "./containers/mypage/MyOrderDetailContainer";
 import MyProfileLoginContainer from "./containers/mypage/MyProfileLoginContainer";
@@ -122,11 +123,21 @@ const router = createBrowserRouter([
   },
   {
     path: "",
-    element: <ProtectedRoute location="/" modalMessage="판매 관리자만 접근 가능합니다." allowedRoles={["seller"]} />,
+    element: <ProtectedRoute location="/" modalMessage="판매 회원만 접근 가능합니다." allowedRoles={["seller"]} />,
     children: [
       {
         path: "seller/*",
         element: <SellerPage />,
+      },
+    ],
+  },
+  {
+    path: "",
+    element: <ProtectedRoute location="/" modalMessage="관리자만 접근 가능합니다." allowedRoles={["admin"]} />,
+    children: [
+      {
+        path: "admin/*",
+        element: <AdminPage />,
       },
     ],
   },
