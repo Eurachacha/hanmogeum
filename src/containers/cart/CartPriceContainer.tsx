@@ -31,18 +31,20 @@ const CartPriceContainer = ({ cartData }: CartPriceContainerProps) => {
     // 로그인 시 선택상품금액 세팅
     if (user) {
       const checkedPrices = cartData
-        .filter((item) => checkedItems.includes(item.product._id))
+        .filter((item) => checkedItems.includes(item.product._id) && item.quantity !== 0)
         .map((item) => item.product.price * item.quantity);
-      const sum = checkedPrices.reduce((a: number, b: number) => a + b, 0);
+      const sum = checkedPrices.reduce((a, b) => a + b, 0);
       setcheckedPrice(sum);
       return;
     }
-    // 비로그인 시 선택상품금액 세팅
-    const checkedPrices = cartStorage
-      .filter((item) => checkedItems.includes(item.product._id))
-      .map((item) => item.product.price * item.quantity);
-    const sum = checkedPrices.reduce((a: number, b: number) => a + b, 0);
-    setcheckedPrice(sum);
+    if (!user) {
+      // 비로그인 시 선택상품금액 세팅
+      const checkedPrices = cartStorage
+        .filter((item) => checkedItems.includes(item.product._id) && item.quantity !== 0)
+        .map((item) => item.product.price * item.quantity);
+      const sum = checkedPrices.reduce((a, b) => a + b, 0);
+      setcheckedPrice(sum);
+    }
   }, [checkedItems, cartData, cartStorage]);
 
   useEffect(() => {
