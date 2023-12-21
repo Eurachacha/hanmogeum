@@ -136,7 +136,7 @@ const LoginContainerLayer = styled.form`
 const LoginCheckModalWrapper = styled.div`
   position: absolute;
   color: var(--color-black);
-  font-weight: var(--weight-bold);
+  font-weight: var(--weight-semibold);
 `;
 const LoginCheckModalButton = styled.div`
   display: flex;

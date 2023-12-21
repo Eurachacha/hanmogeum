@@ -29,7 +29,7 @@ const OrderItemContentsTextLayer = styled.div`
   flex-direction: column;
   margin-right: auto;
   font-size: 1.8rem;
-  font-weight: bold;
+  font-weight: var(--weight-semibold);
   min-width: 20rem;
   gap: 1.4rem;
   span {

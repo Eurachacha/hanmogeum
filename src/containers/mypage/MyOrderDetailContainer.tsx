@@ -171,7 +171,7 @@ const ProductInfoSeparator = styled.span`
   color: var(--color-gray-100);
 `;
 const ProductName = styled.span`
-  font-weight: var(--weight-bold);
+  font-weight: var(--weight-semibold);
 `;
 const ProductPrice = styled.span`
   font-weight: var(--weight-extrabold);

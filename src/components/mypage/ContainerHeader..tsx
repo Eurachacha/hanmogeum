@@ -41,6 +41,6 @@ const ContainerHeaderLayer = styled.div<CustomProperties>`
 `;
 
 const TitleWrapper = styled.div`
-  font-weight: var(--weight-bold);
+  font-weight: var(--weight-semibold);
   font-size: 2.4rem;
 `;

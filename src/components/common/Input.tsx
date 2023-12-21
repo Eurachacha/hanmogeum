@@ -60,7 +60,7 @@ const InputContainer = styled.input<{ $inputStyle: RuleSet<object>; $customStyle
   border-style: solid;
   border-width: 1px;
   padding: 0 1rem;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
 
   ${(props) => props.$customStyle && { ...props.$customStyle }}
 `;

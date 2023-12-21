@@ -25,5 +25,7 @@ const ButtonWrapper = styled.div`
   & > * {
     height: 5.2rem;
     margin-top: 1.5rem;
+    font-size: 1.8rem;
+    font-weight: var(--weight-semibold);
   }
 `;
