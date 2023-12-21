@@ -15,9 +15,14 @@ export interface FilterQueryObject {
   isDecaf?: boolean;
 }
 
+interface PriceObject {
+  maxPrice?: number;
+}
+
 interface RequestSearchProducts {
   sort?: SortQueryObject;
   filter?: FilterQueryObject;
+  price?: PriceObject;
 }
 
 const getSortQueryString = (sortQueryObject: SortQueryObject) => {
@@ -51,16 +56,23 @@ const getFilterQueryString = (filterQueryObject: FilterQueryObject) => {
   return `custom=${JSON.stringify(object)}`;
 };
 
+const getPriceString = (priceObject: PriceObject) => {
+  return `maxPrice=${priceObject}`;
+};
+
 const productsApi = {
   getAllProducts: () => publicInstance.get<ResponseProductsList>("/products"),
   getProductById: (_id: number) => publicInstance.get<ResponseProductInfo>(`/products/${_id}`),
   getProductByIsNew: () => publicInstance.get<ResponseProductsList>(`/products?custom={"extra.isNew": true}`),
   getProductByIsBest: () => publicInstance.get<ResponseProductsList>(`/products?custom={"extra.isBest": true}`),
-  searchProducts: ({ sort, filter }: RequestSearchProducts) => {
+  searchProducts: ({ sort, filter, price }: RequestSearchProducts) => {
     const sortQueryString = sort ? getSortQueryString(sort) : "";
     const filterQueryString = filter ? getFilterQueryString(filter) : "";
+    const priceString = price ? getPriceString(price) : "";
     return publicInstance.get<ResponseProductsList>(
-      `/products?${sortQueryString}${sortQueryString && filterQueryString ? "&" : ""}${filterQueryString}`,
+      `/products?${sortQueryString}${sortQueryString && filterQueryString ? "&" : ""}${filterQueryString}${
+        filterQueryString && priceString ? "&" : ""
+      }${priceString}`,
     );
   },
 };
