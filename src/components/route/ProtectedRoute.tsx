@@ -39,6 +39,9 @@ const ProtectedRoute = ({
 
   const modalSubmitHandle = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setModalOpen((prevState) => {
+      return { ...prevState, isOpen: false };
+    });
     navigateLocation();
   };
 
