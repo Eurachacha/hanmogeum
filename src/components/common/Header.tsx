@@ -183,9 +183,7 @@ const HeaderWrapper = styled.div`
 
 const LogoWrapper = styled.div`
   min-width: 12rem;
-  font-size: 4rem;
-  font-weight: var(--weight-bold);
-  font-family: "Maruburi", "sans-serif";
+  font: var(--weight-bold) 4rem "maruburi";
   color: var(--color-main);
   cursor: pointer;
 `;
@@ -194,8 +192,7 @@ const CategoryWrapper = styled.div`
   align-items: center;
   padding: 0 2rem;
   min-width: 46rem;
-  font-size: 1.6rem;
-  font-weight: var(--weight-bold);
+  font: var(--weight-bold) 1.6rem "suit";
   a {
     padding: 0 1rem;
   }
@@ -228,8 +225,7 @@ const UserControlWrapper = styled.div`
   display: flex;
   justify-content: end;
   min-width: 17rem;
-  font-size: 1.6rem;
-  font-weight: var(--weight-bold);
+  font: var(--weight-bold) 1.6rem "suit";
   cursor: pointer;
   a {
     padding: 0 1rem;
@@ -251,8 +247,7 @@ const CartCountStyle = styled.span`
   height: 2.2rem;
   border-radius: 50%;
   background-color: var(--color-main);
-  font-size: 1.3rem;
-  font-weight: var(--weight-bold);
+  font: var(--weight-bold) 1.3rem "suit";
   color: var(--color-white);
 `;
 

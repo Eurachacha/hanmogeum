@@ -28,7 +28,4 @@ const ProductItemListLayer = styled.div<{ $listCount: number }>`
   display: grid;
   grid-template-columns: repeat(${(props) => props.$listCount}, 1fr);
   gap: 20px;
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(${(props) => props.$listCount - 1}, 1fr);
-  }
 `;

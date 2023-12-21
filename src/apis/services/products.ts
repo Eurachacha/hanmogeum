@@ -1,13 +1,13 @@
 import { publicInstance } from "../instance";
 import { ResponseProductsList, ResponseProductInfo } from "@/types/products";
 
-export interface SortQueryObject {
+interface SortQueryObject {
   price?: number;
   createdAt?: number;
   buyQuantity?: number;
 }
 
-export interface FilterQueryObject {
+interface FilterQueryObject {
   pack?: string[];
   taste?: string[];
   teaType?: string[];
@@ -53,7 +53,7 @@ const getFilterQueryString = (filterQueryObject: FilterQueryObject) => {
 
 const productsApi = {
   getAllProducts: () => publicInstance.get<ResponseProductsList>("/products"),
-  getProductById: (_id: number) => publicInstance.get<ResponseProductInfo>(`/products/${_id}`),
+  getProductById: (_id: number) => publicInstance.get<ResponseProductInfo>(`/products/${_id}?delay=5000`),
   getProductByIsNew: () => publicInstance.get<ResponseProductsList>(`/products?custom={"extra.isNew": true}`),
   getProductByIsBest: () => publicInstance.get<ResponseProductsList>(`/products?custom={"extra.isBest": true}`),
   searchProducts: ({ sort, filter }: RequestSearchProducts) => {

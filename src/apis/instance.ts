@@ -1,9 +1,9 @@
 import axios, { AxiosError } from "axios";
-import { AUTH_TOKEN_KEY } from "@/constants/api";
+import { INSTANCE_TIMEOUT, AUTH_TOKEN_KEY } from "@/constants/api";
 
 export const publicInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  // timeout: INSTANCE_TIMEOUT,
+  timeout: INSTANCE_TIMEOUT,
   headers: {
     "Content-Type": "application/json",
   },
@@ -12,7 +12,7 @@ export const publicInstance = axios.create({
 
 export const privateInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  // timeout: INSTANCE_TIMEOUT,
+  timeout: INSTANCE_TIMEOUT,
   headers: {
     "Content-Type": "application/json",
   },
@@ -21,7 +21,7 @@ export const privateInstance = axios.create({
 
 export const fileUploadInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  // timeout: INSTANCE_TIMEOUT,
+  timeout: INSTANCE_TIMEOUT,
   headers: {
     "Content-Type": "multipart/form-data",
   },
@@ -65,43 +65,43 @@ const getNewToken = async () => {
 };
 
 // privateInstance 응답 인터셉터
-privateInstance.interceptors.response.use(
-  (response) => {
-    if (response.config.url?.startsWith("/admin") || response.config.url?.startsWith("/seller")) {
-      const data = response?.data?.item;
-      if (data) {
-        if (Array.isArray(data)) {
-          const items = response?.data?.item.map((e: any) => {
-            return { ...e, id: e._id };
-          });
-          response.data.item = items;
-        } else response.data.item = { ...data, id: data._id };
-      } else {
-        response.data.item = { ...response.data.updated, id: response.data.updated?._id } || {
-            ...response.data.message,
-          } || { ...response.data.ok };
-      }
-    }
-    return response;
-  },
-  async (error: AxiosError<{ errorName: string; message: string; ok: number }>) => {
-    if (error.response?.data.errorName === "TokenExpiredError") {
-      const newAccessToken = await getNewToken();
-      if (newAccessToken) {
-        localStorage.setItem("token", newAccessToken);
-        window.location.reload();
-      }
-    }
-    return Promise.reject(error);
-  },
-);
+// privateInstance.interceptors.response.use(
+//   (response) => {
+//     if (response.config.url?.startsWith("/admin") || response.config.url?.startsWith("/seller")) {
+//       const data = response?.data?.item;
+//       if (data) {
+//         if (Array.isArray(data)) {
+//           const items = response?.data?.item.map((e: any) => {
+//             return { ...e, id: e._id };
+//           });
+//           response.data.item = items;
+//         } else response.data.item = { ...data, id: data._id };
+//       } else {
+//         response.data.item = { ...response.data.updated, id: response.data.updated?._id } || {
+//             ...response.data.message,
+//           } || { ...response.data.ok };
+//       }
+//     }
+//     return response;
+//   },
+//   async (error: AxiosError<{ errorName: string; message: string; ok: number }>) => {
+//     if (error.response?.data.errorName === "TokenExpiredError") {
+//       const newAccessToken = await getNewToken();
+//       if (newAccessToken) {
+//         localStorage.setItem("token", newAccessToken);
+//         window.location.reload();
+//       }
+//     }
+//     return Promise.reject(error);
+//   },
+// );
 
 // publicInstance 응답 인터셉터
-publicInstance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
-);
+// publicInstance.interceptors.response.use(
+//   (response) => {
+//     return response;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   },
+// );

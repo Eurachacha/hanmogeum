@@ -1,4 +1,8 @@
-const ORDER_STATE = Object.freeze({
+const ORDER_STATE = {
+  SHIPPING_CANCEL: {
+    CODE: "OS100",
+    NAME: "주문 취소",
+  },
   SHIPPING_PREPARING: {
     CODE: "OS030",
     NAME: "배송 준비중",
@@ -11,10 +15,6 @@ const ORDER_STATE = Object.freeze({
     CODE: "OS040",
     NAME: "배송 완료",
   },
-  SHIPPING_CANCEL: {
-    CODE: "OS045",
-    NAME: "주문 취소",
-  },
-});
+};
 
 export default ORDER_STATE;

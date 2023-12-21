@@ -1,10 +1,11 @@
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { cartState } from "@/recoil/atoms/cartState";
 import productsApi from "@/apis/services/products";
-import { ProductDetailWithReplies } from "@/types/products";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import cartApi from "@/apis/services/cart";
 import Modal from "@/components/common/Modal";
@@ -16,8 +17,8 @@ import CategoryButton from "@/components/product/productlist/CategoryButton";
 import useQuantityCounter from "@/hooks/useQuantityCounter";
 import { CartStorageItem } from "@/types/cart";
 
+
 const ProductDetailPage = () => {
-  const [itemData, setItemData] = useState<ProductDetailWithReplies>();
   const user = useRecoilValue(loggedInUserState);
   const [cartStorage, setCartStorage] = useRecoilState(cartState);
   const [isAddCartModalOpen, setIsAddCartModalOpen] = useState(false);
@@ -29,43 +30,35 @@ const ProductDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const fetchProductInfo = async (product_id: number) => {
-    try {
-      const response = await productsApi.getProductById(product_id);
-      const { item } = response.data;
-      setItemData(item);
-    } catch (error) {
-      console.error(error);
-      navigate("/");
-    }
-  };
-
+  const {isLoading, data, error} = useSuspenseQuery ({
+    queryKey: ['products', id], // 쿼리키를 파라미터마다 지정(검색어, 페이지 등)
+    queryFn: () => productsApi.getProductById(Number(id)),
+    // gcTime: 1000*60,  // 기본 5분
+    staleTime: 1000*10, // 기본 0
+    select: res => res.data.item,
+    retry: 0,
+    refetchOnWindowFocus: 'always',
+  });
+  // const response = await productsApi.getProductById(product_id);
+  const itemData = data;
+  
   const addToCartData = async (product_id: number, quantity: number) => {
-    try {
-      const response = await cartApi.addItem({ product_id: product_id, quantity: quantity });
-      const { item: items } = response.data;
-      const updatedCartStorage: CartStorageItem[] = items.map((item) => {
-        return {
-          quantity: item.quantity,
-          stock: item.product.quantity - item.product.buyQuantity,
-          product: {
-            _id: item.product._id,
-            name: item.product.name,
-            image: item.product.image,
-            price: item.product.price,
-          },
-        };
-      });
-      setCartStorage(() => updatedCartStorage);
-    } catch (error) {
-      console.error(error);
-    }
+    const response = await cartApi.addItem({ product_id: product_id, quantity: quantity });
+    const { item: items } = response.data;
+    const updatedCartStorage: CartStorageItem[] = items.map((item) => {
+      return {
+        quantity: item.quantity,
+        stock: item.product.quantity - item.product.buyQuantity,
+        product: {
+          _id: item.product._id,
+          name: item.product.name,
+          image: item.product.image,
+          price: item.product.price,
+        },
+      };
+    });
+    setCartStorage(() => updatedCartStorage);
   };
-
-  useEffect(() => {
-    if (!id) navigate("/");
-    fetchProductInfo(Number(id));
-  }, []);
 
   const handleAddToCart = () => {
     if (user) {
@@ -128,7 +121,11 @@ const ProductDetailPage = () => {
     if (itemData && itemData.quantity - itemData.buyQuantity === 0) setQuantityInputAsStock(0);
   }, [itemData]);
 
+  if(error){
+    return <>Error: {error.message}</>
+  }
   return (
+    
     <ProductDetailPageLayer>
       <Modal isOpen={isStockModalOpen} message="재고가 부족합니다.">
         <ButtonWrapper onClick={handleStockUpdate}>

@@ -145,7 +145,7 @@ const OrderDetailItemWrapper = styled.div`
 
 const ProductImgWrapper = styled.div<ProductImgWrapperProps>`
   border-radius: 5px;
-  opacity: ${(props) => (props.$orderCancelState ? "0.4" : "1")};
+  opacity: ${(props) => (props.$orderCancelState ? "0.6" : "1")};
   img {
     width: 9rem;
     height: 9rem;
@@ -180,6 +180,7 @@ const ProductQuantity = styled.span`
   font-weight: var(----weight-light);
 `;
 
+const ReviewButtonStyle = styled.div``;
 const CartButtonStyle = styled.div``;
 
 const ModalWrapper = styled.div`
