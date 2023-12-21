@@ -3,52 +3,36 @@ import styled from "styled-components";
 import myPageApi from "@/apis/services/mypage";
 import ORDER_STATE from "@/constants/code";
 import GetDateNow from "@/utils/getDateNow";
+import { OrderState } from "../../types/code";
+
+type OrderStatus = {
+  value: number;
+  name: string;
+};
 
 const WidgetShipping = () => {
   // TODO: 리액트 쿼리로 수정
-  const [shippingInfo, setShippingInfo] = useState([
-    {
-      name: ORDER_STATE.SHIPPING_PREPARING.NAME,
-      value: 0,
-      code: ORDER_STATE.SHIPPING_PREPARING.CODE,
-    },
-    { name: ORDER_STATE.SHIPPING_PROGRESS.NAME, value: 0, code: ORDER_STATE.SHIPPING_PROGRESS.CODE },
-    { name: ORDER_STATE.SHIPPING_FINISH.NAME, value: 0, code: ORDER_STATE.SHIPPING_FINISH.CODE },
-  ]);
+  const [shippingInfo, setShippingInfo] = useState<Record<string, OrderStatus>>();
   const getShippingData = async () => {
     try {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      const getDateNow = new GetDateNow(new Date());
-      const endDate = GetDateNow.formatDate(tomorrow) || "";
-      const startDate = getDateNow.getDateYear(-3);
 
-      const response1 = await myPageApi.getMyPageOrderList({
-        createdAt: {
-          startDate,
-          endDate,
-        },
-        state: shippingInfo[0].code,
+      // itemObject init
+      const itemObject: Record<string, OrderStatus> = {};
+
+      Object.keys(ORDER_STATE).forEach((state) => {
+        const key = state as keyof typeof ORDER_STATE;
+        itemObject[ORDER_STATE[key]?.CODE] = { value: 0, name: ORDER_STATE[key].NAME };
       });
-      const response2 = await myPageApi.getMyPageOrderList({
-        createdAt: {
-          startDate,
-          endDate,
-        },
-        state: shippingInfo[1].code,
+
+      // get Data
+      const { data } = await myPageApi.getMyPageShippingState();
+      data.item.forEach((orderState) => {
+        itemObject[orderState?.state].value += 1;
       });
-      const response3 = await myPageApi.getMyPageOrderList({
-        createdAt: {
-          startDate,
-          endDate,
-        },
-        state: shippingInfo[2].code,
-      });
-      const updatedState = { ...shippingInfo };
-      updatedState[0].value = response1.data.item.length;
-      updatedState[1].value = response2.data.item.length;
-      updatedState[2].value = response3.data.item.length;
-      setShippingInfo(updatedState);
+
+      setShippingInfo(itemObject);
     } catch (error) {
       console.error(error);
     }
@@ -64,20 +48,20 @@ const WidgetShipping = () => {
       </TitleWrapper>
       <ShippingInfoWrapper>
         <ShippingDataStyle>
-          <div>{shippingInfo[0]?.value}</div>
-          <div>{shippingInfo[0]?.name}</div>
+          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_PREPARING.CODE].value}</div>
+          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_PREPARING.CODE].name}</div>
         </ShippingDataStyle>
         <Separator>{">"}</Separator>
 
         <ShippingDataStyle>
-          <div>{shippingInfo[1]?.value}</div>
-          <div>{shippingInfo[1]?.name}</div>
+          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_PROGRESS.CODE].value}</div>
+          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_PROGRESS.CODE].name}</div>
         </ShippingDataStyle>
         <Separator>{">"}</Separator>
 
         <ShippingDataStyle>
-          <div>{shippingInfo[2]?.value}</div>
-          <div>{shippingInfo[2]?.name}</div>
+          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_FINISH.CODE].value}</div>
+          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_FINISH.CODE].name}</div>
         </ShippingDataStyle>
       </ShippingInfoWrapper>
     </DashBoardShippingLayout>
@@ -113,7 +97,7 @@ const ShippingDataStyle = styled.div`
   gap: 1rem;
   & > div:first-child {
     font-size: 4rem;
-    font-family: var(--weight-heavy);
+    font-weight: var(--weight-heavy);
     color: var(--color-gray-300);
   }
 `;
