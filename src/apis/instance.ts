@@ -1,9 +1,9 @@
 import axios, { AxiosError } from "axios";
-import { INSTANCE_TIMEOUT, AUTH_TOKEN_KEY } from "@/constants/api";
+import { AUTH_TOKEN_KEY } from "@/constants/api";
 
 export const publicInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  timeout: INSTANCE_TIMEOUT,
+  // timeout: INSTANCE_TIMEOUT,
   headers: {
     "Content-Type": "application/json",
   },
@@ -12,7 +12,7 @@ export const publicInstance = axios.create({
 
 export const privateInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  timeout: INSTANCE_TIMEOUT,
+  // timeout: INSTANCE_TIMEOUT,
   headers: {
     "Content-Type": "application/json",
   },
@@ -21,7 +21,7 @@ export const privateInstance = axios.create({
 
 export const fileUploadInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  timeout: INSTANCE_TIMEOUT,
+  // timeout: INSTANCE_TIMEOUT,
   headers: {
     "Content-Type": "multipart/form-data",
   },
