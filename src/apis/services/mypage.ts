@@ -1,6 +1,11 @@
 import ORDER_STATE from "@/constants/code";
 import { privateInstance } from "../instance";
-import { ResponseDataMyOrderDetail, ResponseDataMyOrderList, getMyPageOrderListProps } from "@/types/myPage";
+import {
+  ResponseDataMyOrderDetail,
+  ResponseDataMyOrderList,
+  ResponseDataMyOrderShippingState,
+  getMyPageOrderListProps,
+} from "@/types/myPage";
 
 const myPageApi = {
   getMyPageOrderList: ({ state, createdAt, pagination }: getMyPageOrderListProps) => {
@@ -19,5 +24,7 @@ const myPageApi = {
   getMyPageOrderDetail: (id: number | string) => privateInstance.get<ResponseDataMyOrderDetail>(`/orders/${id}`),
   patchMyPageOrderShippingCancel: (id: number | string) =>
     privateInstance.patch<ResponseDataMyOrderDetail>(`/orders/${id}`, { state: ORDER_STATE.SHIPPING_CANCEL.CODE }),
+
+  getMyPageShippingState: () => privateInstance.get<ResponseDataMyOrderShippingState>(`/orders/state`),
 };
 export default myPageApi;
