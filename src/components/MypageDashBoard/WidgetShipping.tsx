@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import myPageApi from "@/apis/services/mypage";
 import ORDER_STATE from "@/constants/code";
-import GetDateNow from "@/utils/getDateNow";
-import { OrderState } from "../../types/code";
 
 type OrderStatus = {
   value: number;

@@ -180,7 +180,6 @@ const ProductQuantity = styled.span`
   font-weight: var(----weight-light);
 `;
 
-const ReviewButtonStyle = styled.div``;
 const CartButtonStyle = styled.div``;
 
 const ModalWrapper = styled.div`

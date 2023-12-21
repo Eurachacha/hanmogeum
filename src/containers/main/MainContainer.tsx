@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import productsApi from "@/apis/services/products";
-import GatherTeaType from "@/components/main/GatherTeaType";
-import Slider from "@/components/main/Slider";
 import { Product } from "@/types/products";
 import MainProductsList from "@/components/main/MainProductsList";
-import Banner from "@/components/main/Banner";
+import Banner from "@/components/main/MainBanner";
 
 const MainContainer = () => {
   const [newProducts, setNewProducts] = useState<Product[]>([]);
@@ -34,7 +32,6 @@ const MainContainer = () => {
   }, []);
   return (
     <>
-      <Slider />
       {newProducts && (
         <MainProductsList products={newProducts} title="NEW ARRIVALS" content="한모금 상품을 가장 먼저 만나보세요!" />
       )}
@@ -42,7 +39,6 @@ const MainContainer = () => {
       {bestProducts && (
         <MainProductsList products={bestProducts} title="BEST PRODUCTS" content="가장 많이 찾으신 상품입니다." />
       )}
-      <GatherTeaType />
     </>
   );
 };

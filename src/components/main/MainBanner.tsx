@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import Carousel from "../common/Carousel";
 
 type mainBannerDataType = {

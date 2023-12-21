@@ -113,7 +113,7 @@ const MyProfileEditContainer = () => {
 
   // TODO: 커스텀 훅 사용하도록 수정
   const openPostcode = useDaumPostcodePopup();
-  const addressSearchHandleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const addressSearchHandleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
     openPostcode({
       onComplete: (data) => {
