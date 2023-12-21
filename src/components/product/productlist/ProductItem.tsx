@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+import { useState } from "react";
 import ProductItemLabel from "./ProductItemLabel";
 import { Product } from "@/types/products";
 import { flattenCodeState } from "@/recoil/atoms/codeState";
@@ -12,16 +13,32 @@ interface ProductItemProps {
 }
 
 const ProductItem = ({ product }: ProductItemProps) => {
+  const [imageHoverBox, setImageHoverBox] = useState(false);
+
   const navigate = useNavigate();
   const flattenCodes = useRecoilValue(flattenCodeState);
   const teaTypeCode = product.extra.teaType[0];
 
-  const hashTagCode = product.extra.hashTag.map((item) => `#${flattenCodes[item].value}`);
+  // const tasteValue = product.extra.taste.map((item) => flattenCodes[item].value);
+  const hashTagValue = product.extra.hashTag.map((item) => flattenCodes[item].value);
   const priceKor = getPriceFormat({ price: product.price });
-
   return (
-    <ProductItemLayer onClick={() => navigate(`/products/${product._id}`)}>
+    <ProductItemLayer
+      onClick={() => navigate(`/products/${product._id}`)}
+      onMouseOver={() => setImageHoverBox(true)}
+      onMouseOut={() => setImageHoverBox(false)}
+    >
       <ProductItemImageWrapper>
+        {imageHoverBox && (
+          <ProductItemHoverWrapper>
+            <ProductItemHoverTextWrapper>
+              {/* {tasteValue.map((tasteItem) => (
+                <p>#{tasteItem}</p>
+              ))} */}
+            </ProductItemHoverTextWrapper>
+          </ProductItemHoverWrapper>
+        )}
+
         <StyledLabel>
           <li>
             {product.extra.isNew ? (
@@ -65,9 +82,10 @@ const ProductItem = ({ product }: ProductItemProps) => {
               <h2>{priceKor}</h2>
             </StyledPrice>
           </StyledItemText>
-
           <StyledHashTag>
-            <p>{hashTagCode}</p>
+            {hashTagValue.map((hashTag) => (
+              <span>#{hashTag}</span>
+            ))}
           </StyledHashTag>
         </ul>
       </ProductItemContentWrapper>
@@ -78,6 +96,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
 export default ProductItem;
 
 const ProductItemLayer = styled.div`
+  min-width: 140px;
   background-color: var(--color-white);
 
   border-radius: 5px;
@@ -86,9 +105,40 @@ const ProductItemLayer = styled.div`
   cursor: pointer;
 `;
 
+const ProductItemHoverWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+
+  background: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 100%;
+`;
+
+const ProductItemHoverTextWrapper = styled.div`
+  width: 60%;
+  margin: 20px auto;
+  align-items: center;
+
+  p {
+    width: 100%;
+
+    padding: 20px;
+    color: var(--color-white);
+    font-size: 1.8rem;
+    border: 1px solid var(--color-white);
+    border-radius: 4px;
+
+    text-align: center;
+  }
+  p:not(:last-child) {
+    margin-bottom: 10px;
+  }
+`;
+
 const ProductItemImageWrapper = styled.div`
   position: relative;
-
   width: 100%;
   height: 240px;
   overflow: hidden;
@@ -96,6 +146,7 @@ const ProductItemImageWrapper = styled.div`
   img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
 `;
 const StyledLabel = styled.ul`
@@ -129,24 +180,20 @@ const StyledName = styled.li`
 const StyledPrice = styled.li`
   text-align: right;
   font-weight: var(--weight-extrabold);
-
   margin-top: 10px;
 `;
 
 const StyledHashTag = styled.li`
-  & ::before {
-    content: "";
+  margin-top: 10px;
+  border-top: 1px solid var(--color-gray-300);
 
-    display: block;
-    width: 100%;
-    height: 1px;
-    background-color: var(--color-gray-100);
-
-    margin-top: 20px;
-    margin-bottom: 20px;
+  span {
+    display: inline-block;
+    margin-right: 8px;
+    font-size: 1.2rem;
+    color: var(--color-gray-300);
   }
-
-  color: var(--color-gray-300);
-  font-size: 1.2rem;
-  line-height: 2.4rem;
+  span:first-child {
+    padding-top: 10px;
+  }
 `;
