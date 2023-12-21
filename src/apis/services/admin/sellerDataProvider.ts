@@ -47,11 +47,11 @@ const sellerDataProvider = withLifecycleCallbacks(
       return { data: params.ids };
     },
     delete: async (resource, params) => {
-      const { data } = await privateInstance.delete(`/${resource}/${params.id}`);
+      const { data } = await privateInstance.delete(`/seller/${resource}/${params.id}`);
       return { data };
     },
     deleteMany: async (resource, params) => {
-      const promises = params.ids.map((id: string | number) => privateInstance.delete(`/${resource}/${id}`));
+      const promises = params.ids.map((id: string | number) => privateInstance.delete(`/seller/${resource}/${id}`));
       await Promise.all(promises);
       return { data: params.ids };
     },
