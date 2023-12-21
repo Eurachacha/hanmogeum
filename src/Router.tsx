@@ -9,13 +9,15 @@ import ProductDetailPage from "@/pages/ProductDetailPage";
 import CartPage from "@/pages/CartPage";
 import OrderCheckoutPage from "@/pages/OrderCheckoutPage";
 import OrderCompletePage from "@/pages/OrderCompletePage";
-import MyOrderListPage from "@/pages/MyOrderListPage";
-import MyOrderDetailPage from "@/pages/MyOrderDetailPage";
-import MyLikePage from "@/pages/MyLikePage";
-import MyReviewPage from "@/pages/MyReviewPage";
-import ManagePage from "@/pages/ManagePage";
-import MyProfileLoginPage from "@/pages/MyProfileLoginPage";
-import MyProfileModifyPage from "@/pages/MyProfileModifyPage";
+import SellerPage from "@/pages/SellerPage";
+import MyPage from "@/pages/Mypage";
+import AdminPage from "@/pages/AdminPage";
+
+import MyOrderListContainer from "./containers/mypage/MyOrderListContainer";
+import MyOrderDetailContainer from "./containers/mypage/MyOrderDetailContainer";
+import MyProfileLoginContainer from "./containers/mypage/MyProfileLoginContainer";
+import MyProfileEditContainer from "./containers/mypage/MyProfileModifyContainer";
+import ProtectedRoute from "./components/route/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -23,75 +25,121 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/",
-        element: <MainPage />,
+        path: "",
+        element: <ProtectedRoute location="/" allowedRoles={["all"]} />,
+        children: [
+          {
+            path: "/",
+            element: <MainPage />,
+          },
+          {
+            path: "/products",
+            element: <ProductListPage />,
+          },
+          {
+            path: "/products/:id",
+            element: <ProductDetailPage />,
+          },
+          {
+            path: "/cart",
+            element: <CartPage />,
+          },
+        ],
       },
       {
-        path: "/login",
-        element: <LoginPage />,
+        path: "",
+        element: (
+          <ProtectedRoute
+            location="/login"
+            modalMessage="로그인하셔야 본 서비스를 이용하실 수 있습니다."
+            allowedRoles={["user", "admin", "seller"]}
+          />
+        ),
+        children: [
+          {
+            path: "/orders/checkout",
+            element: <OrderCheckoutPage />,
+          },
+          {
+            path: "/orders/complete",
+            element: <OrderCompletePage />,
+          },
+          {
+            path: "/mypage",
+            element: <MyPage />,
+            children: [
+              {
+                index: true,
+                element: <MyOrderListContainer />,
+              },
+              {
+                path: "orders",
+                element: <MyOrderListContainer />,
+              },
+              {
+                path: "orders/:id",
+                element: <MyOrderDetailContainer />,
+              },
+              {
+                path: "profile",
+                element: <MyProfileLoginContainer />,
+              },
+              {
+                path: "profile/login",
+                element: <MyProfileLoginContainer />,
+              },
+              {
+                path: "profile/modify",
+                element: <MyProfileEditContainer />,
+              },
+              {
+                path: "reviews",
+                element: <>review</>,
+              },
+              {
+                path: "likes",
+                element: <>likes</>,
+              },
+            ],
+          },
+        ],
       },
       {
-        path: "/signup",
-        element: <SignUpPage />,
-      },
-      {
-        path: "/mypage",
-        element: <MyOrderListPage />,
-      },
-      {
-        path: "/mypage/orders",
-        element: <MyOrderListPage />,
-      },
-      {
-        path: "/mypage/orders/:id",
-        element: <MyOrderDetailPage />,
-      },
-      {
-        path: "/mypage/profile",
-        element: <MyProfileLoginPage />,
-      },
-      {
-        path: "/mypage/profile/login",
-        element: <MyProfileLoginPage />,
-      },
-      {
-        path: "/mypage/profile/modify",
-        element: <MyProfileModifyPage />,
-      },
-      {
-        path: "mypage/reviews",
-        element: <MyReviewPage />,
-      },
-      {
-        path: "/mypage/likes",
-        element: <MyLikePage />,
-      },
-      {
-        path: "/products",
-        element: <ProductListPage />,
-      },
-      {
-        path: "/products/:id",
-        element: <ProductDetailPage />,
-      },
-      {
-        path: "/cart",
-        element: <CartPage />,
-      },
-      {
-        path: "/orders/checkout",
-        element: <OrderCheckoutPage />,
-      },
-      {
-        path: "/orders/complete",
-        element: <OrderCompletePage />,
-      },
-      {
-        path: "/manage",
-        element: <ManagePage />,
+        path: "",
+        element: <ProtectedRoute location={-1} modalMessage="이미 로그인된 사용자입니다." allowedRoles={["guest"]} />,
+        children: [
+          {
+            path: "/login",
+            element: <LoginPage />,
+          },
+          {
+            path: "/signup",
+            element: <SignUpPage />,
+          },
+        ],
       },
     ],
     errorElement: <ErrorPage />,
+  },
+  {
+    path: "",
+    element: <ProtectedRoute location="/" modalMessage="판매 회원만 접근 가능합니다." allowedRoles={["seller"]} />,
+    children: [
+      {
+        path: "seller/*",
+        element: <SellerPage />,
+      },
+    ],
+  },
+  {
+    path: "",
+    element: <ProtectedRoute location="/" modalMessage="관리자만 접근 가능합니다." allowedRoles={["admin"]} />,
+    children: [
+      {
+        path: "admin/*",
+        element: <AdminPage />,
+      },
+    ],
   },
 ]);
 

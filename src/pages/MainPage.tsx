@@ -26,7 +26,6 @@ const MainPage = () => {
           <Firecracker setStyle="bigCenter" />
         </FirecrackerWrapper>
       )}
-      메인페이지
     </div>
   );
 };

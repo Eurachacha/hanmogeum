@@ -14,6 +14,7 @@ import { flattenCodeState } from "@/recoil/atoms/codeState";
 import getPriceFormat from "@/utils/getPriceFormat";
 import CategoryButton from "@/components/product/productlist/CategoryButton";
 import useQuantityCounter from "@/hooks/useQuantityCounter";
+import { CartStorageItem } from "@/types/cart";
 
 const ProductDetailPage = () => {
   const [itemData, setItemData] = useState<ProductDetailWithReplies>();
@@ -40,7 +41,25 @@ const ProductDetailPage = () => {
   };
 
   const addToCartData = async (product_id: number, quantity: number) => {
-    cartApi.addItem({ product_id: product_id, quantity: quantity });
+    try {
+      const response = await cartApi.addItem({ product_id: product_id, quantity: quantity });
+      const { item: items } = response.data;
+      const updatedCartStorage: CartStorageItem[] = items.map((item) => {
+        return {
+          quantity: item.quantity,
+          stock: item.product.quantity - item.product.buyQuantity,
+          product: {
+            _id: item.product._id,
+            name: item.product.name,
+            image: item.product.image,
+            price: item.product.price,
+          },
+        };
+      });
+      setCartStorage(() => updatedCartStorage);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -92,20 +111,22 @@ const ProductDetailPage = () => {
   };
 
   const handleCheckoutOrder = () => {
-    if (!user) {
-      setIsLoginModalOpen(true);
-      return;
-    }
-    setIsCheckoutConfirmModalOpen(true);
+    setIsCheckoutConfirmModalOpen(false);
+    navigate("/orders/checkout", { state: { ...itemData, quantityInput } });
   };
 
   const handleStockUpdate = () => {
     setIsStockModalOpen(false);
   };
 
-  const { handleQuantityInput, quantityInput } = useQuantityCounter(
+  const { handleQuantityInput, quantityInput, setQuantityInputAsStock } = useQuantityCounter(
+    1,
     itemData ? itemData.quantity - itemData.buyQuantity : 0,
   );
+
+  useEffect(() => {
+    if (itemData && itemData.quantity - itemData.buyQuantity === 0) setQuantityInputAsStock(0);
+  }, [itemData]);
 
   return (
     <ProductDetailPageLayer>
@@ -138,11 +159,18 @@ const ProductDetailPage = () => {
         <ButtonWrapper onClick={() => setIsCheckoutConfirmModalOpen(false)}>
           <Button value="취소" size="sm" variant="sub" />
         </ButtonWrapper>
-        <ButtonWrapper onClick={() => navigate("/orders/checkout")}>
+        <ButtonWrapper onClick={handleCheckoutOrder}>
           <Button value="구매하기" size="sm" variant="point" />
         </ButtonWrapper>
       </Modal>
-      <ProductDetailLeft>[상품 정보]상품id : {id}</ProductDetailLeft>
+      <ProductDetailLeft>
+        <img
+          src={`${import.meta.env.VITE_API_BASE_URL}${itemData?.mainImages[0].url}`}
+          alt={itemData?.name}
+          width={600}
+        />
+        <DetailArea dangerouslySetInnerHTML={{ __html: itemData?.content as TrustedHTML }}></DetailArea>
+      </ProductDetailLeft>
       <ProductDetailRight>
         <TeaType>{itemData?.extra.teaType[0] ? categoryCodes[itemData?.extra.teaType[0]].value : ""}</TeaType>
         <Title>{itemData?.name}</Title>
@@ -152,12 +180,7 @@ const ProductDetailPage = () => {
           <HashTagWrapper>
             {itemData?.extra.hashTag.map((tagCode, idx) => {
               const keyIndex = idx.toString();
-              const value = `#${categoryCodes[tagCode].value}`;
-              return (
-                <CategoryButton key={keyIndex} variant="default">
-                  {value}
-                </CategoryButton>
-              );
+              return <CategoryButton key={keyIndex} code={tagCode} disabled />;
             })}
           </HashTagWrapper>
         </HashTagArea>
@@ -184,7 +207,7 @@ const ProductDetailPage = () => {
           <MainButtonWrapper onClick={handleAddToCart}>
             <Button value="장바구니" size="lg" variant="sub" disabled={!quantityInput} />
           </MainButtonWrapper>
-          <MainButtonWrapper onClick={handleCheckoutOrder}>
+          <MainButtonWrapper onClick={() => (user ? setIsCheckoutConfirmModalOpen(true) : setIsLoginModalOpen(true))}>
             <Button value="바로구매" size="lg" variant="point" disabled={!quantityInput} />
           </MainButtonWrapper>
         </ButtonArea>
@@ -211,15 +234,24 @@ const ButtonWrapper = styled.div`
 `;
 
 const ProductDetailLeft = styled.section`
-  flex: 1;
-  border: 1px solid var(--color-gray-100);
+  min-width: 650px;
+  text-align: center;
+`;
+
+const DetailArea = styled.div`
+  max-width: 650px;
+  text-align: center;
+
+  & img {
+    width: 600px;
+    border: 1px solid var(--color-gray-100);
+  }
 `;
 
 const ProductDetailRight = styled.section`
-  min-width: 500px;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 20px;
 `;
 
 const TeaType = styled.p`

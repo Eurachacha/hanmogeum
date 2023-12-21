@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { INSTANCE_TIMEOUT, AUTH_TOKEN_KEY } from "@/constants/api";
 
-const publicInstance = axios.create({
+export const publicInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: INSTANCE_TIMEOUT,
   headers: {
@@ -10,7 +10,7 @@ const publicInstance = axios.create({
   withCredentials: true,
 });
 
-const privateInstance = axios.create({
+export const privateInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: INSTANCE_TIMEOUT,
   headers: {
@@ -19,7 +19,16 @@ const privateInstance = axios.create({
   withCredentials: true,
 });
 
-// 헤더에 토큰을 전달하는 요청 인터셉터
+export const fileUploadInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  timeout: INSTANCE_TIMEOUT,
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+  withCredentials: true,
+});
+
+// privateInstance 요청 인터셉터(헤더에 토큰 전달)
 privateInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem(AUTH_TOKEN_KEY);
@@ -55,9 +64,24 @@ const getNewToken = async () => {
   }
 };
 
-// 에러를 처리하는 응답 인터셉터
+// privateInstance 응답 인터셉터
 privateInstance.interceptors.response.use(
   (response) => {
+    if (response.config.url?.startsWith("/admin") || response.config.url?.startsWith("/seller")) {
+      const data = response?.data?.item;
+      if (data) {
+        if (Array.isArray(data)) {
+          const items = response?.data?.item.map((e: any) => {
+            return { ...e, id: e._id };
+          });
+          response.data.item = items;
+        } else response.data.item = { ...data, id: data._id };
+      } else {
+        response.data.item = { ...response.data.updated, id: response.data.updated?._id } || {
+            ...response.data.message,
+          } || { ...response.data.ok };
+      }
+    }
     return response;
   },
   async (error: AxiosError<{ errorName: string; message: string; ok: number }>) => {
@@ -72,7 +96,7 @@ privateInstance.interceptors.response.use(
   },
 );
 
-// 에러를 처리하는 응답 인터셉터
+// publicInstance 응답 인터셉터
 publicInstance.interceptors.response.use(
   (response) => {
     return response;
@@ -81,5 +105,3 @@ publicInstance.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
-export { publicInstance, privateInstance };

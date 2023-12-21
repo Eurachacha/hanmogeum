@@ -1,3 +1,5 @@
+import { MainImageType, ProductDetailWithReplies } from "./products";
+
 interface OrderProduct {
   _id: number;
   quantity: number;
@@ -6,11 +8,12 @@ interface OrderProduct {
 interface OrderAddress {
   name?: string;
   value: string;
+  detailValue?: string;
 }
 
 export interface OrderProductDetail extends OrderProduct {
   name: string;
-  image: string;
+  image: MainImageType;
   price: number;
 }
 
@@ -26,21 +29,25 @@ export interface OrderCost {
   total: number;
 }
 
-interface OrderDetail {
+export interface OrderDetail {
   products: OrderProductDetail[];
-  address: OrderAddress;
   state: string;
   user_id: number;
   _id: number;
   createdAt: string;
   updatedAt: string;
+  shippingInfo: ShippingInfoType;
   cost: OrderCost;
 }
 
 export interface ShippingInfoType {
-  name: string;
+  name?: string;
   phone: string;
   address: OrderAddress;
+}
+
+export interface OrderFromDetailPage extends ProductDetailWithReplies {
+  quantityInput: number;
 }
 
 // Request Types
@@ -52,6 +59,7 @@ export interface RequestCheckStocks {
 
 // POST /orders 구매 목록 조회
 export interface RequestCreateOrder {
+  type?: string;
   products: OrderProduct[];
   shippingInfo: ShippingInfoType;
 }

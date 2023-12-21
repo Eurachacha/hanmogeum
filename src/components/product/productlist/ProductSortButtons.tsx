@@ -1,29 +1,37 @@
 import styled from "styled-components";
-import { Product } from "@/types/products";
+import useQueryParams from "@/hooks/useQueryParams";
 
-interface ProductItemListProps {
-  products: Product[];
+interface ProductSortButtonsProps {
+  productLength: number;
 }
+const ProductSortButtons = ({ productLength }: ProductSortButtonsProps) => {
+  const categoryArray = [
+    { name: "인기순", sortNumber: 0 },
+    { name: "최신순", sortNumber: 1 },
+    { name: "가격낮은순", sortNumber: 2 },
+    { name: "가격높은순", sortNumber: 3 },
+  ];
+  const { toggleSortFilter } = useQueryParams("sortType");
 
-const ProductSortButtons = ({ products }: ProductItemListProps) => {
   return (
-    <CategorySortWrapper>
+    <CategorySortLayer>
       <li>
-        <StyledProductCount>전체 {products.length}개</StyledProductCount>
+        <StyledProductCount>전체 {productLength}개</StyledProductCount>
       </li>
       <li>
-        <StyledCategorySortButton>인기순</StyledCategorySortButton>
-        <StyledCategorySortButton>최신순</StyledCategorySortButton>
-        <StyledCategorySortButton>높은가격순</StyledCategorySortButton>
-        <StyledCategorySortButton>낮은가격순</StyledCategorySortButton>
+        {categoryArray.map((cate) => (
+          <StyledCategorySortButton key={cate.name} onClick={() => toggleSortFilter(`${cate.sortNumber}`)}>
+            {cate.name}
+          </StyledCategorySortButton>
+        ))}
       </li>
-    </CategorySortWrapper>
+    </CategorySortLayer>
   );
 };
 
 export default ProductSortButtons;
 
-const CategorySortWrapper = styled.ul`
+const CategorySortLayer = styled.ul`
   display: flex;
   justify-content: space-between;
   align-items: baseline;

@@ -1,5 +1,11 @@
 import { ProductReview } from "./reviews";
 
+export interface MainImageType {
+  url: string;
+  fileName: string;
+  orgName: string;
+}
+
 // Extra
 export interface Extra {
   isNew: boolean;
@@ -16,13 +22,12 @@ export interface Product {
   _id: number;
   seller_id: number;
   price: number;
-  shippingFees: number;
   show: boolean;
   active: boolean;
   name: string;
   buyQuantity: number;
   quantity: number;
-  mainImages: string[];
+  mainImages: MainImageType[];
   createdAt: string;
   updatedAt: string;
   extra: Extra;

@@ -1,5 +1,5 @@
 import { OrderCost, OrderProductDetail } from "./orders";
-import { Extra } from "./products";
+import { Extra, MainImageType } from "./products";
 
 export interface CartItemSummary {
   _id: number;
@@ -13,7 +13,7 @@ export interface CartItemDetail {
   seller_id: number;
   quantity: number;
   buyQuantity: number;
-  image: string;
+  image: MainImageType;
 }
 
 export interface CartItem {
@@ -31,7 +31,7 @@ export interface CartStorageItem {
   product: {
     _id: number;
     name: string;
-    image: string;
+    image: MainImageType;
     price: number;
   };
   stock: number;

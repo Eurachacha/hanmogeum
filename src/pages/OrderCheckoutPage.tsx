@@ -1,13 +1,14 @@
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
-import { useNavigate } from "react-router-dom";
-import OrderInfo from "@/containers/orderCheckout/OrderInfo";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useLocation, useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
+import OrderInfoContainer from "@/containers/orderCheckout/OrderInfoContainer";
 import OrderPriceContainer from "@/containers/orderCheckout/OrderPriceContainer";
 import { CartItem } from "@/types/cart";
 import cartApi from "@/apis/services/cart";
 import Button from "@/components/common/Button";
-import { cartCheckedItemState } from "@/recoil/atoms/cartState";
+import { cartCheckedItemState, cartState } from "@/recoil/atoms/cartState";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import Modal from "@/components/common/Modal";
 import { RequestCreateOrder, ShippingInfoType } from "@/types/orders";
@@ -16,11 +17,15 @@ import ordersApi from "@/apis/services/orders";
 const OrderCheckoutPage = () => {
   const user = useRecoilValue(loggedInUserState);
   const checkedItems = useRecoilValue(cartCheckedItemState);
-  const [cartData, setCartData] = useState<CartItem[]>([]);
+  const setCartStorage = useSetRecoilState(cartState);
+  const [cartData, setCartData] = useState<CartItem[]>();
   const [shippingInfo, setShippingInfo] = useState<ShippingInfoType>();
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
   const [isShippingModalOpen, setIsShippingModalOpen] = useState(false);
+  const [isOrderErrorModalOpen, setIsOrderErrorModalOpen] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const fetchAllCartItems = async () => {
     try {
@@ -36,9 +41,33 @@ const OrderCheckoutPage = () => {
 
   const createOrder = async (data: RequestCreateOrder) => {
     try {
-      ordersApi.createOrder(data);
-      navigate("/orders/complete");
+      const response = location.state
+        ? await ordersApi.createOrder(data)
+        : await ordersApi.createOrder({ ...data, type: "cart" });
+      if (!location.state) {
+        const getAllCartResponse = await cartApi.getAllItems();
+        const { item } = getAllCartResponse.data;
+        setCartStorage(
+          item.map((e) => {
+            return {
+              quantity: e.quantity,
+              product: {
+                _id: e.product._id,
+                name: e.product.name,
+                image: e.product.image,
+                price: e.product.price,
+              },
+              stock: e.product.quantity - e.product.buyQuantity,
+            };
+          }),
+        );
+      }
+      if (response.data.ok) navigate("/orders/complete");
+      else throw new Error();
     } catch (error) {
+      if ((error as AxiosError).response?.status === 422) {
+        setIsOrderErrorModalOpen(true);
+      }
       console.error(error);
     }
   };
@@ -52,47 +81,74 @@ const OrderCheckoutPage = () => {
     setIsShippingModalOpen(false);
   };
 
+  const handleOrderErrorModalClose = () => {
+    navigate(-1);
+    setIsOrderErrorModalOpen(false);
+  };
+
   const handlePostOrder = () => {
     if (!shippingInfo?.name || !shippingInfo?.phone || !shippingInfo?.address.value) {
       setIsShippingModalOpen(true);
       return;
     }
-    const productsData = cartData.map((item) => {
+    const productsData = cartData!.map((item) => {
       return { _id: item.product._id, quantity: item.quantity };
     });
     const data = {
-      products: productsData,
+      products: location.state ? [{ _id: location.state._id, quantity: location.state.quantityInput }] : productsData,
       shippingInfo: shippingInfo,
     };
     createOrder(data);
   };
 
+  const handleErrorModalClose = () => {
+    navigate(-1);
+    setIsErrorModalOpen(false);
+  };
+
   useEffect(() => {
+    if (!cartData || cartData.length <= 0) {
+      setIsErrorModalOpen(true);
+    }
     if (user) fetchAllCartItems();
   }, []);
 
+  if (user && cartData && cartData.length > 0) {
+    return (
+      <OrderCheckoutPageLayer>
+        <Modal isOpen={isOrderErrorModalOpen} message="주문에 실패했습니다.\n장바구니페이지로 돌아갑니다.">
+          <ButtonWrapper onClick={handleOrderErrorModalClose}>
+            <Button value="확인" size="sm" variant="sub" />
+          </ButtonWrapper>
+        </Modal>
+        <Modal isOpen={isStockModalOpen} message="재고가 부족한 상품이 있습니다.">
+          <ButtonWrapper onClick={handleStockModalClose}>
+            <Button value="확인" size="sm" variant="sub" />
+          </ButtonWrapper>
+        </Modal>
+        <Modal isOpen={isShippingModalOpen} message="배송정보를 올바르게 입력해주세요.">
+          <ButtonWrapper onClick={handleShippingModalClose}>
+            <Button value="확인" size="sm" variant="sub" />
+          </ButtonWrapper>
+        </Modal>
+        <PageLeft>
+          <OrderInfoContainer cartData={cartData} setShippingInfo={setShippingInfo} />
+        </PageLeft>
+        <PageRight>
+          <OrderPriceContainer cartData={cartData} />
+          <OrderButtonWrapper onClick={handlePostOrder}>
+            <Button value="결제하기" size="lg" variant="point" />
+          </OrderButtonWrapper>
+        </PageRight>
+      </OrderCheckoutPageLayer>
+    );
+  }
   return (
-    <OrderCheckoutPageLayer>
-      <Modal isOpen={isStockModalOpen} message="재고가 부족한 상품이 있습니다.">
-        <ButtonWrapper onClick={handleStockModalClose}>
-          <Button value="확인" size="sm" variant="sub" />
-        </ButtonWrapper>
-      </Modal>
-      <Modal isOpen={isShippingModalOpen} message="배송정보를 올바르게 입력해주세요.">
-        <ButtonWrapper onClick={handleShippingModalClose}>
-          <Button value="확인" size="sm" variant="sub" />
-        </ButtonWrapper>
-      </Modal>
-      <PageLeft>
-        <OrderInfo cartData={cartData} setShippingInfo={setShippingInfo} />
-      </PageLeft>
-      <PageRight>
-        <OrderPriceContainer cartData={cartData} />
-        <OrderButtonWrapper onClick={handlePostOrder}>
-          <Button value="결제하기" size="lg" variant="point" />
-        </OrderButtonWrapper>
-      </PageRight>
-    </OrderCheckoutPageLayer>
+    <Modal isOpen={isErrorModalOpen} message="잘못된 접근입니다.">
+      <ButtonWrapper onClick={handleErrorModalClose}>
+        <Button value="확인" size="sm" variant="point"></Button>
+      </ButtonWrapper>
+    </Modal>
   );
 };
 

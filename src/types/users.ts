@@ -1,4 +1,4 @@
-type UserType = "user" | "seller" | "admin";
+export type UserType = "user" | "seller" | "admin";
 
 export interface LoginData {
   email: string;
@@ -41,6 +41,7 @@ export interface User {
   type: UserType;
   phone: string;
   address: string;
+  detailAddress: string;
   extra?: UserExtra;
   createdAt: string;
   updatedAt: string;

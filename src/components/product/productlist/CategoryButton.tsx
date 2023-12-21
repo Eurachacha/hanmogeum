@@ -1,9 +1,12 @@
+import { useLocation } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import styled, { RuleSet, css } from "styled-components";
+import { flattenCodeState } from "@/recoil/atoms/codeState";
 
 interface ButtonProps {
-  variant: "active" | "default";
-  children: string;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  code: string;
+  handleClick?: React.MouseEventHandler<HTMLButtonElement>;
+  disabled?: boolean;
 }
 
 const VARIANTS = {
@@ -19,12 +22,18 @@ const VARIANTS = {
   `,
 };
 
-const CategoryButton = ({ variant, children, onClick }: ButtonProps) => {
-  const variantStyle = VARIANTS[variant];
+const CategoryButton = ({ code, handleClick, disabled = false }: ButtonProps) => {
+  const location = useLocation();
+  const queryString = location.search;
+  const flattenCodes = useRecoilValue(flattenCodeState);
 
   return (
-    <StyledButton $variantStyle={variantStyle} onClick={onClick}>
-      {children}
+    <StyledButton
+      $variantStyle={queryString.includes(code) ? VARIANTS.active : VARIANTS.default}
+      onClick={handleClick}
+      disabled={disabled}
+    >
+      {flattenCodes[code].value}
     </StyledButton>
   );
 };
@@ -37,6 +46,10 @@ const StyledButton = styled.button<{ $variantStyle: RuleSet<object> }>`
   border: 0;
   padding: 6px 10px;
   cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+  }
 `;
 
 export default CategoryButton;

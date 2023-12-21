@@ -18,6 +18,7 @@ const CartPriceContainer = ({ cartData }: CartPriceContainerProps) => {
   const checkedItems = useRecoilValue(cartCheckedItemState);
   const cartStorage = useRecoilValue(cartState);
   const [checkedPrice, setcheckedPrice] = useState(0);
+  const [shippingFeesDiscount, setShippingFeesDiscount] = useState(0);
 
   const navigate = useNavigate();
 
@@ -30,34 +31,43 @@ const CartPriceContainer = ({ cartData }: CartPriceContainerProps) => {
     // 로그인 시 선택상품금액 세팅
     if (user) {
       const checkedPrices = cartData
-        .filter((item) => checkedItems.includes(item.product._id))
+        .filter((item) => checkedItems.includes(item.product._id) && item.quantity !== 0)
         .map((item) => item.product.price * item.quantity);
-      const sum = checkedPrices.reduce((a: number, b: number) => a + b, 0);
+      const sum = checkedPrices.reduce((a, b) => a + b, 0);
       setcheckedPrice(sum);
       return;
     }
-    // 비로그인 시 선택상품금액 세팅
-    const checkedPrices = cartStorage
-      .filter((item) => checkedItems.includes(item.product._id))
-      .map((item) => item.product.price * item.quantity);
-    const sum = checkedPrices.reduce((a: number, b: number) => a + b, 0);
-    setcheckedPrice(sum);
+    if (!user) {
+      // 비로그인 시 선택상품금액 세팅
+      const checkedPrices = cartStorage
+        .filter((item) => checkedItems.includes(item.product._id) && item.quantity !== 0)
+        .map((item) => item.product.price * item.quantity);
+      const sum = checkedPrices.reduce((a, b) => a + b, 0);
+      setcheckedPrice(sum);
+    }
   }, [checkedItems, cartData, cartStorage]);
+
+  useEffect(() => {
+    if (checkedPrice <= 0 || checkedPrice >= FREE_SHIPPING_FEES) setShippingFeesDiscount(SHIPPING_FEES);
+    else setShippingFeesDiscount(0);
+  }, [checkedPrice]);
 
   return (
     <CartPriceContainerLayer>
       <PriceWrapper>
         <Price priceTitle="선택 상품 금액" number={checkedPrice} />
-        <Price priceTitle="배송비" number={checkedPrice > 0 && checkedPrice < FREE_SHIPPING_FEES ? SHIPPING_FEES : 0} />
+        <Price priceTitle="배송비" number={SHIPPING_FEES - shippingFeesDiscount} />
         <div>
-          <Price
-            priceTitle="총 결제 금액"
-            number={checkedPrice > 0 && checkedPrice < FREE_SHIPPING_FEES ? SHIPPING_FEES + checkedPrice : checkedPrice}
-          />
+          <Price priceTitle="총 결제 금액" number={checkedPrice + SHIPPING_FEES - shippingFeesDiscount} />
         </div>
       </PriceWrapper>
       <ButtonWrapper onClick={handleCreateOrder}>
-        <Button value="구매하기" size="lg" variant="point" />
+        <Button
+          value="구매하기"
+          size="lg"
+          variant="point"
+          disabled={!(checkedPrice + SHIPPING_FEES - shippingFeesDiscount)}
+        />
       </ButtonWrapper>
     </CartPriceContainerLayer>
   );

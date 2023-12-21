@@ -1,19 +1,20 @@
 import styled from "styled-components";
 import Button from "@/components/common/Button";
-import MypageLayoutContainer from "./MypageLayoutContainer";
 import Login from "@/components/login/Login";
 import ContentsTitle from "@/components/contentsTitle/ContentsTitle";
+import ContainerHeader from "@/components/mypage/ContainerHeader.";
 
 const MyProfileLoginContainer = () => {
   return (
-    <MypageLayoutContainer ContentsTitle="내 정보 변경">
+    <>
+      <ContainerHeader title="내 정보 변경" />
       <ContentsTitle title="내 정보 변경"></ContentsTitle>
-      <Login redirectAfterLogin="/mypage/profile/modify">
+      <Login isAdditionalAuth redirectAfterLogin="/mypage/profile/modify">
         <ButtonWrapper>
           <Button value="로그인" size="sm" variant="point" />
         </ButtonWrapper>
       </Login>
-    </MypageLayoutContainer>
+    </>
   );
 };
 

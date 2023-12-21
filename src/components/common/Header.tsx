@@ -1,67 +1,62 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { NavLink, useNavigate, useSearchParams, Link, useLocation } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import IconShoppingCart from "@/assets/icons/shoppingCart_40.svg?react";
-import IconSearchCart from "@/assets/icons/search_24.svg?react";
+// import IconSearchCart from "@/assets/icons/search_24.svg?react"; // 검색 기능
 import { getUserTypeState } from "@/recoil/selectors/loggedInUserSelector";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
-import { cartState } from "@/recoil/atoms/cartState";
-import getProductCategoryValueByCode from "@/recoil/selectors/codeSelector";
+import { cartState, cartCheckedItemState } from "@/recoil/atoms/cartState";
+import { getProductCategoryCodeByValue } from "@/recoil/selectors/codeSelector";
 
 // constants
 import { AUTH_TOKEN_KEY } from "@/constants/api";
-import { MANAGE_TYPE } from "@/constants/user";
 
 interface CategoryLinkProps {
   $isActive?: boolean;
-  key: string;
 }
 
 const Header = () => {
   const [cartCount, setCartCount] = useState(0);
-  const [isManager, setIsManager] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [searchParams] = useSearchParams();
   const userType = useRecoilValue(getUserTypeState);
   const [user, setUser] = useRecoilState(loggedInUserState);
   const [cartStorage, setCartStorage] = useRecoilState(cartState);
+  const setCheckedItem = useSetRecoilState(cartCheckedItemState);
 
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    // const code = myCode("티백");
-
     const authToken = localStorage.getItem(AUTH_TOKEN_KEY);
     if (authToken) {
       setIsLogin(true);
-      // TODO: 로그인한 사용자의 장바구니를 불러온다.
-      setCartCount(cartStorage.length);
-      if (MANAGE_TYPE.some((manageType) => userType === manageType)) {
-        setIsManager(true);
-      }
     } else {
       setIsLogin(false);
     }
   }, [user]);
 
+  useEffect(() => {
+    setCartCount(cartStorage.filter((item) => item.stock !== 0).length);
+  }, [cartStorage]);
+
   const logoutHandleClick = () => {
     localStorage.removeItem("cartChecked");
     localStorage.removeItem("token");
     localStorage.removeItem("refreshToken");
-    setIsManager(false);
     setCartCount(0);
     setIsLogin(false);
     setUser(null);
     setCartStorage([]);
+    setCheckedItem([]);
   };
 
   const categoryCode = {
-    티백: useRecoilValue(getProductCategoryValueByCode({ oneDepthValue: "pack", twoDepthValue: "티백" })),
-    잎차: useRecoilValue(getProductCategoryValueByCode({ oneDepthValue: "pack", twoDepthValue: "잎차" })),
-    분말: useRecoilValue(getProductCategoryValueByCode({ oneDepthValue: "pack", twoDepthValue: "분말" })),
-    "음료/원액": useRecoilValue(getProductCategoryValueByCode({ oneDepthValue: "pack", twoDepthValue: "음료-원액" })),
+    티백: useRecoilValue(getProductCategoryCodeByValue({ oneDepthValue: "pack", twoDepthValue: "티백" })),
+    잎차: useRecoilValue(getProductCategoryCodeByValue({ oneDepthValue: "pack", twoDepthValue: "잎차" })),
+    분말: useRecoilValue(getProductCategoryCodeByValue({ oneDepthValue: "pack", twoDepthValue: "분말" })),
+    "음료/원액": useRecoilValue(getProductCategoryCodeByValue({ oneDepthValue: "pack", twoDepthValue: "음료-원액" })),
   };
 
   const categoryList = {
@@ -91,9 +86,6 @@ const Header = () => {
         location: "/products",
         categoryParams: categoryCode["음료/원액"],
       },
-    ],
-    admin: [
-      { name: "관리자페이지", router: "/manage", isPublic: false, location: "/manage" }, // TODO: api 개발 완료 후 라우터 수정
     ],
   };
   const userControlList = {
@@ -128,25 +120,19 @@ const Header = () => {
               </ProductCategoryLink>
             ))}
           </div>
-          {isManager && (
-            <AdminCategoryStyle>
-              {categoryList.admin.map((category) => (
-                <AdminCategoryLink
-                  key={`${category.name}AdminCategoryLink`}
-                  $isActive={location.pathname === category.location}
-                >
-                  <Link key={`${category.name}Link`} to={category.router}>
-                    {category.name}
-                  </Link>
-                </AdminCategoryLink>
-              ))}
-            </AdminCategoryStyle>
-          )}
+          {userType === "admin" || userType === "seller" ? (
+            <>
+              <span style={{ color: "var(--color-gray-200)" }}>|</span>
+              <Link to={`/${userType}`} target="_blank">
+                {userType === "admin" ? "서비스관리" : "판매관리"}
+              </Link>
+            </>
+          ) : null}
         </CategoryWrapper>
-        <SearchWrapper>
+        {/* <SearchWrapper>
           <IconSearchCart />
           <input placeholder="원하는 상품을 검색하세요" type="text" />
-        </SearchWrapper>
+        </SearchWrapper> */}
         <UserControlWrapper>
           {isLogin
             ? userControlList.isLogin.map((userControl) => (
@@ -177,10 +163,6 @@ const ProductCategoryLink = styled.span<CategoryLinkProps>`
   color: ${({ $isActive }) => ($isActive ? "var(--color-main)" : "inherit")};
 `;
 
-const AdminCategoryLink = styled.span<CategoryLinkProps>`
-  color: ${({ $isActive }) => ($isActive ? "var(--color-main)" : "inherit")};
-`;
-
 const HeaderLayer = styled.div`
   border-bottom: 1px solid var(--color-gray-100);
   background-color: var(--color-white);
@@ -201,7 +183,9 @@ const HeaderWrapper = styled.div`
 
 const LogoWrapper = styled.div`
   min-width: 12rem;
-  font: var(--weight-bold) 4rem "maruburi";
+  font-size: 4rem;
+  font-weight: var(--weight-bold);
+  font-family: "Maruburi", "sans-serif";
   color: var(--color-main);
   cursor: pointer;
 `;
@@ -210,7 +194,8 @@ const CategoryWrapper = styled.div`
   align-items: center;
   padding: 0 2rem;
   min-width: 46rem;
-  font: var(--weight-bold) 1.6rem "suit";
+  font-size: 1.6rem;
+  font-weight: var(--weight-bold);
   a {
     padding: 0 1rem;
   }
@@ -221,35 +206,30 @@ const CategoryWrapper = styled.div`
   }
 `;
 
-const AdminCategoryStyle = styled.div`
-  display: flex;
-  align-items: center;
-  height: 1.5rem;
-  border-left: 2px solid var(--color-gray-500);
-`;
-
-const SearchWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid var(--color-sub-500);
-  border-radius: 5px;
-  height: 4rem;
-  svg {
-    padding: 0 0.5rem;
-  }
-  input {
-    min-width: 20rem;
-    outline: none;
-    border: none;
-  }
-`;
+// 검색 기능
+// const SearchWrapper = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   border: 1px solid var(--color-sub-500);
+//   border-radius: 5px;
+//   height: 4rem;
+//   svg {
+//     padding: 0 0.5rem;
+//   }
+//   input {
+//     min-width: 20rem;
+//     outline: none;
+//     border: none;
+//   }
+// `;
 
 const UserControlWrapper = styled.div`
   display: flex;
   justify-content: end;
   min-width: 17rem;
-  font: var(--weight-bold) 1.6rem "suit";
+  font-size: 1.6rem;
+  font-weight: var(--weight-bold);
   cursor: pointer;
   a {
     padding: 0 1rem;
@@ -271,7 +251,8 @@ const CartCountStyle = styled.span`
   height: 2.2rem;
   border-radius: 50%;
   background-color: var(--color-main);
-  font: var(--weight-bold) 1.3rem "suit";
+  font-size: 1.3rem;
+  font-weight: var(--weight-bold);
   color: var(--color-white);
 `;
 

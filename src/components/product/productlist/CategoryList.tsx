@@ -1,319 +1,81 @@
 import styled from "styled-components";
 import { useState } from "react";
+import { useRecoilState } from "recoil";
 import ToggleDefault from "@/assets/icons/toggleDefault.svg?react";
 import ToggleActive from "@/assets/icons/toggleActive.svg?react";
 import CategoryButtonList from "./CategoryButtonList";
+import { nestedCodeState } from "@/recoil/atoms/codeState";
+import { CATEGORY_CONTENT, CATEGORY_TITLE } from "@/constants/category";
+import useQueryParams from "@/hooks/useQueryParams";
 
 const CategoryList = () => {
-  const [toggle, setToggle] = useState(false);
+  const [codes] = useRecoilState(nestedCodeState);
 
-  const handleToggle = () => {
-    setToggle(!toggle);
+  const [isDecaf, setIsDecaf] = useState(false);
+
+  const handleIsDecaf = () => {
+    setIsDecaf(!isDecaf);
+    toggleDecafFilter(!isDecaf);
   };
 
-  // TODO: 하드코딩한 데이터 axios로 받아오기
-  const codes = [
-    {
-      sort: 1,
-      code: "PC02",
-      value: "종류",
-      depth: 1,
-      sub: [
-        {
-          sort: 1,
-          code: "PC0201",
-          value: "홍차",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 2,
-          code: "PC0203",
-          value: "녹차",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 3,
-          code: "PC0202",
-          value: "허브티",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 4,
-          code: "PC0201",
-          value: "우롱차",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 5,
-          code: "PC0201",
-          value: "보이차",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 6,
-          code: "PC0201",
-          value: "블랜드",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 7,
-          code: "PC0201",
-          value: "꽃차",
-          parent: "PC02",
-          depth: 2,
-        },
-      ],
-    },
-    {
-      sort: 2,
-      code: "PC01",
-      value: "맛",
-      depth: 1,
-      sub: [
-        {
-          sort: 1,
-          code: "PC0201",
-          value: "달콤한",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 2,
-          code: "PC0203",
-          value: "새콤한",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 3,
-          code: "PC0202",
-          value: "상쾌한",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 4,
-          code: "PC0202",
-          value: "상큼한",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 5,
-          code: "PC0202",
-          value: "씁쓸한",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 6,
-          code: "PC0202",
-          value: "고소한",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 7,
-          code: "PC0202",
-          value: "깔끔한",
-          parent: "PC02",
-          depth: 2,
-        },
-      ],
-    },
-    {
-      sort: 3,
-      code: "PC03",
-      value: "상황",
-      depth: 1,
-      sub: [
-        {
-          sort: 1,
-          code: "PC0201",
-          value: "겨울에_좋아요",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 2,
-          code: "PC0203",
-          value: "깔끔해요",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 3,
-          code: "PC0202",
-          value: "다이어트",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 4,
-          code: "PC0202",
-          value: "임산부에게_좋아요",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 5,
-          code: "PC0202",
-          value: "집중력_향상",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 6,
-          code: "PC0202",
-          value: "스트레스_해소",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 7,
-          code: "PC0202",
-          value: "입가심으로_좋아요",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 8,
-          code: "PC0202",
-          value: "크리스마스_에디션",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 9,
-          code: "PC0202",
-          value: "선물하기_좋아요",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 10,
-          code: "PC0202",
-          value: "라즈베리_초콜릿_향",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 11,
-          code: "PC0202",
-          value: "향긋해요",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 12,
-          code: "PC0202",
-          value: "잠들기전에_마시기_좋아요",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 13,
-          code: "PC0202",
-          value: "남녀노소_인기만점",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 14,
-          code: "PC0202",
-          value: "식전티",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 15,
-          code: "PC0202",
-          value: "소화에_좋아요",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 16,
-          code: "PC0202",
-          value: "냉침",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 17,
-          code: "PC0202",
-          value: "깊은맛",
-          parent: "PC02",
-          depth: 2,
-        },
-        {
-          sort: 18,
-          code: "PC0202",
-          value: "감기_탈출",
-          parent: "PC02",
-          depth: 2,
-        },
-      ],
-    },
-  ];
+  const { toggleDecafFilter } = useQueryParams("isDecaf");
 
   return (
-    <ProductListCategoryLayer>
-      <StyledTitle $fontSize="3.6rem" $fontWeight="var(--weight-bold)" $margin="0 0 40px 0">
+    <CategoryListLayer>
+      <StyledTitle $fontSize="3.6rem" $fontWeight="var(--weight-bold)" $margin="0 0 60px 0">
         전체상품
       </StyledTitle>
 
-      <ul>
-        <ProductListCategoryWrapper>
-          <StyledTitleDisplayContent>
-            <StyledTitle $fontSize="1.6rem" $fontWeight="var(--weight-semibold)">
-              디카페인
-            </StyledTitle>
-            <StyledToggleButton onClick={handleToggle}>
-              {toggle ? <ToggleActive /> : <ToggleDefault />}
-            </StyledToggleButton>
-          </StyledTitleDisplayContent>
-        </ProductListCategoryWrapper>
+      {codes?.productCategory.codes.map(
+        (item, index) =>
+          index > 0 &&
+          (item.sub ? (
+            <CategoryListWrapper key={item.sort}>
+              <StyledTitleDisplay>
+                <StyledTitle $fontSize="1.6rem" $fontWeight="var(--weight-semibold)">
+                  {CATEGORY_TITLE[item.value]}
+                </StyledTitle>
+                <StyledSubTitle>{CATEGORY_CONTENT[item.value]}</StyledSubTitle>
+              </StyledTitleDisplay>
 
-        {/* TODO: sort로 지정한 map의 key를 변수로 수정 */}
+              <StyledButtonList>
+                <CategoryButtonList subCategory={item.sub} value={item.value} />
+              </StyledButtonList>
+            </CategoryListWrapper>
+          ) : (
+            <CategoryListWrapper key={item.sort}>
+              <StyledDecafTitleDisplay>
+                <StyledTitle $fontSize="1.6rem" $fontWeight="var(--weight-semibold)">
+                  디카페인
+                </StyledTitle>
 
-        {codes.map((code) => (
-          <ProductListCategoryWrapper key={code.sort}>
-            <StyledTitleDisplay>
-              <StyledTitle $fontSize="1.6rem" $fontWeight="var(--weight-semibold)">
-                {code.value}
-              </StyledTitle>
-              <StyledSubTitle>좋아하는 맛을 선택해보세요.</StyledSubTitle>
-            </StyledTitleDisplay>
-
-            <CategoryButtonList value={code.value} subCategory={code.sub} />
-          </ProductListCategoryWrapper>
-        ))}
-      </ul>
-    </ProductListCategoryLayer>
+                <button onClick={handleIsDecaf}>{isDecaf ? <ToggleActive /> : <ToggleDefault />}</button>
+              </StyledDecafTitleDisplay>
+            </CategoryListWrapper>
+          )),
+      )}
+    </CategoryListLayer>
   );
 };
 
 export default CategoryList;
-
-const ProductListCategoryLayer = styled.div`
-  width: 40%;
+const CategoryListLayer = styled.div`
+  width: 360px;
   margin-right: 40px;
 `;
 
-const ProductListCategoryWrapper = styled.li`
+const CategoryListWrapper = styled.div`
   border-bottom: 1px solid var(--color-gray-100);
-  padding-bottom: 12px;
+`;
+
+const StyledTitleDisplay = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 30px 0;
 `;
 
 const StyledTitle = styled.h2<{ $fontSize: string; $fontWeight?: string; $margin?: string }>`
-  font-family: "Maruburi";
+  font-family: "Maruburi", "sans-serif";
 
   font-size: ${(props) => props.$fontSize};
   font-weight: ${(props) => props.$fontWeight};
@@ -329,18 +91,14 @@ const StyledSubTitle = styled.span`
   margin-left: 8px;
 `;
 
-const StyledTitleDisplay = styled.div`
-  display: flex;
-  align-items: center;
-
-  padding: 12px 0;
-`;
-
-const StyledTitleDisplayContent = styled(StyledTitleDisplay)`
+const StyledDecafTitleDisplay = styled(StyledTitleDisplay)`
   justify-content: space-between;
+  button {
+    border: none;
+    background: none;
+  }
 `;
 
-const StyledToggleButton = styled.button`
-  background: none;
-  border: none;
+const StyledButtonList = styled.div`
+  margin: 30px 0;
 `;

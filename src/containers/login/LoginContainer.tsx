@@ -5,7 +5,7 @@ import Login from "@/components/login/Login";
 
 const LoginContainer = () => {
   return (
-    <Login redirectAfterLogin="/">
+    <Login redirectAfterLogin={-1}>
       <ButtonWrapper>
         <div>
           <Button size="lg" value="로그인" variant="point" />

@@ -1,9 +1,33 @@
 import { InputType, InputProps } from "./input";
+import { MainImageType } from "./products";
 
+export interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
 // 마이페이지 > 주문 내역
 export interface ResponseDataMyOrderList {
   ok: number;
   item: MyOrderItem[] | [];
+  pagination: Pagination;
+}
+
+export interface ResponseDataMyOrderDetail {
+  ok: number;
+  item: MyOrderItem;
+}
+
+export interface ResponseDataMyOrderShippingState {
+  ok: number;
+  item: MyShippingData[];
+}
+export interface MyShippingData {
+  state: string;
+  products: {
+    state: string;
+  };
 }
 
 export interface MyOrderItem {
@@ -34,7 +58,7 @@ export interface Product {
   seller_id: number;
   state: string;
   name: string;
-  image: string;
+  image: MainImageType;
   quantity: number;
   price: number;
   reply_id: number;
@@ -87,4 +111,18 @@ export interface SignUpDataType {
   phoneNumber: string;
   address: string;
   addressDetail: string;
+}
+
+// API Props
+
+export interface getMyPageOrderListProps {
+  state?: string;
+  createdAt?: {
+    startDate: string;
+    endDate: string;
+  };
+  pagination?: {
+    page: number;
+    limit: number;
+  };
 }

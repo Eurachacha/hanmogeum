@@ -2,32 +2,69 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
-import MypageLayoutContainer from "./MypageLayoutContainer";
+import Pagination from "@mui/material/Pagination";
+import myPageApi from "@/apis/services/mypage";
+
+// COMPONENT
 import OrderItem from "@/components/mypage/OrderItem";
 import OrderItemContentsText from "@/components/mypage/OrderItemContentsText";
 import Button from "@/components/common/Button";
-import myPageApi from "@/apis/services/mypage";
-import { MyOrderItem } from "../../types/myPage";
-import GetDate from "@/utils/getDate";
-import truncateString from "@/utils/truncateString";
-
+import ContainerHeader from "@/components/mypage/ContainerHeader.";
+import Dropdown from "@/components/common/Dropdown";
+// ATOM
 import { flattenCodeState } from "@/recoil/atoms/codeState";
+// TYPE
+import { MyOrderItem, ResponseDataMyOrderList } from "@/types/myPage";
 import { FlattenData } from "@/types/code";
+// UTILITY
+import GetDate from "@/utils/getDate";
+import GetDateNow from "@/utils/getDateNow";
+import truncateString from "@/utils/truncateString";
 import getPriceFormat from "@/utils/getPriceFormat";
 
 const MyOrderListContainer = () => {
-  const maxTitleLength = 15;
-  const [orderList, setOrderList] = useState<MyOrderItem[]>([]);
+  const maxTitleLength = 26;
+  const [responseOrderList, setResponseOrderList] = useState<ResponseDataMyOrderList>();
+  const [dropDownIdx, setDropDownIdx] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_LIMIT = 4;
+
+  const dropDownList = ["3개월", "6개월", "1년", "3년"];
+  const dropDownData = [
+    { name: "3개월", type: "month", typeValue: -3 },
+    { name: "6개월", type: "month", typeValue: -6 },
+    { name: "1년", type: "year", typeValue: -1 },
+    { name: "3년", type: "year", typeValue: -3 },
+  ];
   const navigator = useNavigate();
 
   const flattenCodeDataState: FlattenData = useRecoilValue(flattenCodeState);
 
+  const getFilterStartAndEndDate = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const getDateNow = new GetDateNow(new Date());
+
+    const endDate = GetDateNow.formatDate(tomorrow) || "";
+    let startDate = "";
+    if (dropDownData[dropDownIdx].type === "month") {
+      startDate = getDateNow.getDateMonth(dropDownData[dropDownIdx].typeValue);
+    } else if (dropDownData[dropDownIdx].type === "year") {
+      startDate = getDateNow.getDateYear(dropDownData[dropDownIdx].typeValue);
+    }
+
+    return { startDate, endDate };
+  };
+
   const requestGetMyOrderList = async () => {
+    const { startDate, endDate } = getFilterStartAndEndDate();
     try {
-      const { data } = await myPageApi.getMyPageOrderList();
+      const { data } = await myPageApi.getMyPageOrderList({
+        pagination: { limit: PAGE_LIMIT, page: currentPage },
+        createdAt: { startDate, endDate },
+      });
       if (data.ok === 1) {
-        const orderItemList = data.item;
-        setOrderList(() => [...orderItemList]);
+        setResponseOrderList(data);
       }
     } catch (error) {
       console.error(error);
@@ -37,14 +74,12 @@ const MyOrderListContainer = () => {
   const orderItemToThumbnailData = (orderItem: MyOrderItem) => {
     const getData = new GetDate(orderItem.createdAt);
     let title = orderItem?.products[0]?.name;
-    if (title?.length > maxTitleLength) {
-      if (orderItem.products.length === 1) {
-        title = truncateString({ fullString: orderItem.products[0].name, maxLength: maxTitleLength });
-      } else {
-        title = `${truncateString({ fullString: orderItem.products[0].name, maxLength: maxTitleLength })} 외 ${
-          orderItem.products.length - 1
-        } 개`;
-      }
+    if (orderItem?.products[0]?.name?.length > maxTitleLength) {
+      title = truncateString({ fullString: orderItem.products[0].name, maxLength: maxTitleLength });
+    }
+
+    if (orderItem.products.length !== 1) {
+      title += ` 외 ${orderItem.products.length - 1} 건`;
     }
 
     const ShippingCode = orderItem.state || orderItem?.products[0]?.state;
@@ -55,7 +90,8 @@ const MyOrderListContainer = () => {
       title: title,
       date: getData.getDateYearMonthDay(),
       totalPrice: getPriceFormat({ price: orderItem.cost.total }),
-      imgURL: orderItem?.products[0]?.image,
+      imgURL: `${import.meta.env.VITE_API_BASE_URL}/${orderItem?.products[0].image.url}`,
+
       shippingState: shippingState,
     };
   };
@@ -66,19 +102,37 @@ const MyOrderListContainer = () => {
 
   useEffect(() => {
     requestGetMyOrderList();
-  }, []);
+  }, [dropDownIdx, currentPage]);
 
+  const paginationHandleChange = (event: React.ChangeEvent<unknown>, page: number) => {
+    event.preventDefault();
+    setCurrentPage(page);
+  };
   return (
     <MyOrderListContainerLayer>
-      <MypageLayoutContainer ContentsTitle="주문 내역">
-        <OrderItemListWrapper>
-          {orderList.map((order, idx) => {
+      <OrderItemListWrapper>
+        <ContainerHeader title="주문 내역">
+          <PeriodContentsWrapper>
+            <DropDownWrapper>
+              <Dropdown
+                onItemSelected={(index) => {
+                  setDropDownIdx(index);
+                }}
+                name="period"
+                list={dropDownList}
+              />
+            </DropDownWrapper>
+          </PeriodContentsWrapper>
+        </ContainerHeader>
+
+        <OrderListWrapper>
+          {responseOrderList?.item?.map((order, idx) => {
             const mapKey = `${idx}_${order._id}_${order.createdAt}`;
             const orderThumbnail = orderItemToThumbnailData(order);
             return (
               <OrderWrapper key={mapKey} onClick={() => detailButtonClickHandle(`${order._id}`)}>
                 <OrderInfoWrapper>
-                  <span>{orderThumbnail.id}</span>
+                  <span>주문 번호 {orderThumbnail.id}</span>
                   <span>{orderThumbnail.date}</span>
                 </OrderInfoWrapper>
                 <OrderItem productImageURL={orderThumbnail.imgURL}>
@@ -96,13 +150,33 @@ const MyOrderListContainer = () => {
               </OrderWrapper>
             );
           })}
-        </OrderItemListWrapper>
-      </MypageLayoutContainer>
+        </OrderListWrapper>
+      </OrderItemListWrapper>
+      <PaginationWrapper>
+        <Pagination
+          defaultPage={0}
+          page={currentPage}
+          onChange={paginationHandleChange}
+          count={responseOrderList?.pagination?.totalPages}
+          shape="rounded"
+          showFirstButton
+          showLastButton
+          size="large"
+        />
+      </PaginationWrapper>
     </MyOrderListContainerLayer>
   );
 };
 export default MyOrderListContainer;
+const PeriodContentsWrapper = styled.div`
+  margin-left: auto;
+`;
 
+const OrderListWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+`;
 const OrderWrapper = styled.div`
   cursor: pointer;
 `;
@@ -110,7 +184,7 @@ const OrderWrapper = styled.div`
 const OrderItemListWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4rem;
+  gap: 1.6rem;
 `;
 
 const MyOrderListContainerLayer = styled.div`
@@ -124,7 +198,7 @@ const OrderInfoWrapper = styled.div`
   gap: 1rem;
   font-size: 1.6rem;
   font-weight: var(--weight-bold);
-  margin-bottom: 1.6rem;
+  margin-bottom: 1.2rem;
   :first-child {
     padding-right: 1rem;
     border-right: 2px solid var(--color-gray-500);
@@ -147,4 +221,18 @@ const ItemRightContentsStyle = styled.div`
 const DetailButtonWrapper = styled.div`
   height: 5rem;
   width: 16rem;
+`;
+
+const DropDownWrapper = styled.div`
+  width: 14rem;
+  height: 4rem;
+  font-size: 1.4rem;
+  & > div {
+    height: 4rem;
+  }
+`;
+
+const PaginationWrapper = styled.div`
+  display: flex;
+  justify-content: center;
 `;

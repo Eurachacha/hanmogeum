@@ -2,6 +2,7 @@ import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useDaumPostcodePopup } from "react-daum-postcode";
+import { useNavigate } from "react-router-dom";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 /* types */
 import { InputType, InputProps } from "@/types/input";
@@ -11,7 +12,6 @@ import { RequestUpdateUser } from "@/types/users";
 import ItemInput from "@/components/itemInput/ItemInput";
 import Button from "@/components/common/Button";
 import Modal from "@/components/common/Modal";
-import MypageLayoutContainer from "./MypageLayoutContainer";
 /* util */
 import autoHyphenPhoneNumber from "@/utils/autoHyphenPhoneNumber";
 /* api */
@@ -19,6 +19,8 @@ import userApi from "@/apis/services/users";
 /* constants */
 import PASSWORD_MIN_LENGTH from "@/constants/signUpValidation";
 import ContentsTitle from "@/components/contentsTitle/ContentsTitle";
+import ContainerHeader from "@/components/mypage/ContainerHeader.";
+import additionalAuthState from "@/recoil/atoms/additionalAuthState";
 
 interface InputDataType {
   title: string;
@@ -57,13 +59,13 @@ const MyProfileEditContainer = () => {
   const loggedInUser = useRecoilValue(loggedInUserState);
 
   const [signUpData, setSignUpData] = useState<SignUpDataType>({
-    email: "",
+    email: loggedInUser?.email || "",
     password: "",
     passwordAgain: "",
-    name: "",
-    phoneNumber: "",
-    address: "",
-    addressDetail: "",
+    name: loggedInUser?.name || "",
+    phoneNumber: loggedInUser?.phone || "",
+    address: loggedInUser?.address || "",
+    addressDetail: loggedInUser?.detailAddress || "",
   });
   const [validationMessage, setValidationMessage] = useState({
     email: "",
@@ -71,12 +73,15 @@ const MyProfileEditContainer = () => {
     passwordAgain: "",
     phoneNumber: "",
   });
-  const [showModal, setShowModal] = useState({ isOpen: false, message: "" });
+  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState({ isOpen: false, message: "", goToPrevPage: false });
   const [isActiveSignUpButton, setIsActiveSignUpButton] = useState(false);
   const [isActiveEmailButton, setIsActiveEmailButton] = useState(true);
+  const isAdditionalLogined = useRecoilValue(additionalAuthState);
 
   // 수정하기 버튼을 눌렀을 때 발생하는 이벤트 함수입니다.
-  const signUpSubmitClick = async () => {
+  const signUpSubmitClick = async (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
     const onlyNumberPhone = signUpData.phoneNumber.replace(/[^0-9]/g, "");
     const updateData: RequestUpdateUser = {}; // 빈 객체로 초기화
     if (signUpData?.password) updateData.password = signUpData.password;
@@ -86,12 +91,13 @@ const MyProfileEditContainer = () => {
       updateData.address = `${signUpData.address} ${signUpData.addressDetail}`;
     try {
       await userApi.updateUserProfile(loggedInUser?._id || -1, updateData);
-      setShowModal({ isOpen: true, message: "수정이 완료되었습니다." });
+      setShowModal((prevState) => ({ ...prevState, isOpen: true, message: "수정이 완료되었습니다." }));
     } catch (error) {
       console.error(error);
       const signupError = error as SignUpErrorType;
       const errorMessage = signupError.message || "회원가입 중 문제가 발생했습니다.";
-      setShowModal({ isOpen: true, message: errorMessage });
+      setShowModal((prevState) => ({ ...prevState, isOpen: true, message: errorMessage }));
+
       setIsActiveEmailButton(true);
     }
   };
@@ -107,7 +113,8 @@ const MyProfileEditContainer = () => {
 
   // TODO: 커스텀 훅 사용하도록 수정
   const openPostcode = useDaumPostcodePopup();
-  const addressSearchHandleClick = () => {
+  const addressSearchHandleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
     openPostcode({
       onComplete: (data) => {
         // 주소 검색 결과 처리
@@ -122,9 +129,14 @@ const MyProfileEditContainer = () => {
     });
   };
 
-  // 가입하기 버튼을 눌렀을때 발생하는 이벤트 함수입니다.
-  const signUpFormHandleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const modalClickHandle = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    if (showModal.goToPrevPage) {
+      navigate(-1);
+    }
+    setShowModal((prevState) => {
+      return { ...prevState, isOpen: false };
+    });
   };
 
   // TODO: 다음 useEffect들 커스텀 훅으로 변경
@@ -174,6 +186,12 @@ const MyProfileEditContainer = () => {
     }
   }, [signUpData.phoneNumber]);
 
+  useEffect(() => {
+    if (!isAdditionalLogined) {
+      setShowModal({ isOpen: true, goToPrevPage: true, message: "추가 로그인이 필요합니다." });
+    }
+  }, []);
+
   // Input 데이터
   const itemInputData: InputDataType[] = [
     {
@@ -202,7 +220,7 @@ const MyProfileEditContainer = () => {
         type: "password",
         name: "password",
         required: true,
-        placeholder: "비밀번호를 입력해주세요.",
+        placeholder: "변경할 비밀번호를 입력해주세요.",
         onChange: inputHandleChange,
         value: signUpData.password,
         customStyle: inputCustomStyle,
@@ -295,43 +313,43 @@ const MyProfileEditContainer = () => {
   ];
 
   return (
-    <MypageLayoutContainer ContentsTitle="내 정보 변경">
+    <SignUpContainerLayer>
+      <ContainerHeader title="내 정보 변경" />
       <ContentsTitle title="내 정보 변경"></ContentsTitle>
+      <div>
+        <Modal isOpen={showModal.isOpen} iconRequired={false} message={showModal.message}>
+          <CheckModalButton type="submit" onClick={modalClickHandle}>
+            확인
+          </CheckModalButton>
+        </Modal>
+      </div>
+      <FromWrapper noValidate>
+        <InputListStyle>
+          {itemInputData.map((itemInput) => {
+            return (
+              <ItemWrapper key={`${itemInput.inputProps.name}_ItemWrapper`}>
+                <ItemInput
+                  key={`${itemInput.inputProps.name}_ItemInput`}
+                  title={itemInput.title}
+                  isTitleImportant={itemInput.isTitleImportant}
+                  showValidationMessage={itemInput.showValidationMessage}
+                  validationMessage={itemInput.validationMessage}
+                  includeButton={itemInput.includeButton}
+                  inputProps={{ ...itemInput.inputProps }}
+                  buttonValue={itemInput?.buttonValue}
+                  buttonOnClick={itemInput?.buttonOnClick}
+                  buttonDisabled={itemInput?.buttonDisabled}
+                />
+              </ItemWrapper>
+            );
+          })}
+        </InputListStyle>
 
-      <SignUpContainerLayer>
-        <div>
-          <Modal isOpen={showModal.isOpen} iconRequired={false} message={showModal.message}>
-            <CheckModalButton onClick={() => setShowModal({ isOpen: false, message: "" })}>확인</CheckModalButton>
-          </Modal>
-        </div>
-        <FromWrapper noValidate onSubmit={signUpFormHandleSubmit}>
-          <InputListStyle>
-            {itemInputData.map((itemInput) => {
-              return (
-                <ItemWrapper key={`${itemInput.inputProps.name}_ItemWrapper`}>
-                  <ItemInput
-                    key={`${itemInput.inputProps.name}_ItemInput`}
-                    title={itemInput.title}
-                    isTitleImportant={itemInput.isTitleImportant}
-                    showValidationMessage={itemInput.showValidationMessage}
-                    validationMessage={itemInput.validationMessage}
-                    includeButton={itemInput.includeButton}
-                    inputProps={{ ...itemInput.inputProps }}
-                    buttonValue={itemInput?.buttonValue}
-                    buttonOnClick={itemInput?.buttonOnClick}
-                    buttonDisabled={itemInput?.buttonDisabled}
-                  />
-                </ItemWrapper>
-              );
-            })}
-          </InputListStyle>
-
-          <ButtonWrapper onClick={signUpSubmitClick}>
-            <Button disabled={!isActiveSignUpButton} value="수정완료" size="lg" variant="point"></Button>
-          </ButtonWrapper>
-        </FromWrapper>
-      </SignUpContainerLayer>
-    </MypageLayoutContainer>
+        <ButtonWrapper onClick={signUpSubmitClick}>
+          <Button disabled={!isActiveSignUpButton} value="수정완료" size="lg" variant="point"></Button>
+        </ButtonWrapper>
+      </FromWrapper>
+    </SignUpContainerLayer>
   );
 };
 
@@ -365,10 +383,12 @@ const InputListStyle = styled.div`
   gap: 1rem;
 `;
 
-const CheckModalButton = styled.div`
+const CheckModalButton = styled.button`
   display: flex;
   justify-content: center;
   padding: 1.8rem 0 0.2rem 0;
+  background-color: inherit;
+  border: none;
   width: 100%;
   border-top: 1px solid var(--color-gray-100);
   color: var(--color-sub-500);

@@ -28,8 +28,8 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
       const response = await cartApi.checkStockStates(data);
       const { products } = response.data.item;
       products.forEach((item) => {
-        if (item.quantityInStock < item.quantity) {
-          const targetIndex = cartStorage.findIndex((e) => e.product._id === item._id);
+        const targetIndex = cartStorage.findIndex((e) => e.product._id === item._id);
+        if (item.quantityInStock !== cartStorage[targetIndex].stock) {
           const newCartStorageItem = { ...cartStorage[targetIndex], stock: item.quantityInStock };
           const newCartStorage = [...cartStorage];
           newCartStorage.splice(targetIndex, 1, newCartStorageItem);
@@ -57,8 +57,8 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
       setCheckedItems([]);
       return;
     }
-    if (user) setCheckedItems(cartData.map((item) => item.product_id));
-    else setCheckedItems(cartStorage.map((item) => item.product._id));
+    if (user) setCheckedItems(cartData.filter((item) => item.quantity !== 0).map((item) => item.product_id));
+    else setCheckedItems(cartStorage.filter((item) => item.quantity !== 0).map((item) => item.product._id));
   };
 
   // [선택삭제]
@@ -70,39 +70,68 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
       replaceCarts({ products: newCartSummary });
       return;
     }
-    // 비로그인 시
-    const newCartData = cartStorage.filter((item) => !checkedItems.includes(item.product._id));
-    setCartStorage(newCartData);
+    if (!user) {
+      // 비로그인 시
+      const newCartData = cartStorage.filter((item) => !checkedItems.includes(item.product._id));
+      setCartStorage(newCartData);
+      setCheckedItems(newCartData.filter((item) => item.stock !== 0).map((item) => item.product._id));
+    }
   };
 
+  // 첫 렌더링 시 재고체크
   useEffect(() => {
-    // 첫 렌더링 시 재고체크
     // - 로그인 시: cartData 내부 확인(CartItem 컴포넌트에서 체크)
     // - 비로그인 시 : cartStorage 데이터로 POST /carts/local 재고체크 요청
-    const targetData = cartStorage.map((item) => {
-      return {
-        _id: item.product._id,
-        quantity: item.quantity,
-      };
-    });
-    checkIsInStock(targetData);
-  }, []);
-
-  useEffect(() => {
-    // 첫 렌더링 또는 데이터 변경 시 checkedItems 배열에 모든 product_id 추가
-    if (user) setCheckedItems([...cartData].map((item) => item.product_id));
-    else {
-      setCheckedItems([...cartStorage].map((item) => item.product._id));
+    if (!user) {
+      const targetData = cartStorage.map((item) => {
+        return {
+          _id: item.product._id,
+          quantity: item.quantity,
+        };
+      });
+      checkIsInStock(targetData);
     }
-  }, [cartData, cartStorage]);
+  }, []);
 
   // 체크박스 상태가 바뀌면 모든 아이템이 체크되어있는지 확인
   useEffect(() => {
     // 로그인 시
-    if (user) setIsAllChecked(checkedItems.length > 0 && checkedItems.length === cartData.length);
+    if (user)
+      setIsAllChecked(
+        checkedItems.length > 0 &&
+          checkedItems.length ===
+            cartData.filter((item) => item.product.quantity - item.product.buyQuantity !== 0).length,
+      );
     // 비로그인 시
-    else setIsAllChecked(checkedItems.length > 0 && checkedItems.length === cartStorage.length);
+    else
+      setIsAllChecked(
+        checkedItems.length > 0 && checkedItems.length === cartStorage.filter((item) => item.stock !== 0).length,
+      );
   }, [checkedItems]);
+
+  useEffect(() => {
+    if (user) {
+      setCheckedItems(
+        cartData
+          .filter((item) => item.product.quantity - item.product.buyQuantity !== 0)
+          .map((item) => item.product_id),
+      );
+      // 장바구니 DB의 item 개수가 바뀌면 cartStorage에 DB상태 반영
+      const updatedCartStorage = cartData.map((item) => {
+        return {
+          quantity: item.quantity,
+          stock: item.product.quantity - item.product.buyQuantity,
+          product: {
+            _id: item.product._id,
+            name: item.product.name,
+            image: item.product.image,
+            price: item.product.price,
+          },
+        };
+      });
+      setCartStorage(updatedCartStorage);
+    }
+  }, [cartData.length]);
 
   return (
     <CartItemListContainerLayer>
@@ -113,7 +142,7 @@ const CartItemListContainer = ({ cartData, setCartData }: CartItemListContainerP
         </CheckAllButton>
         <DeleteCheckedButton onClick={handleDeleteChecked}>선택삭제</DeleteCheckedButton>
       </ItemsHeader>
-      <CartItemContainer cartData={user ? cartData : []} setCartData={setCartData} />
+      <CartItemContainer cartData={cartData} setCartData={setCartData} />
     </CartItemListContainerLayer>
   );
 };
