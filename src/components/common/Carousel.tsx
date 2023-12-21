@@ -1,5 +1,4 @@
 import Slider from "react-slick";
-import styled from "styled-components";
 import { useMemo } from "react";
 
 import "slick-carousel/slick/slick.css";
@@ -13,7 +12,7 @@ interface CarouselProps {
   className?: string;
 }
 
-const Carousel = ({ children, className, autoplay = true, speed = 400, loop = true }: CarouselProps) => {
+const Carousel = ({ children, autoplay = true, speed = 400, loop = true }: CarouselProps) => {
   const settings = useMemo(
     () => ({
       dots: true,
@@ -27,14 +26,6 @@ const Carousel = ({ children, className, autoplay = true, speed = 400, loop = tr
     [autoplay, loop, speed],
   );
 
-  return (
-    <CarouselLayer className={className}>
-      <Slider {...settings}>{children}</Slider>
-    </CarouselLayer>
-  );
+  return <Slider {...settings}>{children}</Slider>;
 };
 export default Carousel;
-
-const CarouselLayer = styled.section`
-  position: relative;
-`;

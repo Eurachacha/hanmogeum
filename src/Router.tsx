@@ -18,6 +18,8 @@ import MyOrderDetailContainer from "./containers/mypage/MyOrderDetailContainer";
 import MyProfileLoginContainer from "./containers/mypage/MyProfileLoginContainer";
 import MyProfileEditContainer from "./containers/mypage/MyProfileModifyContainer";
 import ProtectedRoute from "./components/route/ProtectedRoute";
+import RecommendPage from "./pages/RecommendPage";
+import TeaSurveyResult from "./pages/TeaSurveyResultPage";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +45,14 @@ const router = createBrowserRouter([
           {
             path: "/cart",
             element: <CartPage />,
+          },
+          {
+            path: "/recommend",
+            element: <RecommendPage />,
+          },
+          {
+            path: "/surveyresult",
+            element: <TeaSurveyResult />,
           },
         ],
       },
