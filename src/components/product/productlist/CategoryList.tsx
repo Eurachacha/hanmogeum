@@ -75,7 +75,7 @@ const StyledTitleDisplay = styled.div`
 `;
 
 const StyledTitle = styled.h2<{ $fontSize: string; $fontWeight?: string; $margin?: string }>`
-  font-family: "Maruburi";
+  font-family: "Maruburi", "sans-serif";
 
   font-size: ${(props) => props.$fontSize};
   font-weight: ${(props) => props.$fontWeight};

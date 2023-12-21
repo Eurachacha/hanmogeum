@@ -17,6 +17,5 @@ const ButtonContainer = styled.button`
   color: var(--color-gray-300);
   width: 30px;
   font-size: var(--size-20);
-  font-family: suit;
   cursor: pointer;
 `;
