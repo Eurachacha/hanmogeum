@@ -197,7 +197,7 @@ const OrderInfoWrapper = styled.div`
   display: flex;
   gap: 1rem;
   font-size: 1.6rem;
-  font-weight: var(--weight-bold);
+  font-weight: var(--weight-semibold);
   margin-bottom: 1.2rem;
   :first-child {
     padding-right: 1rem;
@@ -214,7 +214,7 @@ const ItemRightContentsStyle = styled.div`
   gap: 1rem;
   & > span {
     font-size: 2rem;
-    font-weight: bold;
+    font-weight: var(--weight-semibold);
   }
 `;
 

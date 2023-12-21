@@ -45,7 +45,7 @@ const ContentsWrapper = styled.div`
   width: 100%;
 `;
 const UserInfoWrapper = styled.div`
-  font-weight: var(--weight-bold);
+  font-weight: var(--weight-semibold);
   font-size: 1.6rem;
 `;
 const ButtonWrapper = styled.div``;

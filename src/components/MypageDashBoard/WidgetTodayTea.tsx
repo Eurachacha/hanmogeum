@@ -89,7 +89,7 @@ const WidgetTodayTeaLayer = styled.div`
 
 const TitleWrapper = styled.div`
   color: var(--color-sub-500);
-  font-weight: var(--weight-bold);
+  font-weight: var(--weight-semibold);
 `;
 
 const ContentsWrapper = styled.div`
@@ -120,10 +120,10 @@ const ProductInfoStyle = styled.div`
 `;
 const ProductNameStyle = styled.div`
   font-size: 1.4rem;
-  font-weight: var(--weight-bold);
+  font-weight: var(--weight-semibold);
 `;
 const ProductNameHashTag = styled.div`
   font-size: 1.2rem;
-  font-weight: var(--weight-regular);
+  font-weight: var(--weight-light);
   color: var(--color-gray-300);
 `;

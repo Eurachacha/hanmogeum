@@ -167,11 +167,12 @@ const InfoDataStyle = styled.div`
   height: 2.6rem;
 `;
 const InfoTitleStyle = styled.span`
-  font-weight: var(--weight-bold);
+  font-weight: var(----weight-regular);
+  color: var(--color-gray-300);
   min-width: 14rem;
 `;
 const InfoValueStyle = styled.span`
-  font-weight: var(--weight-regular);
+  font-weight: var(--weight-medium);
 `;
 const TotalCostWrapper = styled.div`
   width: 100%;
