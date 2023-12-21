@@ -56,6 +56,7 @@ const ShippingInfoContainer = ({ setShippingInfo }: ShippingInfoContainerProps) 
       <FormInput title="연락처">
         <Input
           type="tel"
+          maxLength={17}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleInputChange(event, setPhone)}
           value={autoHyphenPhoneNumber(phone)}
           placeholder="전화번호를 입력해주세요."
@@ -65,6 +66,7 @@ const ShippingInfoContainer = ({ setShippingInfo }: ShippingInfoContainerProps) 
       </FormInput>
       <FormInput title="주소" $marginBottom="4px">
         <Input
+          disabled
           type="text"
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleInputChange(event, setAddress)}
           value={address}
