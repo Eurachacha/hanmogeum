@@ -1,13 +1,13 @@
 import { publicInstance } from "../instance";
 import { ResponseProductsList, ResponseProductInfo } from "@/types/products";
 
-interface SortQueryObject {
+export interface SortQueryObject {
   price?: number;
   createdAt?: number;
   buyQuantity?: number;
 }
 
-interface FilterQueryObject {
+export interface FilterQueryObject {
   pack?: string[];
   taste?: string[];
   teaType?: string[];

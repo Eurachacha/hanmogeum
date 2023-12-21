@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
-import productsApi from "@/apis/services/products";
+import productsApi, { FilterQueryObject, SortQueryObject } from "@/apis/services/products";
 import ProductItemList from "@/components/product/productlist/ProductItemList";
 import ProductSortButtons from "@/components/product/productlist/ProductSortButtons";
-import { Extra, Product } from "@/types/products";
+import { Product } from "@/types/products";
 
 const ProductSortContainer = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -21,10 +21,10 @@ const ProductSortContainer = () => {
 
   const sortQuery = searchParams.get("sortType");
 
-  type filterObjectType = Partial<Extra>;
+  type filterObjectType = Partial<FilterQueryObject>;
   const filterObject: filterObjectType = {};
 
-  type sortObjectType = Partial<Product>;
+  type sortObjectType = Partial<SortQueryObject>;
   const sortObject: sortObjectType = {};
 
   if (packQuery) {
@@ -46,7 +46,7 @@ const ProductSortContainer = () => {
   if (sortQuery === "0") {
     sortObject.buyQuantity = -1;
   } else if (sortQuery === "1") {
-    sortObject.createdAt = "-1";
+    sortObject.createdAt = -1;
   } else if (sortQuery === "2") {
     sortObject.price = 1;
   } else {
