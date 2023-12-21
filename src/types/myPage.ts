@@ -19,6 +19,17 @@ export interface ResponseDataMyOrderDetail {
   item: MyOrderItem;
 }
 
+export interface ResponseDataMyOrderShippingState {
+  ok: number;
+  item: MyShippingData[];
+}
+export interface MyShippingData {
+  state: string;
+  products: {
+    state: string;
+  };
+}
+
 export interface MyOrderItem {
   _id: number;
   user_id: number;
