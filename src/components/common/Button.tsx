@@ -5,6 +5,7 @@ interface ButtonProps {
   disabled?: boolean;
   size: "sm" | "md" | "lg";
   variant: "point" | "sub" | "normal";
+  onClick?: () => void;
 }
 
 interface CustomProperties {
@@ -51,12 +52,12 @@ const VARIANTS = {
   `,
 };
 
-const Button = ({ value, disabled = false, size, variant }: ButtonProps) => {
+const Button = ({ value, disabled = false, size, variant, onClick }: ButtonProps) => {
   const sizeStyle = SIZES[size];
   const variantStyle = VARIANTS[variant];
 
   return (
-    <ButtonContainer disabled={disabled} $sizeStyle={sizeStyle} $variantStyle={variantStyle}>
+    <ButtonContainer disabled={disabled} $sizeStyle={sizeStyle} $variantStyle={variantStyle} onClick={onClick}>
       {value}
     </ButtonContainer>
   );
