@@ -46,20 +46,20 @@ const WidgetShipping = () => {
       </TitleWrapper>
       <ShippingInfoWrapper>
         <ShippingDataStyle>
-          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_PREPARING.CODE].value}</div>
-          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_PREPARING.CODE].name}</div>
+          <div>{(shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_PREPARING.CODE].value) || 0}</div>
+          <div>{ORDER_STATE.SHIPPING_PREPARING.NAME}</div>
         </ShippingDataStyle>
         <Separator>{">"}</Separator>
 
         <ShippingDataStyle>
-          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_PROGRESS.CODE].value}</div>
-          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_PROGRESS.CODE].name}</div>
+          <div>{(shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_PROGRESS.CODE].value) || 0}</div>
+          <div>{ORDER_STATE.SHIPPING_PROGRESS.NAME}</div>
         </ShippingDataStyle>
         <Separator>{">"}</Separator>
 
         <ShippingDataStyle>
-          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_FINISH.CODE].value}</div>
-          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_FINISH.CODE].name}</div>
+          <div>{(shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_FINISH.CODE].value) || 0}</div>
+          <div>{ORDER_STATE.SHIPPING_FINISH.NAME}</div>
         </ShippingDataStyle>
       </ShippingInfoWrapper>
     </DashBoardShippingLayout>
