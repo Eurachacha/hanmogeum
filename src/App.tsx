@@ -12,6 +12,7 @@ import { flattenCodeState, nestedCodeState } from "@/recoil/atoms/codeState";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import ScrollTop from "./components/common/ScrollTop";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => {
 
   return (
     <>
+      <ScrollTop />
       <Header />
       <ContentsWrapper>
         <QueryClientProvider client={queryClient}>
