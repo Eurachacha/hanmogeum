@@ -59,7 +59,7 @@ const validateForm = (values: Record<string, any>): Record<string, any> => {
 const PreviewImageField = ({ record }: { record: MainImageType }) => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   return (
-    <CardMedia component="img" image={baseUrl + record.url} alt="" sx={{ maxWidth: "200px", maxHeight: "150px" }} />
+    <CardMedia component="img" image={baseUrl + record.url} alt="" sx={{ maxWidth: "200px", maxHeight: "200px" }} />
   );
 };
 
