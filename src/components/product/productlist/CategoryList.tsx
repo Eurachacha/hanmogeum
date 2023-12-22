@@ -107,6 +107,7 @@ const StyledDecafTitleDisplay = styled(StyledTitleDisplay)`
   button {
     border: none;
     background: none;
+    cursor: pointer;
   }
 `;
 
