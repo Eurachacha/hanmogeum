@@ -20,7 +20,7 @@ const MainBanner = () => {
   return (
     <Carousel>
       {mainBannerData.map((image) => (
-        <MainBannerLayer>
+        <MainBannerLayer key={image.id}>
           <img src={image.bg} alt="" />
         </MainBannerLayer>
       ))}
