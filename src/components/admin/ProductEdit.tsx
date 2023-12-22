@@ -58,7 +58,9 @@ const validateForm = (values: Record<string, any>): Record<string, any> => {
 
 const PreviewImageField = ({ record }: { record: MainImageType }) => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
-  return <CardMedia component="img" image={baseUrl + record.url} alt="" sx={{ maxWidth: "10em", maxHeight: "15em" }} />;
+  return (
+    <CardMedia component="img" image={baseUrl + record.url} alt="" sx={{ maxWidth: "200px", maxHeight: "150px" }} />
+  );
 };
 
 const CustomImageField = ({
@@ -120,11 +122,11 @@ const ProductEdit = () => {
         <FileInput
           isRequired
           label="상품 이미지 등록"
-          source="mainImages[0]"
+          source="mainImages"
           placeholder={<p>여기를 클릭하거나 파일을 드래그하여 등록하세요.</p>}
           accept="image/*"
           sx={{
-            "& .RaFileInput-dropZone": { padding: "20px 0" },
+            "& .RaFileInput-dropZone": { padding: "20px 0", width: "50%" },
             "& .RaFileInput-removeButton button": { padding: 0, top: 0 },
             "& svg": { width: 20, height: 20 },
           }}
