@@ -184,6 +184,7 @@ const HeaderWrapper = styled.div`
   align-items: center;
   height: 8.2rem;
   max-width: 1280px;
+  margin: 0 auto;
 `;
 
 const LogoWrapper = styled.div`
