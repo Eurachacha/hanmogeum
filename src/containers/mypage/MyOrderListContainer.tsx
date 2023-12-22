@@ -1,8 +1,9 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import myPageApi from "@/apis/services/mypage";
 
 // COMPONENT
@@ -14,7 +15,7 @@ import Dropdown from "@/components/common/Dropdown";
 // ATOM
 import { flattenCodeState } from "@/recoil/atoms/codeState";
 // TYPE
-import { MyOrderItem, ResponseDataMyOrderList } from "@/types/myPage";
+import { MyOrderItem } from "@/types/myPage";
 import { FlattenData } from "@/types/code";
 // UTILITY
 import GetDate from "@/utils/getDate";
@@ -22,23 +23,18 @@ import GetDateNow from "@/utils/getDateNow";
 import truncateString from "@/utils/truncateString";
 import getPriceFormat from "@/utils/getPriceFormat";
 
+const dropDownList = ["3개월", "6개월", "1년", "3년"];
+const dropDownData = [
+  { name: "3개월", type: "month", typeValue: -3 },
+  { name: "6개월", type: "month", typeValue: -6 },
+  { name: "1년", type: "year", typeValue: -1 },
+  { name: "3년", type: "year", typeValue: -3 },
+];
 const MyOrderListContainer = () => {
   const maxTitleLength = 26;
-  const [responseOrderList, setResponseOrderList] = useState<ResponseDataMyOrderList>();
   const [dropDownIdx, setDropDownIdx] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const PAGE_LIMIT = 4;
-
-  const dropDownList = ["3개월", "6개월", "1년", "3년"];
-  const dropDownData = [
-    { name: "3개월", type: "month", typeValue: -3 },
-    { name: "6개월", type: "month", typeValue: -6 },
-    { name: "1년", type: "year", typeValue: -1 },
-    { name: "3년", type: "year", typeValue: -3 },
-  ];
-  const navigator = useNavigate();
-
-  const flattenCodeDataState: FlattenData = useRecoilValue(flattenCodeState);
+  const PAGE_LIMIT = 30;
 
   const getFilterStartAndEndDate = () => {
     const tomorrow = new Date();
@@ -56,20 +52,25 @@ const MyOrderListContainer = () => {
     return { startDate, endDate };
   };
 
-  const requestGetMyOrderList = async () => {
-    const { startDate, endDate } = getFilterStartAndEndDate();
-    try {
-      const { data } = await myPageApi.getMyPageOrderList({
+  const { data, error } = useSuspenseQuery({
+    queryKey: ["mypage", "orderList", currentPage],
+    queryFn: () =>
+      myPageApi.getMyPageOrderList({
         pagination: { limit: PAGE_LIMIT, page: currentPage },
-        createdAt: { startDate, endDate },
-      });
-      if (data.ok === 1) {
-        setResponseOrderList(data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+        createdAt: getFilterStartAndEndDate(),
+      }),
+    select: (res) => res.data,
+    gcTime: 1000 * 60, // 기본 5분
+    staleTime: 1000 * 10, // 기본 0
+    refetchOnWindowFocus: "always",
+  });
+
+  const responseOrderList = data;
+  if (error) console.error("Query Error: ", error);
+
+  const navigator = useNavigate();
+
+  const flattenCodeDataState: FlattenData = useRecoilValue(flattenCodeState);
 
   const orderItemToThumbnailData = (orderItem: MyOrderItem) => {
     const getData = new GetDate(orderItem.createdAt);
@@ -99,10 +100,6 @@ const MyOrderListContainer = () => {
   const detailButtonClickHandle = (orderId: string) => {
     navigator(`/mypage/orders/${orderId}`);
   };
-
-  useEffect(() => {
-    requestGetMyOrderList();
-  }, [dropDownIdx, currentPage]);
 
   const paginationHandleChange = (event: React.ChangeEvent<unknown>, page: number) => {
     event.preventDefault();
@@ -154,7 +151,7 @@ const MyOrderListContainer = () => {
       </OrderItemListWrapper>
       <PaginationWrapper>
         <Pagination
-          defaultPage={0}
+          defaultPage={1}
           page={currentPage}
           onChange={paginationHandleChange}
           count={responseOrderList?.pagination?.totalPages}
