@@ -113,4 +113,12 @@
  ┗ 📜main.tsx
 ```
 
+### 🏃 서버 실행 방법
+
+```shell
+git clone
+npm install
+npm run dev
+```
+
 #### [👀 한모금 프로젝트 더 알아보기!](https://github.com/Eurachacha/hanmogeum/wiki)
