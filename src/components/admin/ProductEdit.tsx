@@ -36,17 +36,17 @@ const validateForm = (values: Record<string, any>): Record<string, any> => {
   if (!values.mainImages) {
     errors.mainImages = "이미지를 등록해주세요.";
   }
-  if (!values.extra.pack || values.extra.pack.length <= 0) {
-    errors.extra.pack = "포장 형태를 선택해주세요.";
+  if (!values.extra.pack) {
+    errors["extra.pack"] = "포장 형태를 선택해주세요.";
   }
-  if (!values.extra.teaType || values.extra.teaType.length <= 0) {
-    errors.extra.teaType = "차 종류를 선택해주세요.";
+  if (!values.extra.teaType) {
+    errors["extra.teaType"] = "차 종류를 선택해주세요.";
   }
   if (!values.extra.taste || values.extra.taste.length <= 0) {
-    errors.extra.taste = "맛을 선택해주세요.";
+    errors["extra.taste"] = "맛을 선택해주세요.";
   }
   if (!values.extra.hashTag || values.extra.hashTag.length <= 0) {
-    errors.extra.hashTag = "상황을 선택해주세요.";
+    errors["extra.hashTag"] = "상황을 선택해주세요.";
   } else if (values.extra.hashTag.length > 5) {
     errors.extra.hashTag = "최대 5개까지 등록 가능합니다.";
   }
