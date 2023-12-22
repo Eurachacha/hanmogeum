@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import ToggleDefault from "@/assets/icons/toggleDefault.svg?react";
 import ToggleActive from "@/assets/icons/toggleActive.svg?react";
 import CategoryButtonList from "./CategoryButtonList";
-import { nestedCodeState } from "@/recoil/atoms/codeState";
+import { flattenCodeState, nestedCodeState } from "@/recoil/atoms/codeState";
 import { CATEGORY_CONTENT, CATEGORY_TITLE } from "@/constants/category";
 import useQueryParams from "@/hooks/useQueryParams";
 
@@ -14,6 +14,7 @@ const CategoryList = () => {
 
   const searchParams = new URLSearchParams(queryString);
   const isDecafQuery = searchParams.get("isDecaf");
+  const packQuery = searchParams.get("pack");
 
   const { toggleDecafFilter } = useQueryParams("isDecaf");
   const isDecaf = isDecafQuery ? Boolean(isDecafQuery) : false;
@@ -28,10 +29,12 @@ const CategoryList = () => {
     }
   };
 
+  const flattenCodes = useRecoilState(flattenCodeState);
+
   return (
     <CategoryListLayer>
-      <StyledTitle $fontSize="3.6rem" $fontWeight="var(--weight-bold)" $margin="0 0 60px 0">
-        전체상품
+      <StyledTitle $fontSize="2.4rem" $fontWeight="var(--weight-bold)" $margin="0 0 60px 0">
+        {packQuery ? flattenCodes[0][packQuery].value : "모든상품"}
       </StyledTitle>
 
       {codes?.productCategory.codes.map(
