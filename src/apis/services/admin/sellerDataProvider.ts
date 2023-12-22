@@ -105,6 +105,7 @@ const sellerDataProvider = withLifecycleCallbacks(
           const { data: fileResponseData } = await fileUploadInstance.post<ResponseAttachFile>("/files", formData);
           const { file } = fileResponseData;
 
+          if (!file) return params;
           const updatedData = {
             id: params.id,
             data: {
@@ -121,8 +122,6 @@ const sellerDataProvider = withLifecycleCallbacks(
 
           return errorResponse;
         }
-        // }
-        return params;
       },
     },
   ],
