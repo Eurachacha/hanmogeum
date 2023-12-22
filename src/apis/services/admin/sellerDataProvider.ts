@@ -35,9 +35,14 @@ const sellerDataProvider = withLifecycleCallbacks(
       return { data: { ...data, id: data._id } };
     },
     update: async (resource, params) => {
-      const response = await privateInstance.patch(`/seller/${resource}/${params.id}`, {
-        state: params.data.state,
-      });
+      const response = await privateInstance.patch(
+        `/seller/${resource}/${params.id}`,
+        resource === "orders"
+          ? {
+              state: params.data.state,
+            }
+          : params.data,
+      );
       const { item } = response.data;
       return { data: item };
     },
@@ -83,6 +88,34 @@ const sellerDataProvider = withLifecycleCallbacks(
             },
           },
         };
+      },
+      beforeUpdate: async ({ id, data, previousData }: UpdateParams<ProductParams>) => {
+        if (data.mainImages && previousData.mainImages[0].title !== data.mainImages[0].title) {
+          const formData = createImageFormData({ id, data, previousData });
+
+          try {
+            const { data: fileResponseData } = await fileUploadInstance.post<ResponseAttachFile>("/files", formData);
+            const { file } = fileResponseData;
+
+            const updatedData = {
+              id,
+              data: { ...data, mainImages: [{ url: file.path, fileName: file.name, orgName: file.originalname }] },
+              previousData,
+            };
+
+            return updatedData;
+          } catch (error) {
+            console.error("이미지 업로드 중 오류 발생", error);
+            const errorResponse: UpdateParams<ProductParams> = {
+              id,
+              data,
+              previousData,
+            };
+
+            return errorResponse;
+          }
+        }
+        return { id, data, previousData };
       },
     },
   ],
