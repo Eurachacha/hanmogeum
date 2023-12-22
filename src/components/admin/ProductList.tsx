@@ -30,6 +30,7 @@ const ProductList = () => {
           textAlign: "end",
         },
       }}
+      exporter={false}
     >
       <Datagrid rowClick="edit">
         <TextField source="_id" label="상품ID" sortable={false} />
