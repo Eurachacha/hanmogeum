@@ -27,6 +27,7 @@ const OrderList = () => {
           textAlign: "end",
         },
       }}
+      exporter={false}
     >
       <Datagrid rowClick="edit">
         <TextField source="_id" label="주문번호" sortable={false} />
