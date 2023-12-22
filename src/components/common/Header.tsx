@@ -101,61 +101,59 @@ const Header = () => {
 
   return (
     <HeaderLayer>
-      <HeaderWrapper>
-        <LogoWrapper onClick={() => navigate("/")}>
-          <span>한모금</span>
-        </LogoWrapper>
-        <CategoryWrapper>
-          <div>
-            {categoryList.common.map((category) => (
-              <ProductCategoryLink
-                key={`${category.name}Link`}
-                $isActive={
-                  location.pathname === category.location && searchParams.get("pack") === category.categoryParams
-                }
-              >
-                <Link key={`${category.name}Link`} to={category.router}>
-                  {category.name}
-                </Link>
-              </ProductCategoryLink>
-            ))}
-          </div>
-          {userType === "admin" || userType === "seller" ? (
-            <>
-              <span style={{ color: "var(--color-gray-200)" }}>|</span>
-              <Link to={`/${userType}`} target="_blank">
-                {userType === "admin" ? "서비스관리" : "판매관리"}
+      <LogoWrapper onClick={() => navigate("/")}>
+        <span>한모금</span>
+      </LogoWrapper>
+      <CategoryWrapper>
+        <div>
+          {categoryList.common.map((category) => (
+            <ProductCategoryLink
+              key={`${category.name}Link`}
+              $isActive={
+                location.pathname === category.location && searchParams.get("pack") === category.categoryParams
+              }
+            >
+              <Link key={`${category.name}Link`} to={category.router}>
+                {category.name}
               </Link>
-            </>
-          ) : null}
-        </CategoryWrapper>
-        {/* <SearchWrapper>
+            </ProductCategoryLink>
+          ))}
+        </div>
+        {userType === "admin" || userType === "seller" ? (
+          <>
+            <span style={{ color: "var(--color-gray-200)" }}>|</span>
+            <Link to={`/${userType}`} target="_blank">
+              {userType === "admin" ? "서비스관리" : "판매관리"}
+            </Link>
+          </>
+        ) : null}
+      </CategoryWrapper>
+      {/* <SearchWrapper>
           <IconSearchCart />
           <input placeholder="원하는 상품을 검색하세요" type="text" />
         </SearchWrapper> */}
-        <UserControlWrapper>
-          {isLogin
-            ? userControlList.isLogin.map((userControl) => (
-                <NavLink key={userControl.name} to={userControl.router} onClick={userControl.onClick}>
-                  {userControl.name}
-                </NavLink>
-              ))
-            : userControlList.isLogout.map((userControl) => (
-                <NavLink key={userControl.name} to={userControl.router}>
-                  {userControl.name}
-                </NavLink>
-              ))}
-        </UserControlWrapper>
-        <ScrollRestoration />
-        <CartWrapper>
-          <NavLink to="/cart">
-            <IconShoppingCart />
-            <CartCountStyle>
-              <span>{cartCount}</span>
-            </CartCountStyle>
-          </NavLink>
-        </CartWrapper>
-      </HeaderWrapper>
+      <UserControlWrapper>
+        {isLogin
+          ? userControlList.isLogin.map((userControl) => (
+              <NavLink key={userControl.name} to={userControl.router} onClick={userControl.onClick}>
+                {userControl.name}
+              </NavLink>
+            ))
+          : userControlList.isLogout.map((userControl) => (
+              <NavLink key={userControl.name} to={userControl.router}>
+                {userControl.name}
+              </NavLink>
+            ))}
+      </UserControlWrapper>
+      <ScrollRestoration />
+      <CartWrapper>
+        <NavLink to="/cart">
+          <IconShoppingCart />
+          <CartCountStyle>
+            <span>{cartCount}</span>
+          </CartCountStyle>
+        </NavLink>
+      </CartWrapper>
     </HeaderLayer>
   );
 };
@@ -165,24 +163,23 @@ const ProductCategoryLink = styled.span<CategoryLinkProps>`
 `;
 
 const HeaderLayer = styled.div`
-  position: sticky;
   top: 0;
+  display: flex;
+  align-items: center;
+  max-width: 1280px;
+  height: 8.2rem;
+  width: 100%;
+
   border-bottom: 1px solid var(--color-gray-100);
   background-color: var(--color-white);
   a {
     color: inherit;
     text-decoration: none;
   }
+  position: sticky;
   box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 4px 0px;
-`;
-
-const HeaderWrapper = styled.div`
-  display: flex;
-  height: 8.2rem;
-  align-items: center;
-  margin: 0 auto;
-  max-width: 1280px;
-  /* overflow: hidden; */
+  overflow-x: scroll;
+  z-index: 100;
 `;
 
 const LogoWrapper = styled.div`
