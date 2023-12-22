@@ -9,7 +9,25 @@ const OrderList = () => {
   const flattenCodes = useRecoilValue(flattenCodeState);
 
   return (
-    <List resource="orders">
+    <List
+      resource="orders"
+      sx={{
+        "& th, td ": {
+          fontSize: "1.4rem",
+          textAlign: "center",
+        },
+        "& th": {
+          padding: "12px 0",
+          fontWeight: 600,
+        },
+        "td > span": {
+          fontSize: "1.2rem",
+        },
+        "& td.column-price > span": {
+          textAlign: "end",
+        },
+      }}
+    >
       <Datagrid rowClick="edit">
         <TextField source="_id" label="주문번호" sortable={false} />
         <TextField source="user_id" label="주문자ID" sortable={false} />
