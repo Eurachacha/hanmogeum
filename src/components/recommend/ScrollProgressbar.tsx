@@ -48,7 +48,7 @@ const ScrollProgressbarLayer = styled.div`
   margin: 0 auto;
 
   position: sticky;
-  top: 0;
+  top: 8.4rem;
   left: 0;
   right: 0;
 `;
