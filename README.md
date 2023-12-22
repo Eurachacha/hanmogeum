@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://bit.ly/hanmogeum_logo" alt="hanmogeum-logo" width="220" height="220">
+    <img src="https://github.com/Eurachacha/hanmogeum/assets/36308113/d738a6d3-c052-4b21-a425-2b87ebe63144.png" alt="hanmogeum-logo" width="220" height="220">
 </p>
 
 <div align="center">
