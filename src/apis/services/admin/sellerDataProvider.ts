@@ -94,6 +94,8 @@ const sellerDataProvider = withLifecycleCallbacks(
           id: params.id,
           data: {
             ...params.data,
+            pack: [params.data.extra.pack],
+            teaType: [params.data.extra.teaType],
             mainImages: [params.data.mainImages],
           },
           previousData: params.previousData,
