@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useLocation } from "react-router-dom";
 import ToggleDefault from "@/assets/icons/toggleDefault.svg?react";
 import ToggleActive from "@/assets/icons/toggleActive.svg?react";
@@ -29,12 +29,12 @@ const CategoryList = () => {
     }
   };
 
-  const flattenCodes = useRecoilState(flattenCodeState);
+  const flattenCodes = useRecoilValue(flattenCodeState);
 
   return (
     <CategoryListLayer>
       <StyledTitle $fontSize="2.4rem" $fontWeight="var(--weight-bold)" $margin="0 0 60px 0">
-        {packQuery ? flattenCodes[0][packQuery].value : "모든상품"}
+        {packQuery ? flattenCodes[packQuery]?.value : "모든상품"}
       </StyledTitle>
 
       {codes?.productCategory.codes.map(
