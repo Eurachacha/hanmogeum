@@ -9,6 +9,7 @@ export interface ProductParams {
   id: number;
   price: number;
   show: boolean;
+  active: boolean;
   name: string;
   quantity: number;
   buyQuantity: number;

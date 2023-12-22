@@ -1,8 +1,8 @@
-import { CreateParams, UpdateParams, withLifecycleCallbacks } from "react-admin";
+import { withLifecycleCallbacks } from "react-admin";
 import { fileUploadInstance, privateInstance } from "@/apis/instance";
-import { ResponseAttachFile, ProductParams } from "@/types/file";
+import { ResponseAttachFile } from "@/types/file";
 
-const createImageFormData = (params: CreateParams<ProductParams> | UpdateParams<ProductParams>) => {
+const createImageFormData = (params: any) => {
   const formData = new FormData();
   if (params.data.mainImages && params.data.mainImages?.length > 0) {
     formData.append("attach", params.data.mainImages[0].rawFile);
@@ -35,9 +35,14 @@ const sellerDataProvider = withLifecycleCallbacks(
       return { data: { ...data, id: data._id } };
     },
     update: async (resource, params) => {
-      const response = await privateInstance.patch(`/seller/${resource}/${params.id}`, {
-        state: params.data.state,
-      });
+      const response = await privateInstance.patch(
+        `/seller/${resource}/${params.id}`,
+        resource === "orders"
+          ? {
+              state: params.data.state,
+            }
+          : params.data,
+      );
       const { item } = response.data;
       return { data: item };
     },
@@ -83,6 +88,39 @@ const sellerDataProvider = withLifecycleCallbacks(
             },
           },
         };
+      },
+      beforeUpdate: async (params) => {
+        const newData = {
+          id: params.id,
+          data: {
+            ...params.data,
+            mainImages: [params.data.mainImages],
+          },
+          previousData: params.previousData,
+        };
+        const formData = createImageFormData(newData);
+        try {
+          const { data: fileResponseData } = await fileUploadInstance.post<ResponseAttachFile>("/files", formData);
+          const { file } = fileResponseData;
+
+          const updatedData = {
+            id: params.id,
+            data: {
+              ...params.data,
+              mainImages: [{ url: file.path, fileName: file.name, orgName: file.originalname }],
+            },
+            previousData: params.previousData,
+          };
+
+          return updatedData;
+        } catch (error) {
+          console.error("이미지 업로드 중 오류 발생", error);
+          const errorResponse = params;
+
+          return errorResponse;
+        }
+        // }
+        return params;
       },
     },
   ],

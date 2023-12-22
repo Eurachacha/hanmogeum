@@ -35,7 +35,7 @@ const ContentsTitleLayer = styled.div<{ $customStyle: React.CSSProperties }>`
   color: var(--color-sub-500);
   h1 {
     font-size: 3.6rem;
-    font-weight: var(--weight-extrabold);
+    font-weight: var(--weight-bold);
   }
   ${(props) => props.$customStyle && { ...props.$customStyle }}
 `;

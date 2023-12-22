@@ -46,20 +46,20 @@ const WidgetShipping = () => {
       </TitleWrapper>
       <ShippingInfoWrapper>
         <ShippingDataStyle>
-          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_PREPARING.CODE].value}</div>
-          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_PREPARING.CODE].name}</div>
+          <div>{(shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_PREPARING.CODE].value) || 0}</div>
+          <div>{ORDER_STATE.SHIPPING_PREPARING.NAME}</div>
         </ShippingDataStyle>
         <Separator>{">"}</Separator>
 
         <ShippingDataStyle>
-          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_PROGRESS.CODE].value}</div>
-          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_PROGRESS.CODE].name}</div>
+          <div>{(shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_PROGRESS.CODE].value) || 0}</div>
+          <div>{ORDER_STATE.SHIPPING_PROGRESS.NAME}</div>
         </ShippingDataStyle>
         <Separator>{">"}</Separator>
 
         <ShippingDataStyle>
-          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_FINISH.CODE].value}</div>
-          <div>{shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_FINISH.CODE].name}</div>
+          <div>{(shippingInfo && shippingInfo[ORDER_STATE.SHIPPING_FINISH.CODE].value) || 0}</div>
+          <div>{ORDER_STATE.SHIPPING_FINISH.NAME}</div>
         </ShippingDataStyle>
       </ShippingInfoWrapper>
     </DashBoardShippingLayout>
@@ -88,14 +88,15 @@ const ShippingDataStyle = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   min-width: 6.5rem;
   flex-wrap: wrap;
-  font-weight: var(--weight-bold);
+  font-weight: var(--weight-semibold);
   gap: 1rem;
   & > div:first-child {
     font-size: 4rem;
-    font-weight: var(--weight-heavy);
+    font-weight: 700;
+    font-weight: var(--weight-bold);
     color: var(--color-gray-300);
   }
 `;
@@ -103,5 +104,6 @@ const ShippingDataStyle = styled.div`
 const Separator = styled.div`
   font-size: 2rem;
   color: var(--color-gray-200);
+  font-family: sans-serif;
   font-weight: var(--weight-heavy);
 `;

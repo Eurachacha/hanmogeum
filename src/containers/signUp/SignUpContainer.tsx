@@ -297,7 +297,7 @@ const SignUpContainer = () => {
       validationMessage: validationMessage.phoneNumber,
       inputProps: {
         type: "tel",
-        maxLength: 13,
+        maxLength: 17,
         name: "phoneNumber",
         placeholder: "숫자만 입력해주세요.",
         onChange: inputHandleChange,

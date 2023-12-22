@@ -29,7 +29,8 @@ const NavigationMenuLayer = styled.div`
 `;
 const TitleWrapper = styled.h2`
   font-size: 2.8rem;
-  font-weight: var(--weight-bold);
+  font-weight: var(--weight-semibold);
+  padding-left: 0.5rem;
   height: 5rem;
 `;
 const ButtonStyle = styled.div`
@@ -39,8 +40,8 @@ const ButtonStyle = styled.div`
   height: 5.4rem;
   width: 16rem;
   border: 1px solid var(--color-gray-200);
-  font-weight: var(--weight-bold);
-  color: black;
+  font-weight: var(--weight-semibold);
+  color: -var(--color-gray-500);
 `;
 
 const NavStyle = styled(NavLink)`

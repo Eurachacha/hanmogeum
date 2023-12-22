@@ -83,9 +83,10 @@ const ProductItem = ({ product }: ProductItemProps) => {
             </StyledPrice>
           </StyledItemText>
           <StyledHashTag>
-            {hashTagValue.map((hashTag) => (
-              <span>#{hashTag}</span>
-            ))}
+            {hashTagValue.map((hashTag, index) => {
+              const hashTagKey = index.toString();
+              return <span key={hashTagKey}>#{hashTag}</span>;
+            })}
           </StyledHashTag>
         </ul>
       </ProductItemContentWrapper>

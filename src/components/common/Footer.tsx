@@ -31,7 +31,7 @@ const FooterLayer = styled.div`
   align-items: center;
   font-size: 1.3rem;
   font-weight: var(--weight-thin);
-  /* overflow: hidden; */
+  overflow-x: scroll;
   border-top: 1px solid var(--color-gray-100);
   margin-top: 10rem;
 `;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import productsApi, { FilterQueryObject, SortQueryObject } from "@/apis/services/products";
 import ProductItemList from "@/components/product/productlist/ProductItemList";
@@ -12,7 +12,7 @@ const ProductSortContainer = () => {
   const location = useLocation();
   const queryString = location.search;
 
-  const [searchParams] = useSearchParams(queryString);
+  const searchParams = new URLSearchParams(queryString);
   const packQuery = searchParams.get("pack")?.split(",");
   const teaTypeQuery = searchParams.get("teaType")?.split(",");
   const tasteQuery = searchParams.get("taste")?.split(",");

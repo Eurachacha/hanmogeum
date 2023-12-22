@@ -27,8 +27,8 @@ const MainProductsListLayer = styled.div`
 `;
 
 const StyledMainProductsListText = styled.div`
-  /* text-align: center; */
-  padding: 18px 0;
+  text-align: center;
+  padding: 40px 0;
 
   h2 {
     font-size: 2.8rem;

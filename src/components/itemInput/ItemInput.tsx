@@ -88,7 +88,7 @@ const ItemInputWrapper = styled.div<{ $itemInputCustomStyle: React.CSSProperties
 const TitleWrapper = styled.span<{ $titleCustomStyle: React.CSSProperties }>`
   display: flex;
 
-  font-weight: var(--weight-extrabold);
+  font-weight: var(--weight-bold);
   min-width: 10rem;
   ${(props) => props.$titleCustomStyle && { ...props.$titleCustomStyle }}
 `;

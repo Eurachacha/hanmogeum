@@ -269,7 +269,7 @@ const MyProfileEditContainer = () => {
       validationMessage: validationMessage.phoneNumber,
       inputProps: {
         type: "tel",
-        maxLength: 13,
+        maxLength: 17,
         name: "phoneNumber",
         placeholder: "숫자만 입력해주세요.",
         onChange: inputHandleChange,
@@ -316,13 +316,13 @@ const MyProfileEditContainer = () => {
     <SignUpContainerLayer>
       <ContainerHeader title="내 정보 변경" />
       <ContentsTitle title="내 정보 변경"></ContentsTitle>
-      <div>
+      <ModalWrapper>
         <Modal isOpen={showModal.isOpen} iconRequired={false} message={showModal.message}>
           <CheckModalButton type="submit" onClick={modalClickHandle}>
             확인
           </CheckModalButton>
         </Modal>
-      </div>
+      </ModalWrapper>
       <FromWrapper noValidate>
         <InputListStyle>
           {itemInputData.map((itemInput) => {
@@ -390,6 +390,7 @@ const CheckModalButton = styled.button`
   background-color: inherit;
   border: none;
   width: 100%;
+  font-weight: var(--weight-semibold);
   border-top: 1px solid var(--color-gray-100);
   color: var(--color-sub-500);
   font-size: 1.6rem;
@@ -399,6 +400,12 @@ const ButtonWrapper = styled.div`
   border: none;
   background-color: unset;
   width: 100%;
+  button {
+    font-weight: var(--weight-semibold);
+  }
+`;
+const ModalWrapper = styled.div`
+  font-weight: var(--weight-medium);
 `;
 
 export default MyProfileEditContainer;

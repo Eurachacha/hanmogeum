@@ -1,29 +1,40 @@
 import styled from "styled-components";
-import { useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { useLocation } from "react-router-dom";
 import ToggleDefault from "@/assets/icons/toggleDefault.svg?react";
 import ToggleActive from "@/assets/icons/toggleActive.svg?react";
 import CategoryButtonList from "./CategoryButtonList";
-import { nestedCodeState } from "@/recoil/atoms/codeState";
+import { flattenCodeState, nestedCodeState } from "@/recoil/atoms/codeState";
 import { CATEGORY_CONTENT, CATEGORY_TITLE } from "@/constants/category";
 import useQueryParams from "@/hooks/useQueryParams";
 
 const CategoryList = () => {
-  const [codes] = useRecoilState(nestedCodeState);
+  const location = useLocation();
+  const queryString = location.search;
 
-  const [isDecaf, setIsDecaf] = useState(false);
-
-  const handleIsDecaf = () => {
-    setIsDecaf(!isDecaf);
-    toggleDecafFilter(!isDecaf);
-  };
+  const searchParams = new URLSearchParams(queryString);
+  const isDecafQuery = searchParams.get("isDecaf");
+  const packQuery = searchParams.get("pack");
 
   const { toggleDecafFilter } = useQueryParams("isDecaf");
+  const isDecaf = isDecafQuery ? Boolean(isDecafQuery) : false;
+
+  const [codes] = useRecoilState(nestedCodeState);
+
+  const handleIsDecaf = () => {
+    if (isDecaf) {
+      toggleDecafFilter(false);
+    } else {
+      toggleDecafFilter(true);
+    }
+  };
+
+  const flattenCodes = useRecoilValue(flattenCodeState);
 
   return (
     <CategoryListLayer>
-      <StyledTitle $fontSize="3.6rem" $fontWeight="var(--weight-bold)" $margin="0 0 60px 0">
-        전체상품
+      <StyledTitle $fontSize="2.4rem" $fontWeight="var(--weight-bold)" $margin="0 0 60px 0">
+        {packQuery ? flattenCodes[packQuery]?.value : "모든상품"}
       </StyledTitle>
 
       {codes?.productCategory.codes.map(
@@ -96,6 +107,7 @@ const StyledDecafTitleDisplay = styled(StyledTitleDisplay)`
   button {
     border: none;
     background: none;
+    cursor: pointer;
   }
 `;
 

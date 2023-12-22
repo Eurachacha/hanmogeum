@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { NavLink, useNavigate, useSearchParams, Link, useLocation } from "react-router-dom";
+import { NavLink, useNavigate, useSearchParams, Link, useLocation, ScrollRestoration } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import IconShoppingCart from "@/assets/icons/shoppingCart_40.svg?react";
 // import IconSearchCart from "@/assets/icons/search_24.svg?react"; // 검색 기능
@@ -146,6 +146,7 @@ const Header = () => {
                 </NavLink>
               ))}
         </UserControlWrapper>
+        <ScrollRestoration />
         <CartWrapper>
           <NavLink to="/cart">
             <IconShoppingCart />
@@ -164,21 +165,26 @@ const ProductCategoryLink = styled.span<CategoryLinkProps>`
 `;
 
 const HeaderLayer = styled.div`
+  top: 0;
+  width: 100vw;
   border-bottom: 1px solid var(--color-gray-100);
   background-color: var(--color-white);
   a {
     color: inherit;
     text-decoration: none;
   }
+  position: sticky;
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 4px 0px;
+  overflow-x: scroll;
+  z-index: 100;
 `;
 
 const HeaderWrapper = styled.div`
   display: flex;
-  height: 8.2rem;
   align-items: center;
-  margin: 0 auto;
+  height: 8.2rem;
   max-width: 1280px;
-  /* overflow: hidden; */
+  margin: 0 auto;
 `;
 
 const LogoWrapper = styled.div`
@@ -196,6 +202,7 @@ const CategoryWrapper = styled.div`
   min-width: 46rem;
   font-size: 1.6rem;
   font-weight: var(--weight-bold);
+  margin-right: auto;
   a {
     padding: 0 1rem;
   }

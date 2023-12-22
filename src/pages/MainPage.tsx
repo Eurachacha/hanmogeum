@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { styled, keyframes } from "styled-components";
 import Firecracker from "@/components/common/Firecracker";
+import MainContainer from "@/containers/main/MainContainer";
 
 const MainPage = () => {
   const [showConfetti, setShowConfetti] = useState(false);
@@ -26,6 +27,8 @@ const MainPage = () => {
           <Firecracker setStyle="bigCenter" />
         </FirecrackerWrapper>
       )}
+
+      <MainContainer />
     </div>
   );
 };
