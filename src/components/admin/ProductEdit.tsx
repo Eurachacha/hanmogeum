@@ -110,29 +110,90 @@ const ProductEdit = () => {
       : [{ id: "", name: "" }];
 
   return (
-    <Edit>
+    <Edit
+      sx={{
+        "& .RaLabeled-label": {
+          minWidth: 120,
+        },
+        "& span": {
+          fontSize: "1.8rem",
+          lineHeight: "initial",
+        },
+        "& input": {
+          fontSize: "1.6rem",
+        },
+        "& .MuiInputBase-input": {
+          height: "40px",
+          display: "flex",
+          alignItems: "center",
+        },
+        "& .MuiSelect-select": {
+          height: "40px",
+          display: "flex",
+          alignItems: "center",
+        },
+        "& .MuiChip-root span": {
+          fontSize: "1.6rem",
+          fontWeight: "var(--weight-semibold)",
+          height: "24px",
+          display: "flex",
+          alignItems: "center",
+          backgroundColor: "var(--color-sub-500)",
+          color: "var(--color-white)",
+          borderRadius: 4,
+        },
+      }}
+    >
       <SimpleForm validate={validateForm}>
-        <Labeled source="_id">
+        <b style={{ fontSize: "2rem", padding: "12px 0" }}>상품 기본 정보</b>
+        <Labeled source="_id" sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
           <TextField source="_id" label="상품 ID" />
         </Labeled>
-        <Labeled source="name">
-          <TextInput source="name" label="상품명" />
-        </Labeled>
-
         <FileInput
           isRequired
-          label="상품 이미지 등록"
+          label="상품 이미지"
           source="mainImages"
-          placeholder={<p>여기를 클릭하거나 파일을 드래그하여 등록하세요.</p>}
+          placeholder={
+            <>
+              <p>+</p>
+              <span>사진 수정하기</span>
+            </>
+          }
           accept="image/*"
           sx={{
-            "& .RaFileInput-dropZone": { padding: "20px 0", width: "50%" },
-            "& .RaFileInput-removeButton button": { padding: 0, top: 0 },
+            flexDirection: "row",
+            alignItems: "center",
+            "& .RaFileInput-dropZone p": { fontSize: "5rem", marginTop: 5, color: "var(--color-gray-200)" },
+            "& .RaFileInput-dropZone span": { color: "var(--color-gray-200)" },
+            "& .RaFileInput-dropZone": {
+              padding: "20px 0",
+              margin: "0 10px",
+              width: "200px",
+              height: "200px",
+              borderRadius: 30,
+            },
+            "& .RaFileInput-removeButton button": { padding: 0, top: -10, right: -10, position: "absolute" },
             "& svg": { width: 20, height: 20 },
+            "& .previews": { position: "relative" },
           }}
         >
           <CustomImageField record={record} label="title" customSrc="src" customTitle="title" />
         </FileInput>
+
+        <Labeled
+          isRequired
+          source="name"
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            minWidth: "70%",
+          }}
+        >
+          <TextInput isRequired source="name" label="상품명" sx={{ width: "100%" }} />
+        </Labeled>
+
         <div style={{ display: "flex" }}>
           <div style={{ flex: 1, padding: "0 4px" }}>
             <NumberInput step={1000} label="판매가격(원)" source="price" isRequired defaultValue={1000} />
@@ -142,42 +203,57 @@ const ProductEdit = () => {
           </div>
         </div>
         <hr style={{ border: "0.5px solid var(--color-gray-100)", width: "100%" }} />
-        <p>상품 세부 정보</p>
+
+        <b style={{ fontSize: "2rem", padding: "12px 0" }}>상품 상세 정보</b>
         <div
           style={{
             display: "flex",
             alignItems: "center",
             width: "100%",
+            padding: "0 18px",
           }}
         >
           <BooleanInput
             label="베스트상품"
             source="extra.isBest"
-            sx={{ "& .MuiFormControlLabel-root": { display: "flex", flexDirection: "column-reverse" } }}
+            sx={{
+              "& .MuiFormControlLabel-root": { display: "flex", flexDirection: "column-reverse" },
+              "& span": { fontSize: "1.4rem" },
+            }}
           />
           <BooleanInput
             label="디카페인"
             source="extra.isDecaf"
-            sx={{ "& .MuiFormControlLabel-root": { display: "flex", flexDirection: "column-reverse" } }}
+            sx={{
+              "& .MuiFormControlLabel-root": { display: "flex", flexDirection: "column-reverse" },
+              "& span": { fontSize: "1.4rem" },
+            }}
           />
           <SelectInput
             isRequired
             label="포장형태"
             source="extra.pack"
             choices={packChoices}
-            sx={{ padding: "0 4px" }}
+            sx={{ padding: "0 4px", "& .MuiInputBase-root": { fontSize: "1.4rem", padding: "4px 0" } }}
           />
           <SelectInput
             isRequired
             label="차 종류"
             source="extra.teaType"
             choices={teaTypeChoices}
-            sx={{ padding: "0 4px" }}
+            sx={{ padding: "0 4px", "& .MuiInputBase-root": { fontSize: "1.4rem", padding: "4px 0" } }}
           />
         </div>
-        <div style={{ display: "flex", width: "100%" }}>
-          <SelectArrayInput label="맛" source="extra.taste" choices={tasteChoices} sx={{ padding: "0 4px", flex: 1 }} />
+        <div style={{ display: "flex", width: "70%" }}>
           <SelectArrayInput
+            isRequired
+            label="맛"
+            source="extra.taste"
+            choices={tasteChoices}
+            sx={{ padding: "0 4px", flex: 1 }}
+          />
+          <SelectArrayInput
+            isRequired
             label="상황"
             source="extra.hashTag"
             choices={hashTagChoices}
@@ -185,9 +261,13 @@ const ProductEdit = () => {
             helperText="5개 까지만 등록 가능합니다."
           />
         </div>
-        {/* TODO: RichTextInput 사용  */}
-
-        <TextInput label="상품 설명" source="content" />
+        <TextInput
+          isRequired
+          label="상품 설명"
+          source="content"
+          multiline
+          sx={{ width: "70%", "& textarea": { fontSize: "1.4rem", padding: "8px 0" } }}
+        />
       </SimpleForm>
     </Edit>
   );
