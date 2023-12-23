@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { useSetRecoilState } from "recoil";
 import { MyOrderItem, Product } from "@/types/myPage";
