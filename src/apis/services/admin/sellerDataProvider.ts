@@ -94,6 +94,8 @@ const sellerDataProvider = withLifecycleCallbacks(
           id: params.id,
           data: {
             ...params.data,
+            pack: [params.data.extra.pack],
+            teaType: [params.data.extra.teaType],
             mainImages: [params.data.mainImages],
           },
           previousData: params.previousData,
@@ -103,6 +105,7 @@ const sellerDataProvider = withLifecycleCallbacks(
           const { data: fileResponseData } = await fileUploadInstance.post<ResponseAttachFile>("/files", formData);
           const { file } = fileResponseData;
 
+          if (!file) return params;
           const updatedData = {
             id: params.id,
             data: {
@@ -119,8 +122,6 @@ const sellerDataProvider = withLifecycleCallbacks(
 
           return errorResponse;
         }
-        // }
-        return params;
       },
     },
   ],

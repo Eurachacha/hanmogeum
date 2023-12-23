@@ -1,14 +1,11 @@
-import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import productsApi, { FilterQueryObject, SortQueryObject } from "@/apis/services/products";
 import ProductItemList from "@/components/product/productlist/ProductItemList";
 import ProductSortButtons from "@/components/product/productlist/ProductSortButtons";
-import { Product } from "@/types/products";
 
 const ProductSortContainer = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-
   const location = useLocation();
   const queryString = location.search;
 
@@ -53,22 +50,22 @@ const ProductSortContainer = () => {
     sortObject.price = -1;
   }
 
-  const getFilteredData = async (sortDataObject?: sortObjectType, filterDataObject?: filterObjectType) => {
-    try {
-      const response = await productsApi.searchProducts({
-        sort: sortDataObject,
-        filter: filterDataObject,
-      });
-      const { item } = response.data;
-      setProducts(item);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const { data, error } = useSuspenseQuery({
+    queryKey: ["products", sortObject, filterObject],
+    queryFn: () =>
+      productsApi.searchProducts({
+        sort: sortObject,
+        filter: filterObject,
+      }),
+    staleTime: 1000 * 10,
+    select: (response) => response.data.item,
+    refetchOnWindowFocus: "always",
+  });
 
-  useEffect(() => {
-    getFilteredData(sortObject, filterObject);
-  }, [queryString]);
+  const products = data;
+  if (error) {
+    console.error(error);
+  }
 
   return (
     <ProductSortContainerLayer>
