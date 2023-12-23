@@ -63,6 +63,9 @@ const ProductSortContainer = () => {
   });
 
   const products = data;
+  if (error) {
+    console.error(error);
+  }
 
   return (
     <ProductSortContainerLayer>
