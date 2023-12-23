@@ -40,16 +40,8 @@
 - 나만의 차 찾기 페이지
 
 ## 기술 스택
+![기술스택](https://github.com/Eurachacha/hanmogeum/assets/36308113/d264f507-c75e-4ec0-aa37-17d7f27e3727)
 
-- ESLint + Airbnb style Guide
-- Vite
-- ReactJS
-- TypeScript
-- Recoil
-- Styled-Component
-- react-router-dom v6
-- tanstack(react-query)
-- React-Admin
 
 ## 🗂 폴더 구조
 
