@@ -11,7 +11,7 @@ const ErrorPage = () => {
         요청하신 주소를 찾을 수 없습니다. <br />
         다시 한번 확인해 주시기 바랍니다.
       </p>
-      <Link to="/">
+      <Link to="/" replace>
         <Button size="md" variant="point" value="홈으로 돌아가기"></Button>
       </Link>
     </ErrorPageLayer>
