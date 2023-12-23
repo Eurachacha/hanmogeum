@@ -38,27 +38,37 @@ const App = () => {
   return (
     <>
       <ScrollTop />
-      <Header />
-      <ContentsWrapper>
-        <QueryClientProvider client={queryClient}>
-          <Suspense fallback={<LoadingSpinner />}>
-            <Outlet />
-          </Suspense>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </ContentsWrapper>
-      <Footer />
+      <AppWrapper>
+        <Header />
+        <ContentsWrapper>
+          <QueryClientProvider client={queryClient}>
+            <Suspense fallback={<LoadingSpinner />}>
+              <Outlet />
+            </Suspense>
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryClientProvider>
+        </ContentsWrapper>
+        <Footer />
+      </AppWrapper>
     </>
   );
 };
 
 export default App;
 
+const AppWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+`;
+
 const ContentsWrapper = styled.div`
+  flex: 1;
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 65px;
-  min-height: 80vh;
+  height: auto;
   @media (max-width: 768px) {
     padding: 0 20px;
   }
