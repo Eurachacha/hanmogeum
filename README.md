@@ -115,7 +115,7 @@
 
 ### 🏃 서버 실행 방법
 
-```
+```shell
 git clone
 npm install
 npm run dev
