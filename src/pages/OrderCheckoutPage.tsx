@@ -14,6 +14,7 @@ import Modal from "@/components/common/Modal";
 import { RequestCreateOrder, ShippingInfoType } from "@/types/orders";
 import ordersApi from "@/apis/services/orders";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import isValidPhoneNumber from "@/utils/isValidatePhoneNumber";
 
 const OrderCheckoutPage = () => {
   const user = useRecoilValue(loggedInUserState);
@@ -87,7 +88,12 @@ const OrderCheckoutPage = () => {
   };
 
   const handlePostOrder = () => {
-    if (!shippingInfo?.name || !shippingInfo?.phone || !shippingInfo?.address.value) {
+    if (
+      !shippingInfo?.name ||
+      !shippingInfo?.phone ||
+      !shippingInfo?.address.value ||
+      !isValidPhoneNumber(shippingInfo?.phone || "")
+    ) {
       setIsShippingModalOpen(true);
       return;
     }

@@ -18,6 +18,7 @@ import userApi from "@/apis/services/users";
 /* constants */
 import PASSWORD_MIN_LENGTH from "@/constants/signUpValidation";
 import { AUTH_TOKEN_KEY } from "@/constants/api";
+import isValidPhoneNumber from "@/utils/isValidatePhoneNumber";
 
 interface InputDataType {
   title: string;
@@ -209,7 +210,7 @@ const SignUpContainer = () => {
   useEffect(() => {
     const formattingPhoneNumber = autoHyphenPhoneNumber(signUpData.phoneNumber);
     setSignUpData((prevState) => ({ ...prevState, phoneNumber: formattingPhoneNumber }));
-    if (signUpData.phoneNumber && !/^01[016789]-?\d{3,4}-?\d{4}$/.test(signUpData.phoneNumber)) {
+    if (signUpData.phoneNumber && !isValidPhoneNumber(signUpData.phoneNumber)) {
       setValidationMessage((prevState) => ({ ...prevState, phoneNumber: "올바른 휴대폰 번호를 입력해주세요." }));
     } else {
       setValidationMessage((prevState) => ({ ...prevState, phoneNumber: "" }));
