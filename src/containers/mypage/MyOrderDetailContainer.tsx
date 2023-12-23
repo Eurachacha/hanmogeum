@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useParams, useNavigate } from "react-router-dom";
 
+import { useSetRecoilState } from "recoil";
 import { MyOrderItem, Product } from "@/types/myPage";
 import myPageApi from "@/apis/services/mypage";
 import Button from "@/components/common/Button";
@@ -11,6 +12,9 @@ import ContainerHeader from "@/components/mypage/ContainerHeader.";
 import cartApi from "@/apis/services/cart";
 import Modal from "@/components/common/Modal";
 import ORDER_STATE from "@/constants/code";
+import { cartState } from "@/recoil/atoms/cartState";
+
+import { CartStorageItem } from "@/types/cart";
 
 interface ProductImgWrapperProps {
   $orderCancelState: boolean;
@@ -21,6 +25,7 @@ const MyOrderDetailContainer = () => {
   const [openModal, setOenModal] = useState({ isOpen: false, message: "" });
   const [shippingState, setShippingState] = useState("");
   const [orderCancelState, setOrderCancelState] = useState(false);
+  const setCartStorage = useSetRecoilState(cartState);
 
   const navigator = useNavigate();
   const { id } = useParams();
@@ -37,31 +42,39 @@ const MyOrderDetailContainer = () => {
     }
   };
 
-  // const reviewButtonHandleClick = () => {
-  //   // TODO: 리뷰 작성 페이지 구현
-  //   navigator(`/mypage/reviews`);
-  // };
-
   const cartButtonHandleClick = async ({ _id, quantity }: Product) => {
     try {
       const addItem = { product_id: _id, quantity };
-      await cartApi.addItem(addItem);
+      const response = await cartApi.addItem(addItem);
+      const { item: items } = response.data;
+      const updatedCartStorage: CartStorageItem[] = items.map((item) => {
+        return {
+          quantity: item.quantity,
+          stock: item.product.quantity - item.product.buyQuantity,
+          product: {
+            _id: item.product._id,
+            name: item.product.name,
+            image: item.product.image,
+            price: item.product.price,
+          },
+        };
+      });
+      setCartStorage(() => updatedCartStorage);
+      setOenModal({ isOpen: true, message: "장바구니에 담았습니다." });
     } catch (error) {
       console.error(error);
     }
   };
 
-  const errorPageHandleClick = () => {
+  const modalHandleClick = () => {
     setOenModal(() => {
       return { isOpen: false, message: "" };
     });
-    navigator("/mypage/orders");
   };
 
   useEffect(() => {
     setShippingState(orderDetail?.state || "");
 
-    // 주문 취소
     if (shippingState === ORDER_STATE.SHIPPING_CANCEL.CODE) {
       setOrderCancelState(true);
     } else {
@@ -76,7 +89,7 @@ const MyOrderDetailContainer = () => {
     <MyOrderDetailContainerLayer>
       <ModalWrapper>
         <Modal isOpen={openModal.isOpen} message={openModal.message}>
-          <ModalButtonWrapper onClick={errorPageHandleClick}>
+          <ModalButtonWrapper onClick={modalHandleClick}>
             <Button value="확인" size="md" variant="sub" />
           </ModalButtonWrapper>
         </Modal>
@@ -100,11 +113,6 @@ const MyOrderDetailContainer = () => {
               </ProductInfoWrapper>
 
               <ButtonsWrapper>
-                {/* 
-                // 주문 취소 버튼
-                <ReviewButtonStyle onClick={reviewButtonHandleClick}>
-                  <Button disabled={orderCancelState} value="리뷰 작성" size="sm" variant="point" />
-                </ReviewButtonStyle> */}
                 <CartButtonStyle onClick={() => cartButtonHandleClick(product)}>
                   <Button value="장바구니 담기" size="sm" variant="point" />
                 </CartButtonStyle>
