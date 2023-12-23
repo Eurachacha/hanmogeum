@@ -32,7 +32,7 @@ const useAuthorization = ({ allowedRoles, isAdditionalAuthRequired = false }: Au
     } else {
       setResultValue(false);
     }
-  }, [location, userType, additionalAuthRequired]);
+  }, [location, additionalAuthRequired]);
 
   return resultValue;
 };
