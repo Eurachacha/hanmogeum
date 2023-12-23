@@ -7,7 +7,7 @@
 [![Static Badge](https://img.shields.io/badge/hanmogeum-F07D49?logo=netlify&labelColor=white)](https://hanmogeum.netlify.app/)
 [![Static Badge](https://img.shields.io/badge/GitHub_WiKi-1A406C?logo=github&logoColor=white)
 ](https://github.com/Eurachacha/hanmogeum/wiki)
-[![Static Badge](https://img.shields.io/badge/release-v1.0.0-FFFFFF?logo=github&labelColor=323232)](https://github.com/Eurachacha/hanmogeum/releases)
+[![Static Badge](https://img.shields.io/badge/release-v1.0.2-FFFFFF?logo=github&labelColor=323232)](https://github.com/Eurachacha/hanmogeum/releases)
 
 ### 티 더하기 좋은 순간, 한모금
 
