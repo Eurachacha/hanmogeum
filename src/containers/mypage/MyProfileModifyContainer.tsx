@@ -102,7 +102,6 @@ const MyProfileEditContainer = () => {
     }
   };
 
-  // 입력 필드가 변경될 때마다 값을 저장하는 함수입니다.
   const inputHandleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
     setSignUpData((prevState) => ({
@@ -111,7 +110,6 @@ const MyProfileEditContainer = () => {
     }));
   };
 
-  // TODO: 커스텀 훅 사용하도록 수정
   const openPostcode = useDaumPostcodePopup();
   const addressSearchHandleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -132,14 +130,13 @@ const MyProfileEditContainer = () => {
   const modalClickHandle = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (showModal.goToPrevPage) {
-      navigate(-1);
+      navigate("/mypage/profile");
     }
     setShowModal((prevState) => {
       return { ...prevState, isOpen: false };
     });
   };
 
-  // TODO: 다음 useEffect들 커스텀 훅으로 변경
   useEffect(() => {
     if (
       validationMessage.password === "" &&
