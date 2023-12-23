@@ -27,7 +27,6 @@ const MyOrderDetailContainer = () => {
   const [orderCancelState, setOrderCancelState] = useState(false);
   const setCartStorage = useSetRecoilState(cartState);
 
-  const navigator = useNavigate();
   const { id } = useParams();
 
   const requestGetMyOrderList = async () => {
