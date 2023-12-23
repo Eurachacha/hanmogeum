@@ -45,7 +45,7 @@ const App = () => {
             <Suspense fallback={<LoadingSpinner />}>
               <Outlet />
             </Suspense>
-            <ReactQueryDevtools initialIsOpen={false} />
+            {import.meta.env.VITE_DEVELOPMENT_OPTIONS === "TRUE" && <ReactQueryDevtools initialIsOpen={false} />}{" "}
           </QueryClientProvider>
         </ContentsWrapper>
         <Footer />
