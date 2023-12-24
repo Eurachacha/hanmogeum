@@ -20,7 +20,7 @@ import { MainImageType, ProductDetail } from "@/types/products";
 
 const validateForm = (values: Record<string, any>): Record<string, any> => {
   const errors = {} as any;
-  if (!values.price) {
+  if (values.price === "") {
     errors.price = "판매가격을 입력해주세요.";
   } else if (values.price <= 0) {
     errors.price = "판매가격은 1원 이상이어야 합니다.";
@@ -28,10 +28,10 @@ const validateForm = (values: Record<string, any>): Record<string, any> => {
   if (!values.name || !values.name.replace(/\s/gi, "")) {
     errors.name = "상품명을 입력해주세요.";
   }
-  if (!values.quantity) {
+  if (values.quantity === "") {
     errors.quantity = "수량을 입력해주세요.";
   } else if (values.quantity <= 0) {
-    errors.quantity = "수량은 0개 이상이어야 합니다.";
+    errors.quantity = "수량은 1개 이상이어야 합니다.";
   }
   if (!values.mainImages) {
     errors.mainImages = "이미지를 등록해주세요.";
@@ -48,7 +48,7 @@ const validateForm = (values: Record<string, any>): Record<string, any> => {
   if (!values.extra.hashTag || values.extra.hashTag.length <= 0) {
     errors["extra.hashTag"] = "상황을 선택해주세요.";
   } else if (values.extra.hashTag.length > 5) {
-    errors.extra.hashTag = "최대 5개까지 등록 가능합니다.";
+    errors["extra.hashTag"] = "최대 5개까지 등록 가능합니다.";
   }
   if (!values.content || !values.content.trim()) {
     errors.content = "상품 설명은 10글자 이상 입력해야 합니다.";
