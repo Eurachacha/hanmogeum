@@ -163,55 +163,57 @@ const ProductDetailPage = () => {
           <Button value="구매하기" size="sm" variant="point" />
         </ButtonWrapper>
       </Modal>
-      <ProductDetailLeft>
-        <img
-          src={`${import.meta.env.VITE_API_BASE_URL}${itemData?.mainImages[0].url}`}
-          alt={itemData?.name}
-          width={600}
-        />
-        <DetailArea dangerouslySetInnerHTML={{ __html: itemData?.content as TrustedHTML }}></DetailArea>
-      </ProductDetailLeft>
-      <ProductDetailRight>
-        <TeaType>{itemData?.extra.teaType[0] ? categoryCodes[itemData?.extra.teaType[0]].value : ""}</TeaType>
-        <Title>{itemData?.name}</Title>
-        <ItemPrice>{itemData?.price ? getPriceFormat({ price: itemData?.price }) : ""}</ItemPrice>
-        <HashTagArea>
-          <p>이런 분에게 추천해요!</p>
-          <HashTagWrapper>
-            {itemData?.extra.hashTag.map((tagCode, idx) => {
-              const keyIndex = idx.toString();
-              return <CategoryButton key={keyIndex} code={tagCode} disabled />;
-            })}
-          </HashTagWrapper>
-        </HashTagArea>
-        <QuantityHandler>
-          <p>{itemData?.name}</p>
-          <CounterWrapper>
-            <Counter>
-              <CounterLayer>
-                <CounterButton handleQuantity={() => handleQuantityInput("minus")}>-</CounterButton>
-                <QuantityWrapper
-                  type="number"
-                  value={quantityInput}
-                  max={itemData && itemData.quantity - itemData.buyQuantity}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleQuantityInput("", event)}
-                />
-                <CounterButton handleQuantity={() => handleQuantityInput("plus")}>+</CounterButton>
-              </CounterLayer>
-              <p>재고: {itemData && itemData.quantity - itemData.buyQuantity}개</p>
-            </Counter>
-            <p>{itemData?.price ? getPriceFormat({ price: itemData.price * quantityInput }) : ""}</p>
-          </CounterWrapper>
-        </QuantityHandler>
-        <ButtonArea>
-          <MainButtonWrapper onClick={handleAddToCart}>
-            <Button value="장바구니" size="lg" variant="sub" disabled={!quantityInput} />
-          </MainButtonWrapper>
-          <MainButtonWrapper onClick={() => (user ? setIsCheckoutConfirmModalOpen(true) : setIsLoginModalOpen(true))}>
-            <Button value="바로구매" size="lg" variant="point" disabled={!quantityInput} />
-          </MainButtonWrapper>
-        </ButtonArea>
-      </ProductDetailRight>
+      <ProductInfo>
+        <ProductDetailLeft>
+          <img src={`${import.meta.env.VITE_API_BASE_URL}${itemData?.mainImages[0].url}`} alt={itemData?.name} />
+        </ProductDetailLeft>
+        <ProductDetailRight>
+          <ProductDetailWrapper>
+            <TeaType>{itemData?.extra.teaType[0] ? categoryCodes[itemData?.extra.teaType[0]].value : ""}</TeaType>
+            <Title>{itemData?.name}</Title>
+            <ItemPrice>{itemData?.price ? getPriceFormat({ price: itemData?.price }) : ""}</ItemPrice>
+            <HashTagArea>
+              <p>이런 분에게 추천해요!</p>
+              <HashTagWrapper>
+                {itemData?.extra.hashTag.map((tagCode, idx) => {
+                  const keyIndex = idx.toString();
+                  return <CategoryButton key={keyIndex} code={tagCode} disabled />;
+                })}
+              </HashTagWrapper>
+            </HashTagArea>
+            <QuantityHandler>
+              <p>{itemData?.name}</p>
+              <CounterWrapper>
+                <Counter>
+                  <CounterLayer>
+                    <CounterButton handleQuantity={() => handleQuantityInput("minus")}>-</CounterButton>
+                    <QuantityWrapper
+                      type="number"
+                      value={quantityInput}
+                      max={itemData && itemData.quantity - itemData.buyQuantity}
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleQuantityInput("", event)}
+                    />
+                    <CounterButton handleQuantity={() => handleQuantityInput("plus")}>+</CounterButton>
+                  </CounterLayer>
+                  <p>재고: {itemData && itemData.quantity - itemData.buyQuantity}개</p>
+                </Counter>
+                <p>{itemData?.price ? getPriceFormat({ price: itemData.price * quantityInput }) : ""}</p>
+              </CounterWrapper>
+            </QuantityHandler>
+            <ButtonArea>
+              <MainButtonWrapper onClick={handleAddToCart}>
+                <Button value="장바구니" size="lg" variant="sub" disabled={!quantityInput} />
+              </MainButtonWrapper>
+              <MainButtonWrapper
+                onClick={() => (user ? setIsCheckoutConfirmModalOpen(true) : setIsLoginModalOpen(true))}
+              >
+                <Button value="바로구매" size="lg" variant="point" disabled={!quantityInput} />
+              </MainButtonWrapper>
+            </ButtonArea>
+          </ProductDetailWrapper>
+        </ProductDetailRight>
+      </ProductInfo>
+      <DetailArea dangerouslySetInnerHTML={{ __html: itemData?.content as TrustedHTML }}></DetailArea>
     </ProductDetailPageLayer>
   );
 };
@@ -220,11 +222,16 @@ export default ProductDetailPage;
 
 const ProductDetailPageLayer = styled.div`
   display: flex;
+  flex-direction: column;
+
   justify-content: space-between;
   margin-top: 20px;
 
   @media (max-width: 768px) {
     flex-direction: column;
+  }
+  @media (max-width: 1149px) {
+    align-items: center;
   }
 `;
 
@@ -233,25 +240,91 @@ const ButtonWrapper = styled.div`
   padding: 0 4px;
 `;
 
-const ProductDetailLeft = styled.section`
-  min-width: 650px;
-  text-align: center;
+const ProductInfo = styled.div`
+  display: flex;
+
+  @media (max-width: 1149px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
-const DetailArea = styled.div`
-  max-width: 650px;
+const ProductDetailLeft = styled.section`
+  max-width: 600px;
   text-align: center;
+  max-width: 600px;
 
-  & img {
+  & > img {
     width: 600px;
+    max-width: 600px;
     border: 1px solid var(--color-gray-100);
+    @media (max-width: 1149px) {
+      width: 100%;
+      min-width: 300px;
+    }
   }
 `;
 
 const ProductDetailRight = styled.section`
   flex: 1;
+  margin-left: 20px;
+  @media (max-width: 1149px) {
+    margin: 20px 0;
+    width: 100%;
+  }
+  @media (min-width: 1150px) {
+    position: fixed;
+    padding-left: 20px;
+    margin: 0 auto;
+    min-width: 28%;
+    width: calc(35vw);
+    left: calc(50vw - (-100vw * 0.08));
+  }
+  @media (min-width: 1280px) {
+    padding: 0;
+    margin-right: calc(100vw - 1280px + (100vw * 0.01));
+    min-width: 30%;
+    left: calc(48vw - (-100vw * 0.07));
+  }
+  @media (min-width: 1441px) {
+    max-width: 460px;
+    left: calc(46vw - (-100vw * 0.07));
+  }
+`;
+
+const ProductDetailWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  min-width: 300px;
+  max-width: 600px;
+
+  @media (min-width: 1150px) {
+    margin-bottom: 220px;
+    justify-content: center;
+    flex: 1;
+  }
+  @media (min-width: 1441px) {
+    max-width: 460px;
+  }
+`;
+
+const DetailArea = styled.div`
+  max-width: 600px;
+  text-align: center;
+
+  @media (max-width: 1149px) {
+    width: 100%;
+    min-width: 300px;
+  }
+
+  & img {
+    min-width: 300px;
+    max-width: 600px;
+    border: 1px solid var(--color-gray-100);
+    @media (max-width: 1149px) {
+      width: 100%;
+    }
+  }
 `;
 
 const TeaType = styled.p`
