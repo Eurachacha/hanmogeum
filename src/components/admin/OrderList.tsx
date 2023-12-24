@@ -1,15 +1,20 @@
-import { List, Datagrid, TextField, FunctionField, DateField } from "react-admin";
+import { List, Datagrid, TextField, FunctionField, DateField, Pagination } from "react-admin";
 import { useRecoilValue } from "recoil";
 import { OrderDetail } from "@/types/orders";
 import getPriceFormat from "@/utils/getPriceFormat";
 import getCodeValue from "@/utils/getCodeValue";
 import { flattenCodeState } from "@/recoil/atoms/codeState";
 
+const OrderPagination = () => <Pagination rowsPerPageOptions={[10, 25, 50, 100]} />;
+
 const OrderList = () => {
   const flattenCodes = useRecoilValue(flattenCodeState);
 
   return (
     <List
+      pagination={<OrderPagination />}
+      perPage={10}
+      sort={{ field: "createdAt", order: "ASC" }}
       resource="orders"
       sx={{
         "& th, td ": {
