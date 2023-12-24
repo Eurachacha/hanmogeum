@@ -286,6 +286,10 @@ const ProductDetailRight = styled.section`
     min-width: 30%;
     left: calc(48vw - (-100vw * 0.07));
   }
+  @media (min-width: 1441px) {
+    max-width: 460px;
+    left: calc(46vw - (-100vw * 0.07));
+  }
 `;
 
 const ProductDetailWrapper = styled.div`
@@ -298,6 +302,9 @@ const ProductDetailWrapper = styled.div`
     margin-bottom: 220px;
     justify-content: center;
     flex: 1;
+  }
+  @media (min-width: 1441px) {
+    max-width: 460px;
   }
 `;
 
