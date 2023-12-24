@@ -13,12 +13,15 @@ import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ScrollTop from "./components/common/ScrollTop";
+import useAxiosInterceptor from "./hooks/useAxiosInterceptor";
+import TokenExpireModal from "./components/common/TokenExpireModal";
 
 const queryClient = new QueryClient();
 
 const App = () => {
   const setFlattenCodeState = useSetRecoilState(flattenCodeState);
   const setNestedCodeState = useSetRecoilState(nestedCodeState);
+  useAxiosInterceptor();
 
   // API를 요청하여 Code를 Set해오는 함수
   const getCodeData = async () => {
@@ -43,6 +46,7 @@ const App = () => {
         <ContentsWrapper>
           <QueryClientProvider client={queryClient}>
             <Suspense fallback={<LoadingSpinner />}>
+              <TokenExpireModal />
               <Outlet />
             </Suspense>
             <ReactQueryDevtools initialIsOpen={false} />

@@ -9,10 +9,13 @@ import OrderEdit from "@/components/admin/OrderEdit";
 import sellerDataProvider from "@/apis/services/admin/sellerDataProvider";
 import ProductCreate from "@/components/admin/ProductCreate";
 import ProductEdit from "@/components/admin/ProductEdit";
+import useAxiosInterceptor from "@/hooks/useAxiosInterceptor";
+import TokenExpireModal from "@/components/common/TokenExpireModal";
 
 export const SellerPage = () => {
   const setFlattenCodeState = useSetRecoilState(flattenCodeState);
   const setNestedCodeState = useSetRecoilState(nestedCodeState);
+  useAxiosInterceptor();
 
   const getCodeData = async () => {
     try {
@@ -29,10 +32,13 @@ export const SellerPage = () => {
   }, []);
 
   return (
-    <Admin basename="/seller" dataProvider={sellerDataProvider}>
-      <Resource name="orders" list={OrderList} edit={OrderEdit} />
-      <Resource name="products" list={ProductList} edit={ProductEdit} create={ProductCreate} />
-    </Admin>
+    <>
+      <TokenExpireModal />
+      <Admin basename="/seller" dataProvider={sellerDataProvider}>
+        <Resource name="orders" list={OrderList} edit={OrderEdit} />
+        <Resource name="products" list={ProductList} edit={ProductEdit} create={ProductCreate} />
+      </Admin>
+    </>
   );
 };
 export default SellerPage;
