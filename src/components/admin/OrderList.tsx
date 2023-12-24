@@ -18,7 +18,7 @@ const OrderList = () => {
       resource="orders"
       sx={{
         "& th, td ": {
-          fontSize: "1.4rem",
+          fontSize: "1.6rem",
           textAlign: "center",
         },
         "& th": {
@@ -26,10 +26,13 @@ const OrderList = () => {
           fontWeight: 600,
         },
         "td > span": {
-          fontSize: "1.2rem",
+          fontSize: "1.4rem",
         },
         "& td.column-price > span": {
           textAlign: "end",
+        },
+        "& .MuiTablePagination-root *": {
+          fontSize: "1.2rem",
         },
       }}
       exporter={false}
@@ -47,7 +50,9 @@ const OrderList = () => {
         <DateField source="createdAt" label="주문일시" showTime />
         <FunctionField
           label="총 결제 금액"
+          source="cost.total"
           render={(record: OrderDetail) => getPriceFormat({ price: record.cost.total })}
+          sortable
         />
       </Datagrid>
     </List>

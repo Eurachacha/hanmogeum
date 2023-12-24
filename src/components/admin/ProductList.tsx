@@ -20,7 +20,7 @@ const ProductList = () => {
       filter={{ authorId }}
       sx={{
         "& th, td ": {
-          fontSize: "1.4rem",
+          fontSize: "1.6rem",
           textAlign: "center",
         },
         "& th": {
@@ -28,7 +28,7 @@ const ProductList = () => {
           fontWeight: 600,
         },
         "td > span": {
-          fontSize: "1.2rem",
+          fontSize: "1.4rem",
         },
         "& td.column-price > span": {
           textAlign: "end",
@@ -52,7 +52,7 @@ const ProductList = () => {
           source="stock"
           label="재고"
           render={(record: Product) => record.quantity - record.buyQuantity}
-          sortable
+          sortable={false}
         />
         <FunctionField
           source="extra.pack"
@@ -61,7 +61,7 @@ const ProductList = () => {
             return getCodeValue(flattenCodes, record.extra.pack[0]);
           }}
         />
-        <TextField source="buyQuantity" label="누적주문수" sortable={false} />
+        <TextField source="buyQuantity" label="누적주문수" sortable />
       </Datagrid>
     </List>
   );

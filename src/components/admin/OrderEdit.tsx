@@ -14,6 +14,7 @@ import { OrderStateCode } from "@/types/code";
 import { nestedCodeState } from "@/recoil/atoms/codeState";
 import { OrderDetail } from "@/types/orders";
 import getPriceFormat from "@/utils/getPriceFormat";
+import { Product } from "@/types/products";
 
 const OrderEdit = () => {
   const nestedCodes = useRecoilValue(nestedCodeState);
@@ -56,7 +57,12 @@ const OrderEdit = () => {
           <TextField source="shippingInfo.phone" sx={{ paddingLeft: 10 }} />
         </Labeled>
         <Labeled source="받는 곳 주소" sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-          <TextField source="shippingInfo.address.value" sx={{ paddingLeft: 10 }} />
+          <FunctionField
+            sx={{ paddingLeft: 10 }}
+            render={(record: OrderDetail) =>
+              record.shippingInfo.address.value + record.shippingInfo.address.detailValue
+            }
+          />
         </Labeled>
         <SelectInput
           source="state"
@@ -73,6 +79,11 @@ const OrderEdit = () => {
           <Datagrid bulkActionButtons={false}>
             <TextField source="_id" label="상품ID" />
             <TextField source="name" label="상품명" />
+            <FunctionField
+              source="price"
+              label="판매가격"
+              render={(record: Product) => getPriceFormat({ price: record.price })}
+            />
             <TextField source="quantity" label="주문수량" />
           </Datagrid>
         </ArrayField>
