@@ -88,8 +88,10 @@ const MyProfileEditContainer = () => {
     if (signUpData?.password) updateData.password = signUpData.password;
     if (signUpData?.name) updateData.name = signUpData.name; // 여기서는 옵셔널 체이닝이 필요 없습니다.
     if (onlyNumberPhone) updateData.phone = onlyNumberPhone;
-    if (signUpData.address || signUpData.addressDetail)
-      updateData.address = `${signUpData.address} ${signUpData.addressDetail}`;
+    if (signUpData.address || signUpData.addressDetail) {
+      updateData.address = `${signUpData.address}`;
+      updateData.detailAddress = `${signUpData.addressDetail}`;
+    }
     try {
       await userApi.updateUserProfile(loggedInUser?._id || -1, updateData);
       setShowModal((prevState) => ({ ...prevState, isOpen: true, message: "수정이 완료되었습니다." }));
