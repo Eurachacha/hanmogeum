@@ -1,4 +1,4 @@
-import { List, Datagrid, TextField, FunctionField } from "react-admin";
+import { List, Datagrid, TextField, FunctionField, Pagination } from "react-admin";
 import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { Product } from "@/types/products";
@@ -6,12 +6,16 @@ import getCodeValue from "@/utils/getCodeValue";
 import getPriceFormat from "@/utils/getPriceFormat";
 import { flattenCodeState } from "@/recoil/atoms/codeState";
 
+const ProductPagination = () => <Pagination rowsPerPageOptions={[10, 25, 50, 100]} />;
+
 const ProductList = () => {
   const flattenCodes = useRecoilValue(flattenCodeState);
   const { authorId } = useParams();
 
   return (
     <List
+      pagination={<ProductPagination />}
+      perPage={10}
       resource="products"
       filter={{ authorId }}
       sx={{
@@ -28,6 +32,9 @@ const ProductList = () => {
         },
         "& td.column-price > span": {
           textAlign: "end",
+        },
+        "& .MuiTablePagination-root *": {
+          fontSize: "1.2rem",
         },
       }}
       exporter={false}
