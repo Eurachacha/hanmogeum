@@ -55,7 +55,7 @@ const SpinnerWrapper = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
-  z-index: 2000;
+  /* z-index: 2000; */
   & > div {
     margin-top: 20rem;
   }
