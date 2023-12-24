@@ -2,9 +2,9 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { cartState } from "@/recoil/atoms/cartState";
 import productsApi from "@/apis/services/products";
-import { ProductDetailWithReplies } from "@/types/products";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import cartApi from "@/apis/services/cart";
 import Modal from "@/components/common/Modal";
@@ -17,7 +17,6 @@ import useQuantityCounter from "@/hooks/useQuantityCounter";
 import { CartStorageItem } from "@/types/cart";
 
 const ProductDetailPage = () => {
-  const [itemData, setItemData] = useState<ProductDetailWithReplies>();
   const user = useRecoilValue(loggedInUserState);
   const [cartStorage, setCartStorage] = useRecoilState(cartState);
   const [isAddCartModalOpen, setIsAddCartModalOpen] = useState(false);
@@ -29,43 +28,34 @@ const ProductDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const fetchProductInfo = async (product_id: number) => {
-    try {
-      const response = await productsApi.getProductById(product_id);
-      const { item } = response.data;
-      setItemData(item);
-    } catch (error) {
-      console.error(error);
-      navigate("/");
-    }
-  };
+  const { data } = useSuspenseQuery({
+    queryKey: ["products", id],
+    queryFn: () => productsApi.getProductById(Number(id)),
+    staleTime: 1000 * 10,
+    select: (res) => res.data.item,
+    retry: 0,
+    refetchOnWindowFocus: "always",
+  });
+
+  const itemData = data;
 
   const addToCartData = async (product_id: number, quantity: number) => {
-    try {
-      const response = await cartApi.addItem({ product_id: product_id, quantity: quantity });
-      const { item: items } = response.data;
-      const updatedCartStorage: CartStorageItem[] = items.map((item) => {
-        return {
-          quantity: item.quantity,
-          stock: item.product.quantity - item.product.buyQuantity,
-          product: {
-            _id: item.product._id,
-            name: item.product.name,
-            image: item.product.image,
-            price: item.product.price,
-          },
-        };
-      });
-      setCartStorage(() => updatedCartStorage);
-    } catch (error) {
-      console.error(error);
-    }
+    const response = await cartApi.addItem({ product_id: product_id, quantity: quantity });
+    const { item: items } = response.data;
+    const updatedCartStorage: CartStorageItem[] = items.map((item) => {
+      return {
+        quantity: item.quantity,
+        stock: item.product.quantity - item.product.buyQuantity,
+        product: {
+          _id: item.product._id,
+          name: item.product.name,
+          image: item.product.image,
+          price: item.product.price,
+        },
+      };
+    });
+    setCartStorage(() => updatedCartStorage);
   };
-
-  useEffect(() => {
-    if (!id) navigate("/");
-    fetchProductInfo(Number(id));
-  }, []);
 
   const handleAddToCart = () => {
     if (user) {
@@ -121,11 +111,11 @@ const ProductDetailPage = () => {
 
   const { handleQuantityInput, quantityInput, setQuantityInputAsStock } = useQuantityCounter(
     1,
-    itemData ? itemData.quantity - itemData.buyQuantity : 0,
+    itemData.quantity - itemData.buyQuantity,
   );
 
   useEffect(() => {
-    if (itemData && itemData.quantity - itemData.buyQuantity === 0) setQuantityInputAsStock(0);
+    if (itemData.quantity - itemData.buyQuantity === 0) setQuantityInputAsStock(0);
   }, [itemData]);
 
   return (
@@ -153,7 +143,7 @@ const ProductDetailPage = () => {
       </Modal>
       <Modal
         isOpen={isCheckoutConfirmModalOpen}
-        targetString={`${itemData?.name} X ${quantityInput}개`}
+        targetString={`${itemData.name} X ${quantityInput}개`}
         message="구매하시겠습니까?"
       >
         <ButtonWrapper onClick={() => setIsCheckoutConfirmModalOpen(false)}>
@@ -165,24 +155,24 @@ const ProductDetailPage = () => {
       </Modal>
       <ProductInfo>
         <ProductDetailLeft>
-          <img src={`${import.meta.env.VITE_API_BASE_URL}${itemData?.mainImages[0].url}`} alt={itemData?.name} />
+          <img src={`${import.meta.env.VITE_API_BASE_URL}${itemData.mainImages[0].url}`} alt={itemData.name} />
         </ProductDetailLeft>
         <ProductDetailRight>
           <ProductDetailWrapper>
-            <TeaType>{itemData?.extra.teaType[0] ? categoryCodes[itemData?.extra.teaType[0]].value : ""}</TeaType>
-            <Title>{itemData?.name}</Title>
-            <ItemPrice>{itemData?.price ? getPriceFormat({ price: itemData?.price }) : ""}</ItemPrice>
+            <TeaType>{itemData.extra.teaType[0] ? categoryCodes[itemData.extra.teaType[0]].value : ""}</TeaType>
+            <Title>{itemData.name}</Title>
+            <ItemPrice>{itemData.price ? getPriceFormat({ price: itemData.price }) : ""}</ItemPrice>
             <HashTagArea>
               <p>이런 분에게 추천해요!</p>
               <HashTagWrapper>
-                {itemData?.extra.hashTag.map((tagCode, idx) => {
+                {itemData.extra.hashTag.map((tagCode, idx) => {
                   const keyIndex = idx.toString();
                   return <CategoryButton key={keyIndex} code={tagCode} disabled />;
                 })}
               </HashTagWrapper>
             </HashTagArea>
             <QuantityHandler>
-              <p>{itemData?.name}</p>
+              <p>{itemData.name}</p>
               <CounterWrapper>
                 <Counter>
                   <CounterLayer>
@@ -190,14 +180,14 @@ const ProductDetailPage = () => {
                     <QuantityWrapper
                       type="number"
                       value={quantityInput}
-                      max={itemData && itemData.quantity - itemData.buyQuantity}
+                      max={itemData.quantity - itemData.buyQuantity}
                       onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleQuantityInput("", event)}
                     />
                     <CounterButton handleQuantity={() => handleQuantityInput("plus")}>+</CounterButton>
                   </CounterLayer>
-                  <p>재고: {itemData && itemData.quantity - itemData.buyQuantity}개</p>
+                  <p>재고: {itemData.quantity - itemData.buyQuantity}개</p>
                 </Counter>
-                <p>{itemData?.price ? getPriceFormat({ price: itemData.price * quantityInput }) : ""}</p>
+                <p>{getPriceFormat({ price: itemData.price * quantityInput })}</p>
               </CounterWrapper>
             </QuantityHandler>
             <ButtonArea>
@@ -213,7 +203,7 @@ const ProductDetailPage = () => {
           </ProductDetailWrapper>
         </ProductDetailRight>
       </ProductInfo>
-      <DetailArea dangerouslySetInnerHTML={{ __html: itemData?.content as TrustedHTML }}></DetailArea>
+      <DetailArea dangerouslySetInnerHTML={{ __html: itemData.content as TrustedHTML }}></DetailArea>
     </ProductDetailPageLayer>
   );
 };
