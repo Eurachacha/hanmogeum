@@ -2,6 +2,13 @@ import { withLifecycleCallbacks } from "react-admin";
 import { fileUploadInstance, privateInstance } from "@/apis/instance";
 import { ResponseAttachFile } from "@/types/file";
 
+interface GetListParams {
+  pagination: { page: number; perPage: number };
+  sort: { field: string; order: "ASC" | "DESC" };
+  filter: any;
+  meta?: any;
+}
+
 const createImageFormData = (params: any) => {
   const formData = new FormData();
   if (params.data.mainImages && params.data.mainImages?.length > 0) {
@@ -12,10 +19,21 @@ const createImageFormData = (params: any) => {
 
 const sellerDataProvider = withLifecycleCallbacks(
   {
-    getList: async (resource: string) => {
-      const response = await privateInstance.get(`/seller/${resource}`);
-      const { item } = response.data;
-      return { data: item, total: item.length };
+    getList: async (resource: string, params: GetListParams) => {
+      const response = await privateInstance.get(
+        `/seller/${resource}?page=${params.pagination.page}&limit=${params.pagination.perPage}&sort={"${
+          params.sort.field
+        }":${params.sort.order === "ASC" ? "-1" : ""}${params.sort.order === "DESC" ? "1" : ""}}`,
+      );
+      const { item, pagination } = response.data;
+      return {
+        data: item,
+        total: pagination.total,
+        pageInfo: {
+          hasNextPage: pagination.totalPages - pagination.page > 0,
+          hasPreviousPage: pagination.page !== 1,
+        },
+      };
     },
     getOne: async (resource, params) => {
       const response = await privateInstance.get(`/seller/${resource}/${params.id}`);
