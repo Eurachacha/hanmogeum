@@ -92,7 +92,8 @@ const OrderCheckoutPage = () => {
       !shippingInfo?.name ||
       !shippingInfo?.phone ||
       !shippingInfo?.address.value ||
-      !isValidPhoneNumber(shippingInfo?.phone || "")
+      !shippingInfo?.phone ||
+      !isValidPhoneNumber(shippingInfo?.phone.replace(/[^0-9]/g, ""))
     ) {
       setIsShippingModalOpen(true);
       return;
