@@ -15,6 +15,7 @@ import getPriceFormat from "@/utils/getPriceFormat";
 import CategoryButton from "@/components/product/productlist/CategoryButton";
 import useQuantityCounter from "@/hooks/useQuantityCounter";
 import { CartStorageItem } from "@/types/cart";
+import CategoryInfo from "@/components/productDetail/CategoryInfo";
 
 const ProductDetailPage = () => {
   const user = useRecoilValue(loggedInUserState);
@@ -203,6 +204,7 @@ const ProductDetailPage = () => {
           </ProductDetailWrapper>
         </ProductDetailRight>
       </ProductInfo>
+      <CategoryInfo extra={itemData.extra} />
       <DetailArea dangerouslySetInnerHTML={{ __html: itemData.content as TrustedHTML }}></DetailArea>
     </ProductDetailPageLayer>
   );
@@ -242,7 +244,6 @@ const ProductInfo = styled.div`
 const ProductDetailLeft = styled.section`
   max-width: 600px;
   text-align: center;
-  max-width: 600px;
 
   & > img {
     width: 600px;
