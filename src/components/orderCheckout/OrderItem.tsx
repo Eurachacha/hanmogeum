@@ -1,16 +1,19 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 interface OrderItemProps {
+  id: number;
   imgUrl: string;
   name: string;
   quantity: number;
   priceSum: number;
 }
 
-const OrderItem = ({ imgUrl, name, quantity, priceSum }: OrderItemProps) => {
+const OrderItem = ({ id, imgUrl, name, quantity, priceSum }: OrderItemProps) => {
+  const navigate = useNavigate();
   return (
     <OrderItemLayer>
-      <ItemLeft>
+      <ItemLeft onClick={() => navigate(`/products/${id}`)}>
         <ImageWrapper>
           <img src={imgUrl} alt={name} width="100%" />
         </ImageWrapper>
@@ -49,6 +52,7 @@ const ItemLeft = styled.div`
   p {
     font-size: 1.6rem;
     margin: 0 12px;
+    cursor: pointer;
   }
   @media (max-width: 768px) {
     justify-content: flex-start;
@@ -58,6 +62,7 @@ const ItemLeft = styled.div`
 const ImageWrapper = styled.div`
   max-width: 80px;
   border: 1px solid var(--color-gray-50);
+  cursor: pointer;
 `;
 
 const ItemRight = styled.div`
