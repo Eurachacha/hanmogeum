@@ -23,6 +23,7 @@ interface RequestSearchProducts {
   sort?: SortQueryObject;
   filter?: FilterQueryObject;
   price?: PriceObject;
+  page?: number;
 }
 
 const getSortQueryString = (sortQueryObject: SortQueryObject) => {
@@ -60,19 +61,25 @@ const getPriceString = (priceObject: PriceObject) => {
   return `maxPrice=${priceObject}`;
 };
 
+const getPage = (pageData: number) => {
+  return `&page=${pageData}&limit=6`;
+};
+
 const productsApi = {
   getAllProducts: () => publicInstance.get<ResponseProductsList>("/products"),
   getProductById: (_id: number) => publicInstance.get<ResponseProductInfo>(`/products/${_id}`),
   getProductByIsNew: () => publicInstance.get<ResponseProductsList>(`/products?custom={"extra.isNew": true}`),
   getProductByIsBest: () => publicInstance.get<ResponseProductsList>(`/products?custom={"extra.isBest": true}`),
-  searchProducts: ({ sort, filter, price }: RequestSearchProducts) => {
+
+  searchProducts: ({ sort, filter, price, page }: RequestSearchProducts) => {
     const sortQueryString = sort ? getSortQueryString(sort) : "";
     const filterQueryString = filter ? getFilterQueryString(filter) : "";
     const priceString = price ? getPriceString(price) : "";
+    const pageString = page ? getPage(page) : "";
     return publicInstance.get<ResponseProductsList>(
       `/products?${sortQueryString}${sortQueryString && filterQueryString ? "&" : ""}${filterQueryString}${
         filterQueryString && priceString ? "&" : ""
-      }${priceString}`,
+      }${priceString}${pageString}`,
     );
   },
 };
