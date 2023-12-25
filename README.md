@@ -31,7 +31,7 @@
 
 https://github.com/Eurachacha/hanmogeum/assets/36308113/e67d10a1-3c3e-4e2f-b37c-bd33fd4bc064
 
-### [👀더 자세한 화면구성 보기](https://github.com/Eurachacha/hanmogeum/wiki/Figma-%ED%99%94%EB%A9%B4-%EB%94%94%EC%9E%90%EC%9D%B8)
+### [👀더 자세한 화면구성 보기](https://github.com/Eurachacha/hanmogeum/wiki/%08%ED%8E%98%EC%9D%B4%EC%A7%80-%EA%B5%AC%EC%84%B1)
 
 
 
