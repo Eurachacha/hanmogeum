@@ -19,8 +19,8 @@ const ProductItem = ({ product }: ProductItemProps) => {
   const flattenCodes = useRecoilValue(flattenCodeState);
   const teaTypeCode = product.extra.teaType[0];
 
-  // const tasteValue = product.extra.taste.map((item) => flattenCodes[item].value);
-  const hashTagValue = product.extra.hashTag.map((item) => flattenCodes[item].value);
+  const tasteValue = product.extra.taste.map((item) => flattenCodes[item]?.value);
+  const hashTagValue = product.extra.hashTag.map((item) => flattenCodes[item]?.value);
   const priceKor = getPriceFormat({ price: product.price });
   return (
     <ProductItemLayer
@@ -32,9 +32,10 @@ const ProductItem = ({ product }: ProductItemProps) => {
         {imageHoverBox && (
           <ProductItemHoverWrapper>
             <ProductItemHoverTextWrapper>
-              {/* {tasteValue.map((tasteItem) => (
-                <p>#{tasteItem}</p>
-              ))} */}
+              {tasteValue.map((tasteItem, index) => {
+                const tasteKey = index.toString();
+                return <p key={tasteKey}>#{tasteItem}</p>;
+              })}
             </ProductItemHoverTextWrapper>
           </ProductItemHoverWrapper>
         )}
@@ -118,16 +119,18 @@ const ProductItemHoverWrapper = styled.div`
 `;
 
 const ProductItemHoverTextWrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 60%;
-  margin: 20px auto;
-  align-items: center;
 
   p {
     width: 100%;
 
-    padding: 20px;
+    padding: 14px 0;
     color: var(--color-white);
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     border: 1px solid var(--color-white);
     border-radius: 4px;
 
