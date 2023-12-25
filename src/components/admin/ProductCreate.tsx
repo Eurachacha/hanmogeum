@@ -28,6 +28,15 @@ const validateForm = (values: Record<string, any>): Record<string, any> => {
     errors.quantity = "수량을 입력해주세요.";
   } else if (values.quantity <= 0) {
     errors.quantity = "수량은 1개 이상이어야 합니다.";
+  } else if (values.quantity < Number(values.buyQuantity)) {
+    errors.quantity = "수량은 누적 판매량보다 많아야 합니다.";
+  }
+  if (values.buyQuantity === "") {
+    errors.buyQuantity = "누적 판매량을 입력해주세요.";
+  } else if (values.buyQuantity < 0) {
+    errors.buyQuantity = "누적 판매량은 0개 이상이어야 합니다.";
+  } else if (values.buyQuantity > values.quantity) {
+    errors.buyQuantity = "누적 판매량은 수량보다 많을 수 없습니다.";
   }
   if (!values.mainImages) {
     errors.mainImages = "이미지를 등록해주세요.";
@@ -148,6 +157,9 @@ const ProductCreate = () => {
           <div style={{ flex: 1, padding: "0 4px" }}>
             <NumberInput step={1} label="수량(개)" source="quantity" isRequired defaultValue={1} />
           </div>
+          <div style={{ flex: 1, padding: "0 4px" }}>
+            <NumberInput step={1} label="누적 판매량" source="buyQuantity" isRequired defaultValue={0} />
+          </div>
         </div>
         <FileInput
           isRequired
@@ -224,6 +236,15 @@ const ProductCreate = () => {
             source="extra.teaType"
             choices={teaTypeChoices}
             sx={{ padding: "0 4px", "& .MuiInputBase-root": { fontSize: "1.4rem", padding: "4px 0" } }}
+          />
+          <BooleanInput
+            label="상품 공개 여부"
+            source="show"
+            sx={{
+              padding: "0 30px",
+              "& .MuiFormControlLabel-root": { display: "flex", flexDirection: "column-reverse" },
+              "& span": { fontSize: "1.4rem" },
+            }}
           />
         </div>
         <div style={{ display: "flex", width: "100%" }}>
