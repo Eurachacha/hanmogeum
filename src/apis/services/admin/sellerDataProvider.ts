@@ -11,9 +11,7 @@ interface GetListParams {
 
 const createImageFormData = (params: any) => {
   const formData = new FormData();
-  if (params.data.mainImages && params.data.mainImages?.length > 0) {
-    formData.append("attach", params.data.mainImages[0].rawFile);
-  }
+  formData.append("attach", params.data.mainImages.rawFile);
   return formData;
 };
 
