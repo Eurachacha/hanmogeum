@@ -103,7 +103,7 @@ const OrderCheckoutPage = () => {
     });
     const data = {
       products: location.state ? [{ _id: location.state._id, quantity: location.state.quantityInput }] : productsData,
-      shippingInfo: shippingInfo,
+      shippingInfo: { ...shippingInfo, phone: shippingInfo.phone.replace(/[^0-9]/g, "") },
     };
     createOrder(data);
   };
