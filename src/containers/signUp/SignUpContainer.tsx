@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 /* types */
@@ -19,6 +19,9 @@ import userApi from "@/apis/services/users";
 import PASSWORD_MIN_LENGTH from "@/constants/signUpValidation";
 import { AUTH_TOKEN_KEY } from "@/constants/api";
 import isValidPhoneNumber from "@/utils/isValidatePhoneNumber";
+import { cartCheckedItemState, cartState } from "@/recoil/atoms/cartState";
+import { CartStorageItem } from "@/types/cart";
+import cartApi from "@/apis/services/cart";
 
 interface InputDataType {
   title: string;
@@ -72,9 +75,40 @@ const SignUpContainer = () => {
     phoneNumber: "",
   });
   const [showModal, setShowModal] = useState({ isOpen: false, message: "" });
+  const [cartStorage, setCartStorage] = useRecoilState(cartState);
   const [isActiveSignUpButton, setIsActiveSignUpButton] = useState(false);
   const [isActiveEmailButton, setIsActiveEmailButton] = useState(true);
   const setLoggedInUserState = useSetRecoilState(loggedInUserState);
+  const setCartCheckedItem = useSetRecoilState(cartCheckedItemState);
+
+  const mergeCartAfterLogin = async () => {
+    // 상태 관리 중이던 장바구니 상품을 로그인 유저가 갖고 있던 장바구니와 합치기 요청
+    try {
+      if (cartStorage) {
+        const requestCartItemList = cartStorage.map((product) => {
+          return { _id: product.product._id, quantity: product.quantity };
+        });
+        const requestData = { products: requestCartItemList };
+        const responseData = await cartApi.combineCarts(requestData);
+        const updatedCartStorage: CartStorageItem[] = responseData?.data?.item.map((item) => {
+          return {
+            quantity: item.quantity,
+            stock: item.product.quantity - item.product.buyQuantity,
+            product: {
+              _id: item.product._id,
+              name: item.product.name,
+              image: item.product.image,
+              price: item.product.price,
+            },
+          };
+        });
+        setCartStorage(() => updatedCartStorage);
+        setCartCheckedItem(updatedCartStorage.map((item) => item.product._id));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   // 가입하기 버튼을 눌렀을 때 발생하는 이벤트 함수입니다.
   const signUpSubmitClick = async () => {
@@ -96,6 +130,8 @@ const SignUpContainer = () => {
         if (data.ok === 1) {
           setLoggedInUserState(data.item);
           localStorage.setItem(AUTH_TOKEN_KEY, data.item.token.accessToken);
+          localStorage.setItem("refreshToken", data.item.token.refreshToken);
+          await mergeCartAfterLogin();
           navigate("/?welcome=true");
         }
       }
@@ -382,6 +418,8 @@ const SignUpContainer = () => {
   );
 };
 
+export default SignUpContainer;
+
 const SignUpContainerLayer = styled.div`
   display: flex;
   flex-direction: column;
@@ -441,5 +479,3 @@ const ButtonWrapper = styled.div`
   background-color: unset;
   width: 100%;
 `;
-
-export default SignUpContainer;
