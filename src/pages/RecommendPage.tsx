@@ -17,4 +17,8 @@ const RecommendPageLayer = styled.div`
   width: 40vw;
   margin: 0 auto;
   background-color: #fff;
+
+  @media (max-width: 768px) {
+    width: 80vw;
+  }
 `;

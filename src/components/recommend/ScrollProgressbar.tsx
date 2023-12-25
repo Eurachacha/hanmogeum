@@ -56,6 +56,10 @@ const ScrollProgressbarLayer = styled.div`
 const ScrollProgressbarContentWrapper = styled.div`
   width: 40vw;
   margin: 0 auto;
+
+  @media (max-width: 768px) {
+    width: 80vw;
+  }
 `;
 
 const StyledScrollProgressbar = styled.div`
