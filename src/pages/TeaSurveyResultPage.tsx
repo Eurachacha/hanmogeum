@@ -5,6 +5,7 @@ import ProductItemList from "../components/product/productlist/ProductItemList";
 import productsApi from "@/apis/services/products";
 import { Extra, Product } from "@/types/products";
 import Button from "@/components/common/Button";
+import ProductItem from "@/components/product/productlist/ProductItem";
 
 const TeaSurveyResultPage = () => {
   const location = useLocation();
@@ -64,7 +65,13 @@ const TeaSurveyResultPage = () => {
   return (
     <TeaSurveyResultPageLayer>
       <h2>이런 차를 추천해요!</h2>
-      <ProductItemList products={products} listCount={2} />
+      <TeaSurveyResultItemsWrapper>
+        {products &&
+          products.map((product, idx) => {
+            const key = idx.toString();
+            return <ProductItem product={product} key={key} />;
+          })}
+      </TeaSurveyResultItemsWrapper>
       <StyledTeaSurveyResultButtons>
         <Button onClick={reSurvey} size="md" value="다시 검사하기" variant="sub" />
         <Button
@@ -91,6 +98,21 @@ const TeaSurveyResultPageLayer = styled.div`
 
     margin-bottom: 40px;
     text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    width: 80vw;
+  }
+`;
+
+const TeaSurveyResultItemsWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px 14px;
   }
 `;
 
