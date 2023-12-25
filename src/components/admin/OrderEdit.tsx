@@ -60,7 +60,7 @@ const OrderEdit = () => {
           <FunctionField
             sx={{ paddingLeft: 10 }}
             render={(record: OrderDetail) =>
-              record.shippingInfo.address.value + record.shippingInfo.address.detailValue
+              `${record.shippingInfo.address.value} ${record.shippingInfo.address.detailValue}`
             }
           />
         </Labeled>
