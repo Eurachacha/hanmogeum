@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ProductItemList from "../components/product/productlist/ProductItemList";
 import productsApi from "@/apis/services/products";
@@ -7,6 +7,18 @@ import { Extra, Product } from "@/types/products";
 import Button from "@/components/common/Button";
 
 const TeaSurveyResultPage = () => {
+  const location = useLocation();
+  const queryString = location.search;
+
+  const handleCopyClipBoard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      alert("클립보드에 링크가 복사되었습니다.");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const [products, setProducts] = useState<Product[]>([]);
   const localData = JSON.parse(localStorage.getItem("surveyResult") || "");
   const navigate = useNavigate();
@@ -55,6 +67,12 @@ const TeaSurveyResultPage = () => {
       <ProductItemList products={products} listCount={2} />
       <StyledTeaSurveyResultButtons>
         <Button onClick={reSurvey} size="md" value="다시 검사하기" variant="sub" />
+        <Button
+          value="링크 공유하기"
+          size="md"
+          variant="point"
+          onClick={() => handleCopyClipBoard(`${import.meta.env.VITE_API_BASE_URL}/${queryString}`)}
+        />
       </StyledTeaSurveyResultButtons>
     </TeaSurveyResultPageLayer>
   );
