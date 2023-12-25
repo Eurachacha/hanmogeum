@@ -15,6 +15,7 @@ import { nestedCodeState } from "@/recoil/atoms/codeState";
 import { OrderDetail } from "@/types/orders";
 import getPriceFormat from "@/utils/getPriceFormat";
 import { Product } from "@/types/products";
+import autoHyphenPhoneNumber from "@/utils/autoHyphenPhoneNumber";
 
 const OrderEdit = () => {
   const nestedCodes = useRecoilValue(nestedCodeState);
@@ -31,6 +32,7 @@ const OrderEdit = () => {
       }}
     >
       <SimpleForm>
+        <b style={{ fontSize: "2rem", padding: "12px 0" }}>주문자 정보</b>
         <Labeled
           source="주문번호"
           sx={{ display: "flex", flexDirection: "row", width: 120, justifyContent: "space-between" }}
@@ -54,7 +56,10 @@ const OrderEdit = () => {
           source="받는사람 연락처"
           sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}
         >
-          <TextField source="shippingInfo.phone" sx={{ paddingLeft: 10 }} />
+          <FunctionField
+            sx={{ paddingLeft: 10 }}
+            render={(record: OrderDetail) => autoHyphenPhoneNumber(record.shippingInfo.phone)}
+          />
         </Labeled>
         <Labeled source="받는 곳 주소" sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
           <FunctionField
