@@ -18,7 +18,7 @@ const CategoryInfo = ({ extra }: { extra: Extra }) => {
           <CategoryTitle>차 종류</CategoryTitle>
           <TagList>
             {extra.teaType.map((code) => (
-              <Tag>{categoryCodes[code].value}</Tag>
+              <Tag key={code}>{categoryCodes[code].value}</Tag>
             ))}
           </TagList>
         </Category>
@@ -26,7 +26,7 @@ const CategoryInfo = ({ extra }: { extra: Extra }) => {
           <CategoryTitle>맛</CategoryTitle>
           <TagList>
             {extra.taste.map((code) => (
-              <Tag>{categoryCodes[code].value}</Tag>
+              <Tag key={code}>{categoryCodes[code].value}</Tag>
             ))}
           </TagList>
         </Category>
