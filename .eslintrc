@@ -29,6 +29,7 @@
     "import/extensions": ["off"],
     "object-shorthand": ["off"],
     "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-alert": ["off"],
     "no-underscore-dangle": ["off"],
     "@typescript-eslint/naming-convention": [
       "error",

@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CancelIcon from "@/assets/icons/cancel.svg?react";
 import CheckedBoxIcon from "@/assets/icons/checkedBox.svg?react";
 import UncheckedBoxIcon from "@/assets/icons/uncheckedBox.svg?react";
@@ -33,6 +34,7 @@ const CartItem = ({ setCartData, handleDeleteItem, data, idx }: CartItemProps) =
       : (data as CartStorageItem).stock,
   );
   const [cartItemPrice, setCartItemPrice] = useState(data.product.price * quantityInput);
+  const navigate = useNavigate();
 
   const updateQuantity = (_id: number, newQuantity: number) => {
     try {
@@ -118,7 +120,7 @@ const CartItem = ({ setCartData, handleDeleteItem, data, idx }: CartItemProps) =
           >
             {quantityInput > 0 && checkedItems.includes(data.product._id) ? <CheckedBoxIcon /> : <UncheckedBoxIcon />}
           </CheckedBox>
-          <ImageWrapper>
+          <ImageWrapper onClick={() => navigate(`/products/${data.product._id}`)}>
             <img
               src={`${import.meta.env.VITE_API_BASE_URL}${data.product.image.url}`}
               alt={data.product.name}
@@ -126,7 +128,7 @@ const CartItem = ({ setCartData, handleDeleteItem, data, idx }: CartItemProps) =
               height="100%"
             />
           </ImageWrapper>
-          <ProductTitle>{data.product.name}</ProductTitle>
+          <ProductTitle onClick={() => navigate(`/products/${data.product._id}`)}>{data.product.name}</ProductTitle>
         </CartItemLeft>
         <CartItemRight>
           <CountPrice>
@@ -201,6 +203,7 @@ const ImageWrapper = styled.div`
   border: 1px solid var(--color-gray-100);
   padding: 4px;
   margin: 8px;
+  cursor: pointer;
 `;
 
 const ProductTitle = styled.p`
@@ -209,6 +212,7 @@ const ProductTitle = styled.p`
   line-height: initial;
   padding-right: 1.2rem;
   min-width: 10rem;
+  cursor: pointer;
 `;
 
 const CartItemRight = styled.div`

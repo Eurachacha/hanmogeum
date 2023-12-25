@@ -13,6 +13,8 @@ import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import Modal from "@/components/common/Modal";
 import { RequestCreateOrder, ShippingInfoType } from "@/types/orders";
 import ordersApi from "@/apis/services/orders";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import isValidPhoneNumber from "@/utils/isValidatePhoneNumber";
 
 const OrderCheckoutPage = () => {
   const user = useRecoilValue(loggedInUserState);
@@ -23,7 +25,6 @@ const OrderCheckoutPage = () => {
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
   const [isShippingModalOpen, setIsShippingModalOpen] = useState(false);
   const [isOrderErrorModalOpen, setIsOrderErrorModalOpen] = useState(false);
-  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -73,8 +74,8 @@ const OrderCheckoutPage = () => {
   };
 
   const handleStockModalClose = () => {
-    navigate(-1);
     setIsStockModalOpen(false);
+    navigate(-1);
   };
 
   const handleShippingModalClose = () => {
@@ -82,12 +83,18 @@ const OrderCheckoutPage = () => {
   };
 
   const handleOrderErrorModalClose = () => {
-    navigate(-1);
     setIsOrderErrorModalOpen(false);
+    navigate(-1);
   };
 
   const handlePostOrder = () => {
-    if (!shippingInfo?.name || !shippingInfo?.phone || !shippingInfo?.address.value) {
+    if (
+      !shippingInfo?.name ||
+      !shippingInfo?.phone ||
+      !shippingInfo?.address.value ||
+      !shippingInfo?.phone ||
+      !isValidPhoneNumber(shippingInfo?.phone.replace(/[^0-9]/g, ""))
+    ) {
       setIsShippingModalOpen(true);
       return;
     }
@@ -96,24 +103,18 @@ const OrderCheckoutPage = () => {
     });
     const data = {
       products: location.state ? [{ _id: location.state._id, quantity: location.state.quantityInput }] : productsData,
-      shippingInfo: shippingInfo,
+      shippingInfo: { ...shippingInfo, phone: shippingInfo.phone.replace(/[^0-9]/g, "") },
     };
     createOrder(data);
   };
 
-  const handleErrorModalClose = () => {
-    navigate(-1);
-    setIsErrorModalOpen(false);
-  };
-
   useEffect(() => {
-    if (!cartData || cartData.length <= 0) {
-      setIsErrorModalOpen(true);
-    }
     if (user) fetchAllCartItems();
   }, []);
 
-  if (user && cartData && cartData.length > 0) {
+  if (!user) return null;
+
+  if (cartData) {
     return (
       <OrderCheckoutPageLayer>
         <Modal isOpen={isOrderErrorModalOpen} message="주문에 실패했습니다.\n장바구니페이지로 돌아갑니다.">
@@ -143,13 +144,7 @@ const OrderCheckoutPage = () => {
       </OrderCheckoutPageLayer>
     );
   }
-  return (
-    <Modal isOpen={isErrorModalOpen} message="잘못된 접근입니다.">
-      <ButtonWrapper onClick={handleErrorModalClose}>
-        <Button value="확인" size="sm" variant="point"></Button>
-      </ButtonWrapper>
-    </Modal>
-  );
+  return <LoadingSpinner />;
 };
 
 export default OrderCheckoutPage;

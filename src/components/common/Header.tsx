@@ -166,7 +166,7 @@ const ProductCategoryLink = styled.span<CategoryLinkProps>`
 
 const HeaderLayer = styled.div`
   top: 0;
-  width: 100vw;
+  width: 100%;
   border-bottom: 1px solid var(--color-gray-100);
   background-color: var(--color-white);
   a {

@@ -5,6 +5,7 @@ import { Product } from "@/types/products";
 import MainProductsList from "@/components/main/MainProductsList";
 import Banner from "@/components/main/Banner";
 import MainBanner from "@/components/main/MainBanner";
+import Introduction from "@/components/main/Introduction";
 
 const MainContainer = () => {
   const [newProducts, setNewProducts] = useState<Product[]>([]);
@@ -28,6 +29,8 @@ const MainContainer = () => {
         <MainBanner />
       </StyledMainBannerCarousel>
 
+      <Introduction />
+
       {/* 신상품 */}
       {newProducts && (
         <MainProductsList products={newProducts} title="NEW ARRIVALS" content="한모금 상품을 가장 먼저 만나보세요!" />
@@ -43,5 +46,4 @@ export default MainContainer;
 
 const StyledMainBannerCarousel = styled.div`
   width: 100%;
-  height: 400px;
 `;

@@ -15,9 +15,9 @@ const animloader = keyframes`
 
 // Styled loader component
 const Loader = styled.div`
-  width: 48px;
-  height: 40px;
-  margin-top: 30px;
+  width: 4.8rem;
+  height: 4rem;
+  margin-top: 3rem;
   display: inline-block;
   position: relative;
   background: #d25925;
@@ -27,21 +27,21 @@ const Loader = styled.div`
     content: "";
     box-sizing: border-box;
     position: absolute;
-    left: 45px;
-    top: 8px;
+    left: 4.5rem;
+    top: 0.8rem;
     border: 4px solid #d25925;
-    width: 16px;
-    height: 20px;
+    width: 1.6rem;
+    height: 2rem;
     border-radius: 0 4px 4px 0;
   }
 
   &::before {
     content: "";
     position: absolute;
-    width: 1px;
-    height: 10px;
-    top: -15px;
-    left: 11px;
+    width: 0.1rem;
+    height: 1rem;
+    top: -1.5rem;
+    left: 1.1rem;
     box-sizing: border-box;
     animation: ${animloader} 1s ease infinite;
   }
@@ -55,7 +55,7 @@ const SpinnerWrapper = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
-  z-index: 2000;
+  /* z-index: 2000; */
   & > div {
     margin-top: 20rem;
   }

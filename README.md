@@ -26,30 +26,18 @@
 
 </div>
 
-## 화면 구성
+## 쇼핑몰 소개
 
-- 메인페이지
-- 로그인/회원가입 페이지
-- 상품 목록/상품 상세 페이지
-- 장바구니 페이지
-- 상품 구매/구매 확인/주문완료 페이지
-- 마이페이지 > 주문내역 / 주문상세 페이지
-- 마이페이지 > 사용자 정보 수정 페이지
-- 관리자 페이지 > 상품 관리페이지
-- 관리자 페이지 > 주문 관리페이지
-- 나만의 차 찾기 페이지
+
+https://github.com/Eurachacha/hanmogeum/assets/36308113/e67d10a1-3c3e-4e2f-b37c-bd33fd4bc064
+
+### [👀더 자세한 화면구성 보기](https://github.com/Eurachacha/hanmogeum/wiki/%08%ED%8E%98%EC%9D%B4%EC%A7%80-%EA%B5%AC%EC%84%B1)
+
+
 
 ## 기술 스택
+![기술스택](https://github.com/Eurachacha/hanmogeum/assets/36308113/d264f507-c75e-4ec0-aa37-17d7f27e3727)
 
-- ESLint + Airbnb style Guide
-- Vite
-- ReactJS
-- TypeScript
-- Recoil
-- Styled-Component
-- react-router-dom v6
-- tanstack(react-query)
-- React-Admin
 
 ## 🗂 폴더 구조
 
@@ -121,4 +109,5 @@ npm install
 npm run dev
 ```
 
-#### [👀 한모금 프로젝트 더 알아보기!](https://github.com/Eurachacha/hanmogeum/wiki)
+### [👀 한모금 프로젝트 더 알아보기!](https://github.com/Eurachacha/hanmogeum/wiki)
+

@@ -12,6 +12,7 @@ import {
   FileFieldProps,
   ImageField,
   useRecordContext,
+  NumberField,
 } from "react-admin";
 import { useRecoilValue } from "recoil";
 import { CardMedia } from "@mui/material";
@@ -20,7 +21,7 @@ import { MainImageType, ProductDetail } from "@/types/products";
 
 const validateForm = (values: Record<string, any>): Record<string, any> => {
   const errors = {} as any;
-  if (!values.price) {
+  if (values.price === "") {
     errors.price = "판매가격을 입력해주세요.";
   } else if (values.price <= 0) {
     errors.price = "판매가격은 1원 이상이어야 합니다.";
@@ -28,10 +29,12 @@ const validateForm = (values: Record<string, any>): Record<string, any> => {
   if (!values.name || !values.name.replace(/\s/gi, "")) {
     errors.name = "상품명을 입력해주세요.";
   }
-  if (!values.quantity) {
+  if (values.quantity === "") {
     errors.quantity = "수량을 입력해주세요.";
   } else if (values.quantity <= 0) {
-    errors.quantity = "수량은 0개 이상이어야 합니다.";
+    errors.quantity = "수량은 1개 이상이어야 합니다.";
+  } else if (values.quantity < Number(values.buyQuantity)) {
+    errors.quantity = "수량은 누적 판매량보다 많아야 합니다.";
   }
   if (!values.mainImages) {
     errors.mainImages = "이미지를 등록해주세요.";
@@ -48,7 +51,7 @@ const validateForm = (values: Record<string, any>): Record<string, any> => {
   if (!values.extra.hashTag || values.extra.hashTag.length <= 0) {
     errors["extra.hashTag"] = "상황을 선택해주세요.";
   } else if (values.extra.hashTag.length > 5) {
-    errors.extra.hashTag = "최대 5개까지 등록 가능합니다.";
+    errors["extra.hashTag"] = "최대 5개까지 등록 가능합니다.";
   }
   if (!values.content || !values.content.trim()) {
     errors.content = "상품 설명은 10글자 이상 입력해야 합니다.";
@@ -201,6 +204,19 @@ const ProductEdit = () => {
           <div style={{ flex: 1, padding: "0 4px" }}>
             <NumberInput step={1} label="수량(개)" source="quantity" isRequired defaultValue={1} />
           </div>
+          <div style={{ flex: 1, padding: "0 4px" }}>
+            <Labeled
+              sx={{
+                flex: 1,
+                display: "flex",
+                justifyContent: "center",
+                textAlign: "center",
+                padding: "10px 0",
+              }}
+            >
+              <NumberField label="누적 판매량" source="buyQuantity" sx={{ height: 40 }} />
+            </Labeled>
+          </div>
         </div>
         <hr style={{ border: "0.5px solid var(--color-gray-100)", width: "100%" }} />
 
@@ -242,6 +258,15 @@ const ProductEdit = () => {
             source="extra.teaType"
             choices={teaTypeChoices}
             sx={{ padding: "0 4px", "& .MuiInputBase-root": { fontSize: "1.4rem", padding: "4px 0" } }}
+          />
+          <BooleanInput
+            label="상품 공개 여부"
+            source="show"
+            sx={{
+              padding: "0 30px",
+              "& .MuiFormControlLabel-root": { display: "flex", flexDirection: "column-reverse" },
+              "& span": { fontSize: "1.4rem" },
+            }}
           />
         </div>
         <div style={{ display: "flex", width: "70%" }}>

@@ -2,9 +2,9 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { cartState } from "@/recoil/atoms/cartState";
 import productsApi from "@/apis/services/products";
-import { ProductDetailWithReplies } from "@/types/products";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
 import cartApi from "@/apis/services/cart";
 import Modal from "@/components/common/Modal";
@@ -15,9 +15,9 @@ import getPriceFormat from "@/utils/getPriceFormat";
 import CategoryButton from "@/components/product/productlist/CategoryButton";
 import useQuantityCounter from "@/hooks/useQuantityCounter";
 import { CartStorageItem } from "@/types/cart";
+import CategoryInfo from "@/components/productDetail/CategoryInfo";
 
 const ProductDetailPage = () => {
-  const [itemData, setItemData] = useState<ProductDetailWithReplies>();
   const user = useRecoilValue(loggedInUserState);
   const [cartStorage, setCartStorage] = useRecoilState(cartState);
   const [isAddCartModalOpen, setIsAddCartModalOpen] = useState(false);
@@ -29,43 +29,34 @@ const ProductDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const fetchProductInfo = async (product_id: number) => {
-    try {
-      const response = await productsApi.getProductById(product_id);
-      const { item } = response.data;
-      setItemData(item);
-    } catch (error) {
-      console.error(error);
-      navigate("/");
-    }
-  };
+  const { data } = useSuspenseQuery({
+    queryKey: ["products", id],
+    queryFn: () => productsApi.getProductById(Number(id)),
+    staleTime: 1000 * 10,
+    select: (res) => res.data.item,
+    retry: 0,
+    refetchOnWindowFocus: "always",
+  });
+
+  const itemData = data;
 
   const addToCartData = async (product_id: number, quantity: number) => {
-    try {
-      const response = await cartApi.addItem({ product_id: product_id, quantity: quantity });
-      const { item: items } = response.data;
-      const updatedCartStorage: CartStorageItem[] = items.map((item) => {
-        return {
-          quantity: item.quantity,
-          stock: item.product.quantity - item.product.buyQuantity,
-          product: {
-            _id: item.product._id,
-            name: item.product.name,
-            image: item.product.image,
-            price: item.product.price,
-          },
-        };
-      });
-      setCartStorage(() => updatedCartStorage);
-    } catch (error) {
-      console.error(error);
-    }
+    const response = await cartApi.addItem({ product_id: product_id, quantity: quantity });
+    const { item: items } = response.data;
+    const updatedCartStorage: CartStorageItem[] = items.map((item) => {
+      return {
+        quantity: item.quantity,
+        stock: item.product.quantity - item.product.buyQuantity,
+        product: {
+          _id: item.product._id,
+          name: item.product.name,
+          image: item.product.image,
+          price: item.product.price,
+        },
+      };
+    });
+    setCartStorage(() => updatedCartStorage);
   };
-
-  useEffect(() => {
-    if (!id) navigate("/");
-    fetchProductInfo(Number(id));
-  }, []);
 
   const handleAddToCart = () => {
     if (user) {
@@ -121,11 +112,11 @@ const ProductDetailPage = () => {
 
   const { handleQuantityInput, quantityInput, setQuantityInputAsStock } = useQuantityCounter(
     1,
-    itemData ? itemData.quantity - itemData.buyQuantity : 0,
+    itemData.quantity - itemData.buyQuantity,
   );
 
   useEffect(() => {
-    if (itemData && itemData.quantity - itemData.buyQuantity === 0) setQuantityInputAsStock(0);
+    if (itemData.quantity - itemData.buyQuantity === 0) setQuantityInputAsStock(0);
   }, [itemData]);
 
   return (
@@ -153,7 +144,7 @@ const ProductDetailPage = () => {
       </Modal>
       <Modal
         isOpen={isCheckoutConfirmModalOpen}
-        targetString={`${itemData?.name} X ${quantityInput}개`}
+        targetString={`${itemData.name} X ${quantityInput}개`}
         message="구매하시겠습니까?"
       >
         <ButtonWrapper onClick={() => setIsCheckoutConfirmModalOpen(false)}>
@@ -163,55 +154,58 @@ const ProductDetailPage = () => {
           <Button value="구매하기" size="sm" variant="point" />
         </ButtonWrapper>
       </Modal>
-      <ProductDetailLeft>
-        <img
-          src={`${import.meta.env.VITE_API_BASE_URL}${itemData?.mainImages[0].url}`}
-          alt={itemData?.name}
-          width={600}
-        />
-        <DetailArea dangerouslySetInnerHTML={{ __html: itemData?.content as TrustedHTML }}></DetailArea>
-      </ProductDetailLeft>
-      <ProductDetailRight>
-        <TeaType>{itemData?.extra.teaType[0] ? categoryCodes[itemData?.extra.teaType[0]].value : ""}</TeaType>
-        <Title>{itemData?.name}</Title>
-        <ItemPrice>{itemData?.price ? getPriceFormat({ price: itemData?.price }) : ""}</ItemPrice>
-        <HashTagArea>
-          <p>이런 분에게 추천해요!</p>
-          <HashTagWrapper>
-            {itemData?.extra.hashTag.map((tagCode, idx) => {
-              const keyIndex = idx.toString();
-              return <CategoryButton key={keyIndex} code={tagCode} disabled />;
-            })}
-          </HashTagWrapper>
-        </HashTagArea>
-        <QuantityHandler>
-          <p>{itemData?.name}</p>
-          <CounterWrapper>
-            <Counter>
-              <CounterLayer>
-                <CounterButton handleQuantity={() => handleQuantityInput("minus")}>-</CounterButton>
-                <QuantityWrapper
-                  type="number"
-                  value={quantityInput}
-                  max={itemData && itemData.quantity - itemData.buyQuantity}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleQuantityInput("", event)}
-                />
-                <CounterButton handleQuantity={() => handleQuantityInput("plus")}>+</CounterButton>
-              </CounterLayer>
-              <p>재고: {itemData && itemData.quantity - itemData.buyQuantity}개</p>
-            </Counter>
-            <p>{itemData?.price ? getPriceFormat({ price: itemData.price * quantityInput }) : ""}</p>
-          </CounterWrapper>
-        </QuantityHandler>
-        <ButtonArea>
-          <MainButtonWrapper onClick={handleAddToCart}>
-            <Button value="장바구니" size="lg" variant="sub" disabled={!quantityInput} />
-          </MainButtonWrapper>
-          <MainButtonWrapper onClick={() => (user ? setIsCheckoutConfirmModalOpen(true) : setIsLoginModalOpen(true))}>
-            <Button value="바로구매" size="lg" variant="point" disabled={!quantityInput} />
-          </MainButtonWrapper>
-        </ButtonArea>
-      </ProductDetailRight>
+      <ProductInfo>
+        <ProductDetailLeft>
+          <img src={`${import.meta.env.VITE_API_BASE_URL}${itemData.mainImages[0].url}`} alt={itemData.name} />
+        </ProductDetailLeft>
+        <ProductDetailRight>
+          <ProductDetailWrapper>
+            <TeaType>{itemData.extra.teaType[0] ? categoryCodes[itemData.extra.teaType[0]].value : ""}</TeaType>
+            <Title>{itemData.name}</Title>
+            <ItemPrice>{itemData.price ? getPriceFormat({ price: itemData.price }) : ""}</ItemPrice>
+            <HashTagArea>
+              <p>이런 분에게 추천해요!</p>
+              <HashTagWrapper>
+                {itemData.extra.hashTag.map((tagCode, idx) => {
+                  const keyIndex = idx.toString();
+                  return <CategoryButton key={keyIndex} code={tagCode} disabled />;
+                })}
+              </HashTagWrapper>
+            </HashTagArea>
+            <QuantityHandler>
+              <p>{itemData.name}</p>
+              <CounterWrapper>
+                <Counter>
+                  <CounterLayer>
+                    <CounterButton handleQuantity={() => handleQuantityInput("minus")}>-</CounterButton>
+                    <QuantityWrapper
+                      type="number"
+                      value={quantityInput}
+                      max={itemData.quantity - itemData.buyQuantity}
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleQuantityInput("", event)}
+                    />
+                    <CounterButton handleQuantity={() => handleQuantityInput("plus")}>+</CounterButton>
+                  </CounterLayer>
+                  <p>재고: {itemData.quantity - itemData.buyQuantity}개</p>
+                </Counter>
+                <p>{getPriceFormat({ price: itemData.price * quantityInput })}</p>
+              </CounterWrapper>
+            </QuantityHandler>
+            <ButtonArea>
+              <MainButtonWrapper onClick={handleAddToCart}>
+                <Button value="장바구니" size="lg" variant="sub" disabled={!quantityInput} />
+              </MainButtonWrapper>
+              <MainButtonWrapper
+                onClick={() => (user ? setIsCheckoutConfirmModalOpen(true) : setIsLoginModalOpen(true))}
+              >
+                <Button value="바로구매" size="lg" variant="point" disabled={!quantityInput} />
+              </MainButtonWrapper>
+            </ButtonArea>
+          </ProductDetailWrapper>
+        </ProductDetailRight>
+      </ProductInfo>
+      <CategoryInfo extra={itemData.extra} />
+      <DetailArea dangerouslySetInnerHTML={{ __html: itemData.content as TrustedHTML }}></DetailArea>
     </ProductDetailPageLayer>
   );
 };
@@ -220,11 +214,16 @@ export default ProductDetailPage;
 
 const ProductDetailPageLayer = styled.div`
   display: flex;
+  flex-direction: column;
+
   justify-content: space-between;
   margin-top: 20px;
 
   @media (max-width: 768px) {
     flex-direction: column;
+  }
+  @media (max-width: 1149px) {
+    align-items: center;
   }
 `;
 
@@ -233,25 +232,90 @@ const ButtonWrapper = styled.div`
   padding: 0 4px;
 `;
 
-const ProductDetailLeft = styled.section`
-  min-width: 650px;
-  text-align: center;
+const ProductInfo = styled.div`
+  display: flex;
+
+  @media (max-width: 1149px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
-const DetailArea = styled.div`
-  max-width: 650px;
+const ProductDetailLeft = styled.section`
+  max-width: 600px;
   text-align: center;
 
-  & img {
+  & > img {
     width: 600px;
+    max-width: 600px;
     border: 1px solid var(--color-gray-100);
+    @media (max-width: 1149px) {
+      width: 100%;
+      min-width: 300px;
+    }
   }
 `;
 
 const ProductDetailRight = styled.section`
   flex: 1;
+  margin-left: 20px;
+  @media (max-width: 1149px) {
+    margin: 20px 0;
+    width: 100%;
+  }
+  @media (min-width: 1150px) {
+    position: fixed;
+    padding-left: 20px;
+    margin: 0 auto;
+    min-width: 28%;
+    width: calc(35vw);
+    left: calc(50vw - (-100vw * 0.08));
+  }
+  @media (min-width: 1280px) {
+    padding: 0;
+    margin-right: calc(100vw - 1280px + (100vw * 0.01));
+    min-width: 30%;
+    left: calc(48vw - (-100vw * 0.07));
+  }
+  @media (min-width: 1441px) {
+    max-width: 460px;
+    left: calc(46vw - (-100vw * 0.07));
+  }
+`;
+
+const ProductDetailWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  min-width: 300px;
+  max-width: 600px;
+
+  @media (min-width: 1150px) {
+    margin-bottom: 220px;
+    justify-content: center;
+    flex: 1;
+  }
+  @media (min-width: 1441px) {
+    max-width: 460px;
+  }
+`;
+
+const DetailArea = styled.div`
+  max-width: 600px;
+  text-align: center;
+
+  @media (max-width: 1149px) {
+    width: 100%;
+    min-width: 300px;
+  }
+
+  & img {
+    min-width: 300px;
+    max-width: 600px;
+    border: 1px solid var(--color-gray-100);
+    @media (max-width: 1149px) {
+      width: 100%;
+    }
+  }
 `;
 
 const TeaType = styled.p`

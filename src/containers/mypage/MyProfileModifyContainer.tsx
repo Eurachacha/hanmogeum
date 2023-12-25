@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 import { useNavigate } from "react-router-dom";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
@@ -21,6 +21,7 @@ import PASSWORD_MIN_LENGTH from "@/constants/signUpValidation";
 import ContentsTitle from "@/components/contentsTitle/ContentsTitle";
 import ContainerHeader from "@/components/mypage/ContainerHeader.";
 import additionalAuthState from "@/recoil/atoms/additionalAuthState";
+import isValidPhoneNumber from "@/utils/isValidatePhoneNumber";
 
 interface InputDataType {
   title: string;
@@ -78,6 +79,7 @@ const MyProfileEditContainer = () => {
   const [isActiveSignUpButton, setIsActiveSignUpButton] = useState(false);
   const [isActiveEmailButton, setIsActiveEmailButton] = useState(true);
   const isAdditionalLogined = useRecoilValue(additionalAuthState);
+  const setLoggedInUserState = useSetRecoilState(loggedInUserState);
 
   // 수정하기 버튼을 눌렀을 때 발생하는 이벤트 함수입니다.
   const signUpSubmitClick = async (event: React.MouseEvent<HTMLElement>) => {
@@ -87,10 +89,14 @@ const MyProfileEditContainer = () => {
     if (signUpData?.password) updateData.password = signUpData.password;
     if (signUpData?.name) updateData.name = signUpData.name; // 여기서는 옵셔널 체이닝이 필요 없습니다.
     if (onlyNumberPhone) updateData.phone = onlyNumberPhone;
-    if (signUpData.address || signUpData.addressDetail)
-      updateData.address = `${signUpData.address} ${signUpData.addressDetail}`;
+    if (signUpData.address || signUpData.addressDetail) {
+      updateData.address = `${signUpData.address}`;
+      updateData.detailAddress = `${signUpData.addressDetail}`;
+    }
     try {
       await userApi.updateUserProfile(loggedInUser?._id || -1, updateData);
+      const responseUserProfile = await userApi.getUserProfile(loggedInUser?._id || -1);
+      setLoggedInUserState(responseUserProfile.data.item);
       setShowModal((prevState) => ({ ...prevState, isOpen: true, message: "수정이 완료되었습니다." }));
     } catch (error) {
       console.error(error);
@@ -102,7 +108,6 @@ const MyProfileEditContainer = () => {
     }
   };
 
-  // 입력 필드가 변경될 때마다 값을 저장하는 함수입니다.
   const inputHandleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
     setSignUpData((prevState) => ({
@@ -111,7 +116,6 @@ const MyProfileEditContainer = () => {
     }));
   };
 
-  // TODO: 커스텀 훅 사용하도록 수정
   const openPostcode = useDaumPostcodePopup();
   const addressSearchHandleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -132,14 +136,13 @@ const MyProfileEditContainer = () => {
   const modalClickHandle = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (showModal.goToPrevPage) {
-      navigate(-1);
+      navigate("/mypage/profile");
     }
     setShowModal((prevState) => {
       return { ...prevState, isOpen: false };
     });
   };
 
-  // TODO: 다음 useEffect들 커스텀 훅으로 변경
   useEffect(() => {
     if (
       validationMessage.password === "" &&
@@ -179,7 +182,7 @@ const MyProfileEditContainer = () => {
   useEffect(() => {
     const formattingPhoneNumber = autoHyphenPhoneNumber(signUpData.phoneNumber);
     setSignUpData((prevState) => ({ ...prevState, phoneNumber: formattingPhoneNumber }));
-    if (signUpData.phoneNumber && !/^01[016789]-?\d{3,4}-?\d{4}$/.test(signUpData.phoneNumber)) {
+    if (signUpData.phoneNumber && !isValidPhoneNumber(signUpData.phoneNumber)) {
       setValidationMessage((prevState) => ({ ...prevState, phoneNumber: "올바른 휴대폰 번호를 입력해주세요." }));
     } else {
       setValidationMessage((prevState) => ({ ...prevState, phoneNumber: "" }));

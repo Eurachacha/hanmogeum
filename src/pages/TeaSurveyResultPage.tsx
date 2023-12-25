@@ -1,12 +1,24 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import ProductItemList from "../components/product/productlist/ProductItemList";
 import productsApi from "@/apis/services/products";
 import { Extra, Product } from "@/types/products";
 import Button from "@/components/common/Button";
+import ProductItem from "@/components/product/productlist/ProductItem";
 
 const TeaSurveyResultPage = () => {
+  const location = useLocation();
+  const queryString = location.search;
+
+  const handleCopyClipBoard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      alert("클립보드에 링크가 복사되었습니다.");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const [products, setProducts] = useState<Product[]>([]);
   const localData = JSON.parse(localStorage.getItem("surveyResult") || "");
   const navigate = useNavigate();
@@ -52,9 +64,21 @@ const TeaSurveyResultPage = () => {
   return (
     <TeaSurveyResultPageLayer>
       <h2>이런 차를 추천해요!</h2>
-      <ProductItemList products={products} listCount={2} />
+      <TeaSurveyResultItemsWrapper>
+        {products &&
+          products.map((product, idx) => {
+            const key = idx.toString();
+            return <ProductItem product={product} key={key} />;
+          })}
+      </TeaSurveyResultItemsWrapper>
       <StyledTeaSurveyResultButtons>
         <Button onClick={reSurvey} size="md" value="다시 검사하기" variant="sub" />
+        <Button
+          value="링크 공유하기"
+          size="md"
+          variant="point"
+          onClick={() => handleCopyClipBoard(`${import.meta.env.VITE_API_BASE_URL}/${queryString}`)}
+        />
       </StyledTeaSurveyResultButtons>
     </TeaSurveyResultPageLayer>
   );
@@ -74,6 +98,21 @@ const TeaSurveyResultPageLayer = styled.div`
     margin-bottom: 40px;
     text-align: center;
   }
+
+  @media (max-width: 768px) {
+    width: 80vw;
+  }
+`;
+
+const TeaSurveyResultItemsWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px 14px;
+  }
 `;
 
 const StyledTeaSurveyResultButtons = styled.div`
@@ -81,4 +120,12 @@ const StyledTeaSurveyResultButtons = styled.div`
 
   display: flex;
   gap: 20px;
+
+  @media (max-width: 768px) {
+    display: block;
+
+    button:first-child {
+      margin-bottom: 10px;
+    }
+  }
 `;
