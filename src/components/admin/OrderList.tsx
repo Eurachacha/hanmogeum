@@ -38,8 +38,8 @@ const OrderList = () => {
       exporter={false}
     >
       <Datagrid rowClick="edit">
-        <TextField source="_id" label="주문번호" sortable={false} />
-        <TextField source="user_id" label="주문자ID" sortable={false} />
+        <TextField source="_id" label="주문번호" />
+        <TextField source="user_id" label="주문자ID" />
         <FunctionField label="배송상태" render={(record: OrderDetail) => getCodeValue(flattenCodes, record.state)} />
         <FunctionField
           label="배송지"

@@ -40,13 +40,12 @@ const ProductList = () => {
       exporter={false}
     >
       <Datagrid rowClick="edit">
-        <TextField source="_id" label="상품ID" sortable={false} />
-        <TextField source="name" label="상품명" sortable={false} />
+        <TextField source="_id" label="상품ID" />
+        <TextField source="name" label="상품명" />
         <FunctionField
           source="price"
           label="판매가격"
           render={(record: Product) => getPriceFormat({ price: record.price })}
-          sortable
         />
         <FunctionField
           source="stock"
