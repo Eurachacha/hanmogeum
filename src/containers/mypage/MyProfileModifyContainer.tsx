@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useDaumPostcodePopup } from "react-daum-postcode";
 import { useNavigate } from "react-router-dom";
 import loggedInUserState from "@/recoil/atoms/loggedInUserState";
@@ -79,6 +79,7 @@ const MyProfileEditContainer = () => {
   const [isActiveSignUpButton, setIsActiveSignUpButton] = useState(false);
   const [isActiveEmailButton, setIsActiveEmailButton] = useState(true);
   const isAdditionalLogined = useRecoilValue(additionalAuthState);
+  const setLoggedInUserState = useSetRecoilState(loggedInUserState);
 
   // 수정하기 버튼을 눌렀을 때 발생하는 이벤트 함수입니다.
   const signUpSubmitClick = async (event: React.MouseEvent<HTMLElement>) => {
@@ -88,10 +89,14 @@ const MyProfileEditContainer = () => {
     if (signUpData?.password) updateData.password = signUpData.password;
     if (signUpData?.name) updateData.name = signUpData.name; // 여기서는 옵셔널 체이닝이 필요 없습니다.
     if (onlyNumberPhone) updateData.phone = onlyNumberPhone;
-    if (signUpData.address || signUpData.addressDetail)
-      updateData.address = `${signUpData.address} ${signUpData.addressDetail}`;
+    if (signUpData.address || signUpData.addressDetail) {
+      updateData.address = `${signUpData.address}`;
+      updateData.detailAddress = `${signUpData.addressDetail}`;
+    }
     try {
       await userApi.updateUserProfile(loggedInUser?._id || -1, updateData);
+      const responseUserProfile = await userApi.getUserProfile(loggedInUser?._id || -1);
+      setLoggedInUserState(responseUserProfile.data.item);
       setShowModal((prevState) => ({ ...prevState, isOpen: true, message: "수정이 완료되었습니다." }));
     } catch (error) {
       console.error(error);
