@@ -253,6 +253,9 @@ const TeaSurveyButtonWrapper = styled.ul`
     font-size: 1.8rem;
     margin-top: 4px;
   }
+  @media (max-width: 768px) {
+    gap: 14px;
+  }
 `;
 
 const StyledTeasurveyButton = styled.button<{ $variantStyle: RuleSet<object> }>`
@@ -262,4 +265,8 @@ const StyledTeasurveyButton = styled.button<{ $variantStyle: RuleSet<object> }>`
   padding: 60px 0;
   border-radius: 4px;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    padding: 40px 0;
+  }
 `;
