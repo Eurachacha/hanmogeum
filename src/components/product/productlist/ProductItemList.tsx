@@ -9,7 +9,7 @@ interface ProductItemListProps {
   listCount: number;
   pagination?: number;
   onClick?: (event: React.ChangeEvent<unknown>, page: number) => void;
-  currentPage: number;
+  currentPage?: number;
 }
 
 const ProductItemList = ({ products, listCount, pagination, onClick, currentPage }: ProductItemListProps) => {
