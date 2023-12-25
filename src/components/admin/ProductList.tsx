@@ -1,4 +1,4 @@
-import { List, Datagrid, TextField, FunctionField, Pagination } from "react-admin";
+import { List, Datagrid, TextField, FunctionField, Pagination, BooleanField } from "react-admin";
 import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { Product } from "@/types/products";
@@ -62,6 +62,7 @@ const ProductList = () => {
           }}
         />
         <TextField source="buyQuantity" label="누적주문수" sortable />
+        <BooleanField source="show" label="상품 공개 여부" />
       </Datagrid>
     </List>
   );

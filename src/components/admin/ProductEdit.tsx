@@ -214,7 +214,7 @@ const ProductEdit = () => {
                 padding: "10px 0",
               }}
             >
-              <NumberField label="누적 판매량" source="buyQuantity" sx={{ height: 40 }} isRequired />
+              <NumberField label="누적 판매량" source="buyQuantity" sx={{ height: 40 }} />
             </Labeled>
           </div>
         </div>
@@ -258,6 +258,15 @@ const ProductEdit = () => {
             source="extra.teaType"
             choices={teaTypeChoices}
             sx={{ padding: "0 4px", "& .MuiInputBase-root": { fontSize: "1.4rem", padding: "4px 0" } }}
+          />
+          <BooleanInput
+            label="상품 공개 여부"
+            source="show"
+            sx={{
+              padding: "0 30px",
+              "& .MuiFormControlLabel-root": { display: "flex", flexDirection: "column-reverse" },
+              "& span": { fontSize: "1.4rem" },
+            }}
           />
         </div>
         <div style={{ display: "flex", width: "70%" }}>
