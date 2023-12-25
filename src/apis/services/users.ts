@@ -14,7 +14,7 @@ const userApi = {
     publicInstance.get<ResponseEmailDuplicateCheck>(`/users/email?email=${email}`),
   loginUser: (credentials: LoginData) => publicInstance.post<ResponseLogin>("/users/login", credentials),
   signUpUser: (data: SignUpData) => publicInstance.post<ResponseSignUp>("/users", data),
-  getUserProfile: (_id: number) => privateInstance.get<ResponseUpdateUser>(`/users/${_id}`),
+  getUserProfile: (_id: number) => privateInstance.get<ResponseSignUp>(`/users/${_id}`),
   updateUserProfile: (_id: number, data: RequestUpdateUser) =>
     privateInstance.patch<ResponseUpdateUser>(`/users/${_id}`, data),
 };
