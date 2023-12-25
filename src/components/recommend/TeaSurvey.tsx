@@ -138,7 +138,7 @@ const TeaSurvey = () => {
   };
 
   return (
-    <div>
+    <TeaSurveyLayer>
       <TeaSurveyWrapper>
         <StyledTeaSurveyTitle>어떤 종류를 선호하시나요?</StyledTeaSurveyTitle>
         <TeaSurveyButtonWrapper>
@@ -170,7 +170,6 @@ const TeaSurvey = () => {
                   onClick={() => onTasteClick(index, item.data)}
                   $variantStyle={isTasteClicked === index ? VARIANTS.active : VARIANTS.default}
                 >
-                  {/* <StyledTeasurveyButton onClick={() => setTaste(item.data)}> */}
                   <h2>{item.title}</h2>
                 </StyledTeasurveyButton>
               </li>
@@ -191,7 +190,6 @@ const TeaSurvey = () => {
                   onClick={() => onIsDecafClick(index, item.data)}
                   $variantStyle={isDecafClicked === index ? VARIANTS.active : VARIANTS.default}
                 >
-                  {/* <StyledTeasurveyButton onClick={() => setIsDecaf(item.data)}> */}
                   <p>{item.content}</p>
                   <h2>{item.title}</h2>
                 </StyledTeasurveyButton>
@@ -213,7 +211,6 @@ const TeaSurvey = () => {
                   onClick={() => onIsPriceClick(index, item.data)}
                   $variantStyle={isPriceClicked === index ? VARIANTS.active : VARIANTS.default}
                 >
-                  {/* <StyledTeasurveyButton onClick={() => setPrice(Number(item.data))}> */}
                   <h2>{item.title}</h2>
                 </StyledTeasurveyButton>
               </li>
@@ -225,15 +222,23 @@ const TeaSurvey = () => {
       <StyledTeaSurveyResult onClick={setLocalStorage}>
         <Button value="결과 확인하기" size="lg" variant="point" />
       </StyledTeaSurveyResult>
-    </div>
+    </TeaSurveyLayer>
   );
 };
 
 export default TeaSurvey;
 
+const TeaSurveyLayer = styled.div`
+  width: 100%;
+`;
+
 const TeaSurveyWrapper = styled.section`
   padding: 80px 0;
   text-align: center;
+
+  @media (max-width: 768px) {
+    padding: 40px 0;
+  }
 `;
 
 const StyledTeaSurveyTitle = styled.h2`
