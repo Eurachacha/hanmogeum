@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import ProductItemList from "../components/product/productlist/ProductItemList";
 import productsApi from "@/apis/services/products";
 import { Extra, Product } from "@/types/products";
 import Button from "@/components/common/Button";
