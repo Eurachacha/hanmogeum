@@ -99,4 +99,12 @@ const StyledTeaSurveyResultButtons = styled.div`
 
   display: flex;
   gap: 20px;
+
+  @media (max-width: 768px) {
+    display: block;
+
+    button:first-child {
+      margin-bottom: 10px;
+    }
+  }
 `;
