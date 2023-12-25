@@ -1,11 +1,14 @@
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import productsApi, { FilterQueryObject, SortQueryObject } from "@/apis/services/products";
 import ProductItemList from "@/components/product/productlist/ProductItemList";
 import ProductSortButtons from "@/components/product/productlist/ProductSortButtons";
 
 const ProductSortContainer = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
   const location = useLocation();
   const queryString = location.search;
 
@@ -51,26 +54,39 @@ const ProductSortContainer = () => {
   }
 
   const { data, error } = useSuspenseQuery({
-    queryKey: ["products", sortObject, filterObject],
+    queryKey: ["products", sortObject, filterObject, searchParams, currentPage],
     queryFn: () =>
       productsApi.searchProducts({
         sort: sortObject,
         filter: filterObject,
+        page: currentPage,
       }),
     staleTime: 1000 * 10,
-    select: (response) => response.data.item,
+    select: (response) => response,
     refetchOnWindowFocus: "always",
   });
 
-  const products = data;
+  const products = data.data.item;
+  const pagination = data.data.pagination.totalPages;
   if (error) {
     console.error(error);
   }
 
+  const paginationHandleChange = (event: React.ChangeEvent<unknown>, page: number) => {
+    event.preventDefault();
+    setCurrentPage(page);
+  };
+
   return (
     <ProductSortContainerLayer>
       <ProductSortButtons productLength={products.length} />
-      <ProductItemList products={products} listCount={3} />
+      <ProductItemList
+        products={products}
+        listCount={3}
+        pagination={pagination}
+        onClick={(event, page) => paginationHandleChange(event, page)}
+        currentPage={currentPage}
+      />
     </ProductSortContainerLayer>
   );
 };

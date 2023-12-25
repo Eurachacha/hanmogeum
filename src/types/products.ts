@@ -42,10 +42,17 @@ export interface ProductDetailWithReplies extends ProductDetail {
 }
 
 // Reponse Types
+export interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
 
 export interface ResponseProductsList {
   ok: number;
   item: Product[];
+  pagination: Pagination;
 }
 
 export interface ResponseProductInfo {
