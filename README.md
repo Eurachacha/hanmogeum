@@ -26,13 +26,25 @@
 
 </div>
 
-## 쇼핑몰 소개
+## 화면 구성
 
 
-https://github.com/Eurachacha/hanmogeum/assets/36308113/e67d10a1-3c3e-4e2f-b37c-bd33fd4bc064
+| 맞춤 차 찾기|
+| - |
+| <img src="https://github.com/Eurachacha/hanmogeum/assets/36308113/83ac1c47-6860-4f78-8d2e-692038ba78dc" width="400"> |
 
-### [👀더 자세한 화면구성 보기](https://github.com/Eurachacha/hanmogeum/wiki/%08%ED%8E%98%EC%9D%B4%EC%A7%80-%EA%B5%AC%EC%84%B1)
+| 상품 구매 | 장바구니 |
+| - | - |
+| <img src="https://github.com/Eurachacha/hanmogeum/assets/36308113/f0b06fa1-3d08-4735-9e8c-febb9f5da905" width="400">| <img src="https://github.com/Eurachacha/hanmogeum/assets/36308113/a9fb8ccd-4d1c-4020-9c95-bc3e63ac72e7" width="400">|
 
+
+| 마이페이지 > 주문관리| 마이페이지 > 내정보변경 |
+| - | - |
+| <img src="https://github.com/Eurachacha/hanmogeum/assets/36308113/202a29eb-796f-4fcd-8379-36086aa61020" width="400"> | <img src="https://github.com/Eurachacha/hanmogeum/assets/36308113/a02fced5-3c94-4b23-b76a-98ace44b7c57" width="400"> |
+
+| 관리자 페이지 > 주문 관리| 관리자 페이지 > 상품 관리 |
+| - | - |
+| <img src="https://github.com/Eurachacha/hanmogeum/assets/36308113/4d8cde05-d9e4-4807-b8af-053f039e9ec1" width="400"> | <img src="https://github.com/Eurachacha/hanmogeum/assets/36308113/9867ca06-221f-49a7-88da-b2bf39ebde07" width="400"> |
 
 
 ## 기술 스택
