@@ -26,60 +26,72 @@ const OrderEdit = () => {
   return (
     <Edit
       sx={{
+        "& .RaLabeled-label": {
+          minWidth: 120,
+        },
         "& span": {
           fontSize: "1.8rem",
+        },
+        "& #state": {
+          fontSize: "1.6rem",
+          height: 40,
+          display: "flex",
+          alignItems: "center",
+        },
+        "& th, td ": {
+          textAlign: "center",
         },
       }}
     >
       <SimpleForm>
-        <b style={{ fontSize: "2rem", padding: "12px 0" }}>주문자 정보</b>
-        <Labeled
-          source="주문번호"
-          sx={{ display: "flex", flexDirection: "row", width: 120, justifyContent: "space-between" }}
-        >
-          <TextField source="_id" sx={{ paddingLeft: "10px" }} />
+        <Labeled source="주문번호" sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+          <TextField source="_id" />
         </Labeled>
-        <Labeled
-          source="주문자 ID"
-          sx={{ display: "flex", flexDirection: "row", width: 120, justifyContent: "space-between" }}
-        >
-          <TextField source="user_id" label="주문자ID" sx={{ paddingLeft: "4px" }} />
+        <Labeled source="주문자 ID" sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+          <TextField source="user_id" label="주문자ID" />
         </Labeled>
         <Labeled source="주문일시" sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-          <DateField source="createdAt" showTime sx={{ paddingLeft: "40px" }} />
+          <DateField source="createdAt" showTime />
         </Labeled>
-        <b style={{ fontSize: "2rem", padding: "8px 0" }}>배송정보</b>
+        <b style={{ fontSize: "2rem", padding: "12px 0" }}>배송정보</b>
         <Labeled source="받는사람 이름" sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-          <TextField source="shippingInfo.name" sx={{ paddingLeft: 10 }} />
+          <TextField source="shippingInfo.name" sx={{ paddingLeft: 4 }} />
         </Labeled>
         <Labeled
           source="받는사람 연락처"
           sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}
         >
           <FunctionField
-            sx={{ paddingLeft: 10 }}
+            sx={{ paddingLeft: 4 }}
             render={(record: OrderDetail) => autoHyphenPhoneNumber(record.shippingInfo.phone)}
           />
         </Labeled>
         <Labeled source="받는 곳 주소" sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
           <FunctionField
-            sx={{ paddingLeft: 10 }}
+            sx={{ paddingLeft: 4 }}
             render={(record: OrderDetail) =>
               `${record.shippingInfo.address.value} ${record.shippingInfo.address.detailValue}`
             }
           />
         </Labeled>
-        <SelectInput
-          source="state"
-          label="배송상태"
-          choices={orderStateChoices}
-          sx={{
-            "& label": { padding: "4px 0" },
-            "& input": { fontSize: "20px" },
-            ".MuiFilledInput-root": { height: "100%" },
-            "MuiSelect-nativeInput": { fontSize: "1.6rem" },
-          }}
-        />
+        <Labeled
+          source="배송상태"
+          sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "baseline" }}
+        >
+          <SelectInput
+            isRequired
+            source="state"
+            label="배송상태"
+            choices={orderStateChoices}
+            sx={{
+              marginLeft: 4,
+              "& label": { padding: "4px 0" },
+              "& input": { fontSize: "20px" },
+              ".MuiFilledInput-root": { height: "100%" },
+              "MuiSelect-nativeInput": { fontSize: "1.6rem" },
+            }}
+          />
+        </Labeled>
         <ArrayField source="products" textAlign="center">
           <Datagrid bulkActionButtons={false}>
             <TextField source="_id" label="상품ID" />
@@ -87,12 +99,18 @@ const OrderEdit = () => {
             <FunctionField
               source="price"
               label="판매가격"
-              render={(record: Product) => getPriceFormat({ price: record.price })}
+              render={(record: Product) => getPriceFormat({ price: record.price / record.quantity })}
             />
             <TextField source="quantity" label="주문수량" />
+            <FunctionField
+              source="priceSum"
+              label="계"
+              render={(record: Product) => getPriceFormat({ price: record.price })}
+              sortable={false}
+            />
           </Datagrid>
         </ArrayField>
-        <b style={{ fontSize: "2rem", padding: "8px 0" }}>결제 정보</b>
+        <b style={{ fontSize: "2rem", padding: "12px 0" }}>결제 정보</b>
         <Labeled
           source="상품금액"
           sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "230px" }}
