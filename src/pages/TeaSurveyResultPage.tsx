@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import productsApi from "@/apis/services/products";
 import { Extra, Product } from "@/types/products";
@@ -7,9 +7,6 @@ import Button from "@/components/common/Button";
 import ProductItem from "@/components/product/productlist/ProductItem";
 
 const TeaSurveyResultPage = () => {
-  const location = useLocation();
-  const queryString = location.search;
-
   const handleCopyClipBoard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -74,10 +71,10 @@ const TeaSurveyResultPage = () => {
       <StyledTeaSurveyResultButtons>
         <Button onClick={reSurvey} size="md" value="다시 검사하기" variant="sub" />
         <Button
-          value="링크 공유하기"
+          value="친구와 함께 검사하기"
           size="md"
           variant="point"
-          onClick={() => handleCopyClipBoard(`${import.meta.env.VITE_API_BASE_URL}/${queryString}`)}
+          onClick={() => handleCopyClipBoard("https://hanmogeum.netlify.app/recommend")}
         />
       </StyledTeaSurveyResultButtons>
     </TeaSurveyResultPageLayer>
