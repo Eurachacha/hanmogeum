@@ -34,7 +34,7 @@ const MyOrderListContainer = () => {
   const maxTitleLength = 26;
   const [dropDownIdx, setDropDownIdx] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const PAGE_LIMIT = 30;
+  const PAGE_LIMIT = 6;
 
   const getFilterStartAndEndDate = () => {
     const tomorrow = new Date();
