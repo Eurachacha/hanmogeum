@@ -79,7 +79,7 @@ const ProductSortContainer = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [queryString]);
+  }, [products]);
 
   return (
     <ProductSortContainerLayer>
