@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import productsApi, { FilterQueryObject, SortQueryObject } from "@/apis/services/products";
 import ProductItemList from "@/components/product/productlist/ProductItemList";
 import ProductSortButtons from "@/components/product/productlist/ProductSortButtons";
@@ -54,7 +54,7 @@ const ProductSortContainer = () => {
   }
 
   const { data, error } = useSuspenseQuery({
-    queryKey: ["products", sortObject, filterObject, searchParams, currentPage],
+    queryKey: ["products", sortObject, filterObject, queryString, currentPage],
     queryFn: () =>
       productsApi.searchProducts({
         sort: sortObject,
@@ -76,6 +76,10 @@ const ProductSortContainer = () => {
     event.preventDefault();
     setCurrentPage(page);
   };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [queryString]);
 
   return (
     <ProductSortContainerLayer>
