@@ -37,7 +37,7 @@ const ProtectedRoute = ({
     }
   };
 
-  const modalSubmitHandle = () => {
+  const handleSubmitModal = () => {
     setModalOpen((prevState) => {
       return { ...prevState, isOpen: false };
     });
@@ -49,7 +49,7 @@ const ProtectedRoute = ({
     return (
       <ModalWrapper>
         <Modal isOpen={modalOpen.isOpen} message={modalOpen.message}>
-          <ButtonWrapper onSubmit={modalSubmitHandle}>
+          <ButtonWrapper onSubmit={handleSubmitModal}>
             <Button value="확인" size="sm" variant="point" />
           </ButtonWrapper>
         </Modal>

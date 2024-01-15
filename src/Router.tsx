@@ -10,13 +10,13 @@ import CartPage from "@/pages/CartPage";
 import OrderCheckoutPage from "@/pages/OrderCheckoutPage";
 import OrderCompletePage from "@/pages/OrderCompletePage";
 import SellerPage from "@/pages/SellerPage";
-import MyPage from "@/pages/Mypage";
+import MyPage from "@/pages/MyPage";
 import AdminPage from "@/pages/AdminPage";
 
-import MyOrderListContainer from "./containers/mypage/MyOrderListContainer";
-import MyOrderDetailContainer from "./containers/mypage/MyOrderDetailContainer";
-import MyProfileLoginContainer from "./containers/mypage/MyProfileLoginContainer";
-import MyProfileEditContainer from "./containers/mypage/MyProfileModifyContainer";
+import MyOrderListContainer from "./containers/myPage/MyOrderListContainer";
+import MyOrderDetailContainer from "./containers/myPage/MyOrderDetailContainer";
+import MyProfileLoginContainer from "./containers/myPage/MyProfileLoginContainer";
+import MyProfileEditContainer from "./containers/myPage/MyProfileModifyContainer";
 import ProtectedRoute from "./components/route/ProtectedRoute";
 import RecommendPage from "./pages/RecommendPage";
 import TeaSurveyResult from "./pages/TeaSurveyResultPage";
@@ -75,7 +75,7 @@ const router = createBrowserRouter([
             element: <OrderCompletePage />,
           },
           {
-            path: "/mypage",
+            path: "/myPage",
             element: <MyPage />,
             children: [
               {

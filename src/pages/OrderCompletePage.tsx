@@ -13,7 +13,7 @@ const OrderCompletePage = () => {
           <ButtonWrapper onClick={() => navigate("/")}>
             <Button value="계속 쇼핑하기" size="md" variant="sub" />
           </ButtonWrapper>
-          <ButtonWrapper onClick={() => navigate("/mypage/orders")}>
+          <ButtonWrapper onClick={() => navigate("/myPage/orders")}>
             <Button value="주문내역 확인하기" size="md" variant="point" />
           </ButtonWrapper>
         </ButtonArea>

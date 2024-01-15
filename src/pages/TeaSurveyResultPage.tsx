@@ -4,7 +4,7 @@ import styled from "styled-components";
 import productsApi from "@/apis/services/products";
 import { Extra, Product } from "@/types/products";
 import Button from "@/components/common/Button";
-import ProductItem from "@/components/product/productlist/ProductItem";
+import ProductItem from "@/components/product/productList/ProductItem";
 
 const TeaSurveyResultPage = () => {
   const handleCopyClipBoard = async (text: string) => {

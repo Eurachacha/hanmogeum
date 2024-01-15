@@ -12,7 +12,7 @@ import Button from "@/components/common/Button";
 import CounterButton from "@/components/cart/CounterButton";
 import { flattenCodeState } from "@/recoil/atoms/codeState";
 import getPriceFormat from "@/utils/getPriceFormat";
-import CategoryButton from "@/components/product/productlist/CategoryButton";
+import CategoryButton from "@/components/product/productList/CategoryButton";
 import useQuantityCounter from "@/hooks/useQuantityCounter";
 import { CartStorageItem } from "@/types/cart";
 import CategoryInfo from "@/components/productDetail/CategoryInfo";

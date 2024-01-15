@@ -1,7 +1,17 @@
 import styled, { keyframes } from "styled-components";
 
+const LoadingSpinner = () => {
+  return (
+    <SpinnerWrapper>
+      <Loader />
+    </SpinnerWrapper>
+  );
+};
+
+export default LoadingSpinner;
+
 // Keyframes for the animation
-const animloader = keyframes`
+const animationLoader = keyframes`
   0% {
     box-shadow: 2px 0px rgba(210, 89, 37, 0), 12px 0px rgba(210, 89, 37, 0.3), 20px 0px rgba(210, 89, 37, 0);
   }
@@ -43,7 +53,7 @@ const Loader = styled.div`
     top: -1.5rem;
     left: 1.1rem;
     box-sizing: border-box;
-    animation: ${animloader} 1s ease infinite;
+    animation: ${animationLoader} 1s ease infinite;
   }
 `;
 
@@ -60,13 +70,3 @@ const SpinnerWrapper = styled.div`
     margin-top: 20rem;
   }
 `;
-
-const LoadingSpinner = () => {
-  return (
-    <SpinnerWrapper>
-      <Loader />
-    </SpinnerWrapper>
-  );
-};
-
-export default LoadingSpinner;

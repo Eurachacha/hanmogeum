@@ -19,6 +19,7 @@ const LoginContainer = () => {
     </Login>
   );
 };
+export default LoginContainer;
 
 const ButtonWrapper = styled.div`
   width: 100%;
@@ -27,5 +28,3 @@ const ButtonWrapper = styled.div`
     margin-top: 1.5rem;
   }
 `;
-
-export default LoginContainer;
