@@ -70,7 +70,7 @@
  ┃ ┣ 📂itemInput
  ┃ ┣ 📂login
  ┃ ┣ 📂main
- ┃ ┣ 📂mypage
+ ┃ ┣ 📂myPage
  ┃ ┣ 📂orderCheckout
  ┃ ┣ 📂product
  ┃ ┃ ┗ 📂productlist
@@ -80,7 +80,7 @@
  ┃ ┣ 📂cart
  ┃ ┣ 📂login
  ┃ ┣ 📂main
- ┃ ┣ 📂mypage
+ ┃ ┣ 📂myPage
  ┃ ┣ 📂orderCheckout
  ┃ ┣ 📂product
  ┃ ┗ 📂signUp
@@ -91,7 +91,7 @@
  ┃ ┣ 📜ErrorPage.tsx
  ┃ ┣ 📜LoginPage.tsx
  ┃ ┣ 📜MainPage.tsx
- ┃ ┣ 📜Mypage.tsx
+ ┃ ┣ 📜MyPage.tsx
  ┃ ┣ 📜OrderCheckoutPage.tsx
  ┃ ┣ 📜OrderCompletePage.tsx
  ┃ ┣ 📜ProductDetailPage.tsx

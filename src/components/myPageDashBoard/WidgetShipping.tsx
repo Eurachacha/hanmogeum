@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import myPageApi from "@/apis/services/mypage";
+import myPageApi from "@/apis/services/myPage";
 import ORDER_STATE from "@/constants/code";
 
 type OrderStatus = {
