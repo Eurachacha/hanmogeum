@@ -29,9 +29,9 @@
 ## 화면 구성
 
 
-| 맞춤 차 찾기|
-| - |
-| <img src="https://github.com/Eurachacha/hanmogeum/assets/36308113/83ac1c47-6860-4f78-8d2e-692038ba78dc" width="400"> |
+| 맞춤 차 찾기| 로그인,회원가입 |
+| - | - |
+| <img src="https://github.com/Eurachacha/hanmogeum/assets/36308113/83ac1c47-6860-4f78-8d2e-692038ba78dc" width="400"> | <img src="https://github.com/Eurachacha/hanmogeum/assets/36308113/b32f4dce-f8f0-4480-b50a-12187b9e8a24" width="400"> | 
 
 | 상품 구매 | 장바구니 |
 | - | - |
