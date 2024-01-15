@@ -97,11 +97,11 @@ const MyOrderListContainer = () => {
     };
   };
 
-  const detailButtonClickHandle = (orderId: string) => {
+  const handleClickDetailButton = (orderId: string) => {
     navigator(`/myPage/orders/${orderId}`);
   };
 
-  const paginationHandleChange = (event: React.ChangeEvent<unknown>, page: number) => {
+  const handleChangePagination = (event: React.ChangeEvent<unknown>, page: number) => {
     event.preventDefault();
     setCurrentPage(page);
   };
@@ -127,7 +127,7 @@ const MyOrderListContainer = () => {
             const mapKey = `${idx}_${order._id}_${order.createdAt}`;
             const orderThumbnail = orderItemToThumbnailData(order);
             return (
-              <OrderWrapper key={mapKey} onClick={() => detailButtonClickHandle(`${order._id}`)}>
+              <OrderWrapper key={mapKey} onClick={() => handleClickDetailButton(`${order._id}`)}>
                 <OrderInfoWrapper>
                   <span>주문 번호 {orderThumbnail.id}</span>
                   <span>{orderThumbnail.date}</span>
@@ -153,7 +153,7 @@ const MyOrderListContainer = () => {
         <Pagination
           defaultPage={1}
           page={currentPage}
-          onChange={paginationHandleChange}
+          onChange={handleChangePagination}
           count={responseOrderList?.pagination?.totalPages}
           shape="rounded"
           showFirstButton

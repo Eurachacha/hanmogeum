@@ -25,6 +25,8 @@ const Footer = () => {
   );
 };
 
+export default Footer;
+
 const FooterLayer = styled.div`
   display: flex;
   flex-direction: column;
@@ -54,5 +56,3 @@ const StyledInfo = styled.div`
   width: 60rem;
   margin-bottom: 1.5rem;
 `;
-
-export default Footer;

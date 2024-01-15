@@ -44,6 +44,8 @@ const Input = ({
   );
 };
 
+export default Input;
+
 const INPUT_STYLES = Object.freeze({
   normal: css`
     &:focus {
@@ -64,5 +66,3 @@ const InputContainer = styled.input<{ $inputStyle: RuleSet<object>; $customStyle
 
   ${(props) => props.$customStyle && { ...props.$customStyle }}
 `;
-
-export default Input;

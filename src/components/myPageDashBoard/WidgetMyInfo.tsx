@@ -9,7 +9,7 @@ const WidgetMyInfo = () => {
   const navigate = useNavigate();
   const currentUserName = useRecoilValue(getUserNameState);
 
-  const myProfileHandleClick = () => {
+  const handleClickMyProfile = () => {
     // TODO: 내 정보 확인 페이지로 이동하도록 함 (수정페이지X)
     navigate("/myPage/profile");
   };
@@ -23,13 +23,15 @@ const WidgetMyInfo = () => {
         <UserInfoWrapper>
           <span>{`${currentUserName} 님, 안녕하세요.`}</span>
         </UserInfoWrapper>
-        <ButtonWrapper onClick={myProfileHandleClick}>
+        <ButtonWrapper onClick={handleClickMyProfile}>
           <Button value="내 정보 관리" size="sm" variant="point"></Button>
         </ButtonWrapper>
       </ContentsWrapper>
     </DashBardMyInfoLayout>
   );
 };
+
+export default WidgetMyInfo;
 
 const DashBardMyInfoLayout = styled.div`
   align-items: center;
@@ -49,5 +51,3 @@ const UserInfoWrapper = styled.div`
   font-size: 1.6rem;
 `;
 const ButtonWrapper = styled.div``;
-
-export default WidgetMyInfo;

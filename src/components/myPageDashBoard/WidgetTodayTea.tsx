@@ -54,14 +54,14 @@ const WidgetTodayTea = () => {
     setTodayTea(newTea);
   }, [bestProducts]);
 
-  const wigetHandleClick = () => {
+  const handleClickWiget = () => {
     if (todayTea?.id) {
       navigate(`/products/${todayTea?.id}`);
     }
   };
 
   return (
-    <WidgetTodayTeaLayer onClick={wigetHandleClick}>
+    <WidgetTodayTeaLayer onClick={handleClickWiget}>
       <TitleWrapper>오늘의 추천 차</TitleWrapper>
       <ContentsWrapper>
         <ProductImgStyle>

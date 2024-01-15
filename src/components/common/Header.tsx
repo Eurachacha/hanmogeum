@@ -41,7 +41,7 @@ const Header = () => {
     setCartCount(cartStorage.filter((item) => item.stock !== 0).length);
   }, [cartStorage]);
 
-  const logoutHandleClick = () => {
+  const handleClickLogout = () => {
     localStorage.removeItem("cartChecked");
     localStorage.removeItem("token");
     localStorage.removeItem("refreshToken");
@@ -91,7 +91,7 @@ const Header = () => {
   const userControlList = {
     isLogin: [
       { name: "마이페이지", router: "/myPage/orders", onClick: () => {} },
-      { name: "로그아웃", router: "/", onClick: logoutHandleClick },
+      { name: "로그아웃", router: "/", onClick: handleClickLogout },
     ],
     isLogout: [
       { name: "로그인", router: "/login" },
@@ -159,6 +159,8 @@ const Header = () => {
     </HeaderLayer>
   );
 };
+
+export default Header;
 
 const ProductCategoryLink = styled.span<CategoryLinkProps>`
   color: ${({ $isActive }) => ($isActive ? "var(--color-main)" : "inherit")};
@@ -262,5 +264,3 @@ const CartCountStyle = styled.span`
   font-weight: var(--weight-bold);
   color: var(--color-white);
 `;
-
-export default Header;

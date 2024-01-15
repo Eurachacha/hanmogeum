@@ -108,7 +108,7 @@ const MyProfileEditContainer = () => {
     }
   };
 
-  const inputHandleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
     setSignUpData((prevState) => ({
       ...prevState,
@@ -117,7 +117,7 @@ const MyProfileEditContainer = () => {
   };
 
   const openPostcode = useDaumPostcodePopup();
-  const addressSearchHandleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleClickAddressSearch = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
     openPostcode({
       onComplete: (data) => {
@@ -133,7 +133,7 @@ const MyProfileEditContainer = () => {
     });
   };
 
-  const modalClickHandle = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickModal = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (showModal.goToPrevPage) {
       navigate("/myPage/profile");
@@ -208,7 +208,7 @@ const MyProfileEditContainer = () => {
         type: "email",
         required: true,
         placeholder: "이메일을 입력해주세요.",
-        onChange: inputHandleChange,
+        onChange: handleChangeInput,
         value: loggedInUser?.email || "",
         customStyle: { width: "32rem", color: "var(--color-gray-200)" },
       },
@@ -224,7 +224,7 @@ const MyProfileEditContainer = () => {
         name: "password",
         required: true,
         placeholder: "변경할 비밀번호를 입력해주세요.",
-        onChange: inputHandleChange,
+        onChange: handleChangeInput,
         value: signUpData.password,
         customStyle: inputCustomStyle,
       },
@@ -242,7 +242,7 @@ const MyProfileEditContainer = () => {
         name: "passwordAgain",
         required: true,
         placeholder: "비밀번호를 한번 더 입력해주세요.",
-        onChange: inputHandleChange,
+        onChange: handleChangeInput,
         value: signUpData.passwordAgain,
         customStyle: inputCustomStyle,
       },
@@ -258,7 +258,7 @@ const MyProfileEditContainer = () => {
         name: "name",
         required: true,
         placeholder: "이름을 입력해주세요",
-        onChange: inputHandleChange,
+        onChange: handleChangeInput,
         value: signUpData.name,
         customStyle: inputCustomStyle,
       },
@@ -275,7 +275,7 @@ const MyProfileEditContainer = () => {
         maxLength: 17,
         name: "phoneNumber",
         placeholder: "숫자만 입력해주세요.",
-        onChange: inputHandleChange,
+        onChange: handleChangeInput,
         value: signUpData.phoneNumber,
         customStyle: inputCustomStyle,
       },
@@ -291,13 +291,13 @@ const MyProfileEditContainer = () => {
         name: "address",
         disabled: true,
         placeholder: "주소 검색",
-        onChange: inputHandleChange,
+        onChange: handleChangeInput,
         value: signUpData.address,
         customStyle: inputCustomStyle,
       },
       includeButton: true,
       buttonValue: "주소검색",
-      buttonOnClick: addressSearchHandleClick,
+      buttonOnClick: handleClickAddressSearch,
     },
     {
       // 상세 주소
@@ -308,7 +308,7 @@ const MyProfileEditContainer = () => {
         type: "text",
         name: "addressDetail",
         placeholder: "상세 주소를 입력해주세요.",
-        onChange: inputHandleChange,
+        onChange: handleChangeInput,
         value: signUpData.addressDetail,
         customStyle: inputCustomStyle,
       },
@@ -321,7 +321,7 @@ const MyProfileEditContainer = () => {
       <ContentsTitle title="내 정보 변경"></ContentsTitle>
       <ModalWrapper>
         <Modal isOpen={showModal.isOpen} iconRequired={false} message={showModal.message}>
-          <CheckModalButton type="submit" onClick={modalClickHandle}>
+          <CheckModalButton type="submit" onClick={handleClickModal}>
             확인
           </CheckModalButton>
         </Modal>
@@ -355,6 +355,7 @@ const MyProfileEditContainer = () => {
     </SignUpContainerLayer>
   );
 };
+export default MyProfileEditContainer;
 
 const SignUpContainerLayer = styled.div`
   display: flex;
@@ -410,5 +411,3 @@ const ButtonWrapper = styled.div`
 const ModalWrapper = styled.div`
   font-weight: var(--weight-medium);
 `;
-
-export default MyProfileEditContainer;

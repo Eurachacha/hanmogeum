@@ -65,6 +65,8 @@ const ItemInput = ({
   );
 };
 
+export default ItemInput;
+
 const ItemInputLayer = styled.div`
   display: flex;
   flex-direction: column;
@@ -118,5 +120,3 @@ const ButtonWrapper = styled.div<{ $buttonCustomStyle: React.CSSProperties }>`
   font-size: 1.6rem;
   ${(props) => props.$buttonCustomStyle && { ...props.$buttonCustomStyle }}
 `;
-
-export default ItemInput;

@@ -23,6 +23,8 @@ const NavigationMenu = () => {
   );
 };
 
+export default NavigationMenu;
+
 const NavigationMenuLayer = styled.div`
   display: flex;
   flex-direction: column;
@@ -51,5 +53,3 @@ const NavStyle = styled(NavLink)`
     color: var(--color-main);
   }
 `;
-
-export default NavigationMenu;

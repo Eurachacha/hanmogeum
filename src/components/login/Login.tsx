@@ -61,7 +61,7 @@ const Login = ({ children, isAdditionalAuth = false, redirectAfterLogin = "/" }:
     }
   };
 
-  const loginHandleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       const credentials = { email, password };
@@ -87,7 +87,7 @@ const Login = ({ children, isAdditionalAuth = false, redirectAfterLogin = "/" }:
   };
 
   return (
-    <LoginContainerLayer onSubmit={loginHandleSubmit}>
+    <LoginContainerLayer onSubmit={handleSubmitLogin}>
       <InputWrapper>
         {showLoginCheckAlert && (
           <LoginCheckModalWrapper>

@@ -30,7 +30,7 @@ const OrderDetailInfo = ({ orderData, shippingState }: OrderDetailInfoProps) => 
     setIsOpenModalData({ isOpen: true, message: "주문 취소되었습니다." });
   };
 
-  const modalHandleButton = () => {
+  const handleButtonModal = () => {
     setIsOpenModalData((prevState) => {
       return { ...prevState, isOpen: false };
     });
@@ -49,7 +49,7 @@ const OrderDetailInfo = ({ orderData, shippingState }: OrderDetailInfoProps) => 
       title: "배송상태",
       value: codeData[orderData?.state || ""]?.value,
       showButton: shippingState === ORDER_STATE.SHIPPING_PREPARING.CODE,
-      buttonHandle: shippingCancel,
+      handleButton: shippingCancel,
     },
     { title: "받는분", value: orderData?.shippingInfo?.name || "" },
     { title: "연락처", value: autoHyphenPhoneNumber(orderData?.shippingInfo?.phone || "") },
@@ -67,7 +67,7 @@ const OrderDetailInfo = ({ orderData, shippingState }: OrderDetailInfoProps) => 
 
   return (
     <OrderDetailInfoLayer>
-      <ModalWrapper onSubmit={modalHandleButton}>
+      <ModalWrapper onSubmit={handleButtonModal}>
         <Modal isOpen={isOpenModalData.isOpen} message={isOpenModalData.message}>
           <Button value="확인" size="sm" variant="sub"></Button>
         </Modal>
@@ -93,7 +93,7 @@ const OrderDetailInfo = ({ orderData, shippingState }: OrderDetailInfoProps) => 
             {shippingInfoList.map((infoData, idx) => {
               const infoWrapperKey = `OrderDetailInfo_InfoWrapper_${idx}`;
               return (
-                <InfoDataWrapper key={`${infoWrapperKey}Data`} onSubmit={infoData.buttonHandle}>
+                <InfoDataWrapper key={`${infoWrapperKey}Data`} onSubmit={infoData.handleButton}>
                   <InfoDataStyle key={infoWrapperKey}>
                     <InfoTitleStyle>{infoData.title}</InfoTitleStyle>
                     <InfoValueStyle>{infoData.value}</InfoValueStyle>

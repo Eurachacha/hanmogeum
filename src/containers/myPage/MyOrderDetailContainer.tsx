@@ -41,7 +41,7 @@ const MyOrderDetailContainer = () => {
     }
   };
 
-  const cartButtonHandleClick = async ({ _id, quantity }: Product) => {
+  const handleClickCartButton = async ({ _id, quantity }: Product) => {
     try {
       const addItem = { product_id: _id, quantity };
       const response = await cartApi.addItem(addItem);
@@ -65,7 +65,7 @@ const MyOrderDetailContainer = () => {
     }
   };
 
-  const modalHandleClick = () => {
+  const handleClickModal = () => {
     setOenModal(() => {
       return { isOpen: false, message: "" };
     });
@@ -88,7 +88,7 @@ const MyOrderDetailContainer = () => {
     <MyOrderDetailContainerLayer>
       <ModalWrapper>
         <Modal isOpen={openModal.isOpen} message={openModal.message}>
-          <ModalButtonWrapper onClick={modalHandleClick}>
+          <ModalButtonWrapper onClick={handleClickModal}>
             <Button value="확인" size="md" variant="sub" />
           </ModalButtonWrapper>
         </Modal>
@@ -112,7 +112,7 @@ const MyOrderDetailContainer = () => {
               </ProductInfoWrapper>
 
               <ButtonsWrapper>
-                <CartButtonStyle onClick={() => cartButtonHandleClick(product)}>
+                <CartButtonStyle onClick={() => handleClickCartButton(product)}>
                   <Button value="장바구니 담기" size="sm" variant="point" />
                 </CartButtonStyle>
               </ButtonsWrapper>

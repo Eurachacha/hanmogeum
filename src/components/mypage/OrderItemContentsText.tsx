@@ -24,6 +24,8 @@ const OrderItemContentsText = ({ textList, subTextList }: OrderItemContentsTextP
   );
 };
 
+export default OrderItemContentsText;
+
 const OrderItemContentsTextLayer = styled.div`
   display: flex;
   flex-direction: column;
@@ -49,5 +51,3 @@ const SubTextStyle = styled.span`
   font-size: 1.6rem;
   color: var(--color-gray-300);
 `;
-
-export default OrderItemContentsText;
