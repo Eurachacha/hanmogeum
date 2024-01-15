@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import productsApi, { FilterQueryObject, SortQueryObject } from "@/apis/services/products";
-import ProductItemList from "@/components/product/productlist/ProductItemList";
-import ProductSortButtons from "@/components/product/productlist/ProductSortButtons";
+import ProductItemList from "@/components/product/productList/ProductItemList";
+import ProductSortButtons from "@/components/product/productList/ProductSortButtons";
 
 const ProductSortContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);

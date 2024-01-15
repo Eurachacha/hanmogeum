@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Product } from "@/types/products";
-import ProductItemList from "../product/productlist/ProductItemList";
+import ProductItemList from "../product/productList/ProductItemList";
 
 interface MainProductsListProps {
   products: Product[]; // DB장바구니 state
