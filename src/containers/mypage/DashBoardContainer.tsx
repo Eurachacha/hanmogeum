@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import WidgetMyInfo from "@/components/MypageDashBoard/WidgetMyInfo";
-import WidgetShipping from "@/components/MypageDashBoard/WidgetShipping";
-import WidgetTodayTea from "@/components/MypageDashBoard/WidgetTodayTea";
+import WidgetMyInfo from "@/components/myPageDashBoard/WidgetMyInfo";
+import WidgetShipping from "@/components/myPageDashBoard/WidgetShipping";
+import WidgetTodayTea from "@/components/myPageDashBoard/WidgetTodayTea";
 
 const DashBoardContainer = () => {
   return (
